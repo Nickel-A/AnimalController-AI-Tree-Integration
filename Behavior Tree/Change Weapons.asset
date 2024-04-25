@@ -609,14 +609,14 @@ MonoBehaviour:
     ConstantValue: 15
     Variable: {fileID: 0}
   LookAngle: 360
-  lookFor: 1
+  lookFor: 0
   ObstacleLayer:
     UseConstant: 1
     ConstantValue:
       serializedVersion: 2
       m_Bits: 1
     Variable: {fileID: 0}
-  AssignTarget: 1
+  AssignTarget: 0
   MoveToTarget: 0
   RemoveTarget: 0
   ChooseRandomly: 0
@@ -740,7 +740,7 @@ MonoBehaviour:
     ConstantValue: 10
     Variable: {fileID: 0}
   LookAngle: 177
-  lookFor: 1
+  lookFor: 0
   ObstacleLayer:
     UseConstant: 1
     ConstantValue:
