@@ -56,7 +56,11 @@ namespace Malbers.Integration.AITree
             aiBrain = GetOwner().GetComponent<AIBrain>();
 
             WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
-            comboManager = aiBrain.GetComponentInParent<ComboManager>(); 
+            comboManager = aiBrain.GetComponentInParent<ComboManager>();
+            
+
+            
+
         }
 
         protected override void OnEntry()
@@ -97,10 +101,6 @@ namespace Malbers.Integration.AITree
                     case BrainWeaponActions.Attack:
                         break;
                     case BrainWeaponActions.Store_Weapon:
-                        if (WeaponManager.Weapon == null)
-                        {
-                            taskDone = true;
-                        }
                         WeaponManager.IgnoreStore = IgnoreDrawStore;
                         WeaponManager.Aim_Set(false);
                         WeaponManager.Store_Weapon();
@@ -113,10 +113,6 @@ namespace Malbers.Integration.AITree
                         }
                         break;
                     case BrainWeaponActions.Unequip_Weapon:
-                        if (WeaponManager.Weapon == null)
-                        {
-                            taskDone = true;
-                        }
                         WeaponManager.UnEquip();
                         taskDone = true;
                         break;
@@ -174,7 +170,7 @@ namespace Malbers.Integration.AITree
                         if (near && !aiBrain.AIControl.HasArrived)
                         {
                             WeaponManager.MainAttackReleased();
-                            if (WeaponManager.Weapon) WeaponManager.Weapon.Input = false;
+                            WeaponManager.Weapon.Input = false;
                             return State.Running;
                         }
 
@@ -195,6 +191,7 @@ namespace Malbers.Integration.AITree
                                     WeaponManager.MainAttack();
                                     if (attackOnce)
                                     {
+                                        WeaponManager.MainAttackReleased();
                                         taskDone = true;
                                     }
                                 }
@@ -204,12 +201,10 @@ namespace Malbers.Integration.AITree
                                 if (!WeaponManager.Weapon.Input || (WeaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
                                 {
                                     WeaponManager.MainAttack();
-                                    //taskDone = true;
                                 }
                                 else
                                 {
                                     WeaponManager.MainAttackReleased();
-                                    taskDone = true;
                                 }
                             }
                         }
@@ -228,17 +223,13 @@ namespace Malbers.Integration.AITree
                 }
             }
 
-            return taskDone || GetState().Equals(State.Aborted) ? State.Success : State.Running;//
+            //return taskDone || GetState().Equals(State.Aborted) ? State.Success : State.Running;
+            return State.Success;
         }
 
         protected override void OnExit()
         {
             base.OnExit();
-            if (WeaponManager.Weapon)
-            {
-            WeaponManager.Weapon.Input = false;
-
-            }
             taskDone = false;
         }
 

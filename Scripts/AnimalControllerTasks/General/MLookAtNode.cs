@@ -61,6 +61,7 @@ namespace Malbers.Integration.AITree
                     }
 
                     aiBrain.Animal.FindInterface<IAim>()?.SetTarget(child);
+                    Debug.Log("SET");
                 }
                 else
                 {

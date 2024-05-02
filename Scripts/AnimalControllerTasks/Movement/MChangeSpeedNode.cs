@@ -3,7 +3,7 @@ using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using UnityEngine;
 using State = RenownedGames.AITree.State;
-
+using MalbersAnimations.HAP;
 
 namespace Malbers.Integration.AITree
 {
@@ -14,23 +14,29 @@ namespace Malbers.Integration.AITree
         [Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
         public Affected affect = Affected.Self;
 
+        private Faction faction;
         public string SpeedSet = "Ground";
         public IntReference SpeedIndex = new(3);
         private AIBrain aiBrain;
-        public bool matchTargetSpeed;
+        public bool matchLeaderSpeed;
         private MAnimal targetAnimal;
         protected override void OnEntry()
         {
+            faction = GetOwner().gameObject.GetComponent<Faction>();
             aiBrain = GetOwner().GetComponent<AIBrain>();
-            if (matchTargetSpeed)
+            if (matchLeaderSpeed)
             {
-                if (aiBrain.AIControl.Target != null) targetAnimal = aiBrain.AIControl.Target.GetComponent<MAnimal>();
+                targetAnimal = faction.FindLeaderAnimal(faction.groupName) ;
+                if (targetAnimal.GetComponent<MRider>().IsRiding)
+                {
+                    targetAnimal = targetAnimal.GetComponent<MRider>().Montura.Animal;
+                }
             }
         }
 
         protected override State OnUpdate()
         {
-            if (matchTargetSpeed)
+            if (matchLeaderSpeed)
             {
                 aiBrain.Animal.SetSprint(targetAnimal.Sprint);
                 SpeedSet = targetAnimal.CurrentSpeedSet.name;
@@ -67,7 +73,7 @@ namespace Malbers.Integration.AITree
             description += $"Affect: {checkType}\n";
             description += $"SpeedSet: {SpeedSet}\n";
             description += $"SpeedIndex: {SpeedIndex.Value}\n";
-            description += $"Match Target Speed: {matchTargetSpeed}\n";
+            description += $"Match Leader Speed: {matchLeaderSpeed}\n";
             return description;
         }
     }

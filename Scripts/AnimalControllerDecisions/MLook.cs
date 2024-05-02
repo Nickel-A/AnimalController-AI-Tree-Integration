@@ -47,6 +47,7 @@ namespace Malbers.Integration.AITree
         public bool MoveToTarget = true;
         [Tooltip("Remove Target when loose sight:\nIf the Target No longer on the Field of View: Set the Target from the AIControl as NULL")]
         public bool RemoveTarget = false;
+
         [Tooltip("Select randomly one of the potential targets, not the first one found")]
         public bool ChooseRandomly = false;
 
@@ -84,16 +85,18 @@ namespace Malbers.Integration.AITree
 
         public Color debugColor = new Color(0, 0, 0.7f, 0.3f); AIBrain brain;
         private float interval;
-        bool result;
         Decision[] DecisionsVars;
         int index = 0;
-
+        private bool result;
         public override event Action OnValueChange;
 
+        private Faction faction;
+ 
         protected override void OnInitialize()
         {
             base.OnInitialize();
             brain = GetOwner().GetComponent<AIBrain>();
+            faction = GetOwner().GetComponent<Faction>();
 
         }
         protected override void OnFlowUpdate()
@@ -111,8 +114,7 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
-            if(result == true)
-            Look_For(brain, AssignTarget, index); //This will assign the Target in case its true
+            if (result) Look_For(brain, AssignTarget, index); //This will assign the Target in case its true
         }
 
 
@@ -323,6 +325,16 @@ namespace Malbers.Integration.AITree
                     brain.AIControl.SetTarget(target, MoveToTarget);
 
             }
+            /*
+            if (assignToBB && BBKeyName!=null)
+            {
+                Blackboard blackboard = faction.behaviourRunner.GetBlackboard();
+                if (blackboard.TryFindKey<TransformKey>(BBKeyName, out TransformKey transformKey))
+                {
+                    transformKey.SetValue(target.transform);
+                }
+            }
+            */
         }
 
         public bool LookForZones(AIBrain brain, bool assign)
@@ -729,7 +741,6 @@ namespace Malbers.Integration.AITree
                 description += $"Assign Target: {AssignTarget} \n";
             if (MoveToTarget)
                 description += $"Move To Target: {MoveToTarget} \n";
-
             return description;            
         }
 
@@ -908,6 +919,8 @@ namespace Malbers.Integration.AITree
 
                 EditorGUILayout.PropertyField(AssignTarget);
                 EditorGUILayout.PropertyField(MoveToTarget);
+                
+
 
             }
             // EditorGUILayout.EndVertical();

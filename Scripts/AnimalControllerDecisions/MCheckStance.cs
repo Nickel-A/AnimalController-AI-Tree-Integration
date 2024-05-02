@@ -10,11 +10,10 @@ namespace Malbers.Integration.AITree
     [NodeContent("Check Stance", "Animal Controller/Check Stance", IconPath = "Icons/AIDecision_Icon.png")]
     public class MCheckStance : ObserverDecorator
     {
+        public enum Affected { Self, Target, Leader };
         [Header("Node")]
-
         [Tooltip("Check the Decision on the Animal(Self) or the Target(Target)")]
         public Affected check = Affected.Self;
-
         [Tooltip("Identifier for the stance")]
         public StanceID stanceID;
 
@@ -28,11 +27,12 @@ namespace Malbers.Integration.AITree
         AIBrain aiBrain;
 
         public override event Action OnValueChange;
-
+        private Faction faction;
         protected override void OnInitialize()
         {
             base.OnInitialize();
             aiBrain = GetOwner().GetComponent<AIBrain>();
+            faction = GetOwner().gameObject.GetComponent<Faction>();
         }
         /// <summary>
         /// Called every tick regardless of the node execution.
@@ -71,6 +71,15 @@ namespace Malbers.Integration.AITree
                     if (aiBrain != null && aiBrain.TargetAnimal != null)
                     {
                         return CheckState(aiBrain.TargetAnimal);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                case Affected.Leader:
+                    if (faction != null)
+                    {
+                        return CheckState(faction.FindLeader(faction.groupName).GetComponent<MAnimal>());
                     }
                     else
                     {

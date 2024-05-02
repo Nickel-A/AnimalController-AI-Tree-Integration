@@ -43,15 +43,11 @@ namespace Malbers.Integration.AITree
         {
             base.OnInitialize();
             aiBrain = GetOwner().GetComponent<AIBrain>();
-        }
 
-        protected override void OnEntry()
-        {
-            base.OnEntry();
             switch (checkOn)
             {
                 case Affected.Self:
-                    if (TryGetValue && aiBrain != null)
+                    if (TryGetValue)
                     {
                         if (aiBrain.AnimalStats.TryGetValue(Stat.ID, out Stat statS))
                         {
@@ -137,7 +133,6 @@ namespace Malbers.Integration.AITree
                     }
                     break;
             }
-            //Debug.Log(result);
             return result;
 
         }
@@ -203,21 +198,9 @@ namespace Malbers.Integration.AITree
                 description += $"Stat ID: {Stat.DisplayName} \n";
             }
             description += $"Option: {Option} \n";
-
-            switch (Option)
-            {
-                case checkStatOption.Compare:
-                    description += $"Stat Is: {StatIs} \n";
-                    description += $"Value: {Value} \n";
-                    break;
-
-                case checkStatOption.CompareNormalized:
-                    description += $"Stat Is: {StatIs} \n";
-                    description += $"Value: {Value} \n";
-                    break;
-
-            }
-
+            description += $"Stat Is: {StatIs} \n";
+            description += $"Value: {Value} \n";
+            description += $"Result: {checkResult} \n";
             return description;
         }
 
@@ -262,9 +245,10 @@ namespace Malbers.Integration.AITree
 
             EditorGUILayout.LabelField("Description", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(nodeName);
-            EditorGUILayout.LabelField("Flow Control", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(notifyObserver);
+            EditorGUILayout.LabelField("Condition", EditorStyles.boldLabel);
+
             EditorGUILayout.PropertyField(observerAbort);
+            EditorGUILayout.PropertyField(notifyObserver);
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Node", EditorStyles.boldLabel);
             EditorGUI.BeginDisabledGroup(true);

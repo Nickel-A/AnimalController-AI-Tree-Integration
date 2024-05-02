@@ -1,39 +1,42 @@
+using RenownedGames.AITree;
+using UnityEngine;
+using UnityEditor;
 using MalbersAnimations;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Controller.AI;
-using RenownedGames.AITree;
+using MalbersAnimations.HAP;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Check Animal", "Animal Controller/Check Animal", IconPath = "Icons/AIDecision_Icon.png")]
     public class MCheckAnimal : ConditionDecorator
     {
+        public enum LookFor { HasArrived, IsSprinting, IsMounted, CanMount, MyRiderHasTarget, AttackedBy, IsDead };
+        public LookFor lookFor;
         public enum Affect { Target, BlackBoardAnimal };
         public Affect affect;
-        public enum LookFor { HasArrived, IsSprinting };
-        public LookFor lookFor;
+
         public TransformKey BlackBoardAnimal;
         private AIBrain aiBrain;
         private MAnimal mAnimal;
         private MAnimalAIControl AIControl;
         private bool result;
         float remainingdistance;
-
+        private Faction faction;
+        private MRider mRider;
+        private Mount mount;
+        public TransformKey myRiderTarget;
         protected override void OnInitialize()
         {
-
+            faction = GetOwner().gameObject.GetComponent<Faction>();
 
         }
 
         // Override the Evaluate method or else your environment will throw an error
         protected override bool CalculateResult()
         {
-            if (aiBrain == null)
-            {
-                aiBrain = GetOwner().GetComponent<AIBrain>();
-            }
-
-            if (mAnimal == null)
+            if (aiBrain == null) aiBrain = GetOwner().GetComponent<AIBrain>();
+            if (mAnimal == null && lookFor!=LookFor.MyRiderHasTarget)
             {
                 if (affect == Affect.Target)
                 {
@@ -62,34 +65,54 @@ namespace Malbers.Integration.AITree
                     break;
                 case LookFor.HasArrived:
                     result = AIControl.HasArrived;
+                    remainingdistance = aiBrain.AIControl.RemainingDistance;
+                    break;
+                case LookFor.CanMount:
+                    result = mAnimal.GetComponent<MRider>().CanMount;
+                    break;
+                case LookFor.IsMounted:
+                    result = mAnimal.GetComponent<MRider>().Mounted;
+                    break;
+                case LookFor.IsDead:
+                    result = mAnimal.ActiveState.StateIDName == "Death";
+                    break;
+                case LookFor.MyRiderHasTarget:
+                    if (mRider == null) mRider = faction.mount.Rider;
+                    if (mRider.gameObject.GetComponentInChildren<MAnimalAIControl>().Target != null)
+                    {
+                        myRiderTarget.SetValue(mRider.gameObject.GetComponentInChildren<MAnimalAIControl>().Target);
+                        return true;
+                    }else
+                    {
+                        return false;
+                    }
+                    /*
+                        Blackboard blackboard = mRider.gameObject.GetComponentInChildren<Faction>().behaviourRunner.GetBlackboard();
+                        if (blackboard.TryFindKey<TransformKey>(BBRiderEnemyKey, out TransformKey transformKey))
+                        {
+                            if (transformKey.GetValue() != null)
+                            {
+                                MyRiderEnemy.SetValue(transformKey.GetValue());
+                                result = true;
+                            }
+                        }
+                    */
                     break;
             }
-            /*
-            remainingdistance = aiBrain.AIControl.RemainingDistance;
-
-            if (string.IsNullOrEmpty(TargetName))
-            {
-                Result =
-                    aiBrain.AIControl.HasArrived;
-            }
-            else
-            {
-                Result = aiBrain.AIControl.HasArrived && 
-                   (aiBrain.Target.name == TargetName || aiBrain.Target.root.name == TargetName); //If we are looking for an specific Target
-            }
-            */
+             
             return result;
         }
 
         public override string GetDescription()
         {
-            string description = base.GetDescription();
-            if (!string.IsNullOrEmpty(description))
+            string description = "";
+            switch (lookFor)
             {
-                description += "\n";
+                case LookFor.HasArrived:
+                    description += $"Remaining Distance: {remainingdistance}\n";
+                    break;
             }
 
-            //description += $"Remaining Distance: {remainingdistance}\n";
             description += $"Result: {result}\n";
 
             return description;

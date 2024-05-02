@@ -50,8 +50,8 @@ namespace Malbers.Integration.AITree
 
         [Tooltip("The AI will stop if it arrives to the current target")]
         public bool StopOnArrive = true;
-        float defaultStopdistance;
-        Transform currentTarget;
+
+       Transform currentTarget;
         AIBrain aiBrain;
         bool arrived;
         bool failed;
@@ -60,12 +60,12 @@ namespace Malbers.Integration.AITree
         {
             base.OnInitialize();
             aiBrain = GetOwner().GetComponent<AIBrain>();
-            
+
         }
 
         protected override void OnEntry()
         {
-            defaultStopdistance = aiBrain.AIControl.StoppingDistance;
+            
             aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;      //IMPORTANT or the animal will try to Move if the Target moves
 
             switch (task)
@@ -183,7 +183,6 @@ namespace Malbers.Integration.AITree
             }
             failed = false;
             arrived = false;
-            aiBrain.AIControl.StoppingDistance = defaultStopdistance;
         }
 
         private void StopOnArrived()

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    public enum CompareTarget { IsNull, isTransformVar, IsInRuntimeSet, HasName, IsActiveInHierarchy }
+    public enum CompareTarget { IsNull, isTransformVar, IsInRuntimeSet, HasName, IsActiveInHierarchy, BlackBoard, MalbersTags }
 
     [NodeContent("Check Target", "Animal Controller/Check Target", IconPath = "Icons/AIDecision_Icon.png")]
     public class MCheckTarget : ConditionDecorator
@@ -21,8 +21,14 @@ namespace Malbers.Integration.AITree
         public TransformVar transform;
         [Hide("compare", 3)]
         public string m_name;
+        [Hide("compare", 5)]
+        public TransformKey blackBoard;
+        [Hide("compare", 6)]
+        public Tag[] tags;
+
         bool targetMatched;
         AIBrain aiBrain;
+
 
         protected override void OnInitialize()
         {
@@ -49,6 +55,25 @@ namespace Malbers.Integration.AITree
                     break;
                 case CompareTarget.IsActiveInHierarchy:
                     targetMatched = aiBrain.Target && aiBrain.Target.gameObject.activeInHierarchy;
+                    break;
+                case CompareTarget.BlackBoard:
+                    targetMatched = aiBrain.Target && blackBoard.GetValue();
+                    break;
+                case CompareTarget.MalbersTags:
+                    if (aiBrain.Target.GetComponent<Tags>() != null)
+                    {
+                        var filtredTags = Tags.GambeObjectbyTag(tags);
+                        for (int i = 0; i < filtredTags.Count; i++)
+                        {
+                            if (aiBrain.Target.GetComponent<Tags>())//.HasTag(filtredTags[i])
+                            {
+                                return true;
+                            }
+                        }
+                    }else
+                    {
+                        return false;
+                    }
                     break;
                 default:
                     break;
@@ -100,15 +125,17 @@ namespace Malbers.Integration.AITree
             }
             description += "\n";
 
-            string targetName;
+            string targetName="";
             if (aiBrain == null)
             {
                targetName = "null";
             }
             else
             {
-                targetName = aiBrain.Target.ToString();
-
+                if (aiBrain.Target != null)
+                {
+                    targetName = aiBrain.Target.ToString();
+                }
             }
             description += "Target is: ";
             description += $"{targetName}";
