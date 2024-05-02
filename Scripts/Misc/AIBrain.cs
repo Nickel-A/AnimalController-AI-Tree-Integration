@@ -2,7 +2,6 @@ using MalbersAnimations;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
-using RenownedGames.AITree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +61,7 @@ namespace Malbers.Integration.AITree
 
         /// <summary>Reference for the Animal</summary>
         public MAnimal Animal { get; private set; }
-
+        //public MAnimalAIControl mAnimalAIControl;
         /// <summary>Reference for the AnimalStats</summary>
         public Dictionary<int, Stat> AnimalStats { get; set; }
 
@@ -101,7 +100,7 @@ namespace Malbers.Integration.AITree
 
         /// <summary>Time Elapsed for the State Decisions</summary>
         [HideInInspector] public float[] DecisionsTime;// { get; set; }
-        BehaviourRunner behaviourRunner;
+
 
         #region Unity Callbakcs
         void Awake()
@@ -110,8 +109,9 @@ namespace Malbers.Integration.AITree
             {
                 Animal = gameObject.FindComponent<MAnimal>();
             }
-            behaviourRunner = GetComponent<BehaviourRunner>();
+
             AIControl ??= gameObject.FindInterface<IAIControl>();
+            //mAnimalAIControl ??= gameObject.FindInterface<MAnimalAIControl>();
 
             var AnimalStatscomponent = Animal.FindComponent<Stats>();
             if (AnimalStatscomponent)
@@ -173,15 +173,14 @@ namespace Malbers.Integration.AITree
             {
                 StopAllCoroutines();
                
-                behaviourRunner.SetEnable(false);
-                AIControl.ClearTarget();
-                
+                //schemaAgent.SetEnable(false);
+
                 enabled = false;
 
                 if (DisableAIOnDeath)
                 {
                     AIControl.SetActive(false);
-                    this.SetEnable(false);
+                    //this.SetEnable(false);
                 }
             }
         }

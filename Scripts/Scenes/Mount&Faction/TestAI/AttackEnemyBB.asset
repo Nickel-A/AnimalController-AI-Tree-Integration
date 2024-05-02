@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8374995035194348613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25e407b7ce80ad48afc03654956a1b0, type: 3}
+  m_Name: Self
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &-5100620207885714492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfcad34f5547eb4292ce0c46aef412c, type: 3}
+  m_Name: AttackStyle
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a71c596e8b0944b909bbf44cf66c50, type: 3}
+  m_Name: AttackEnemyBB
+  m_EditorClassIdentifier: 
+  keys:
+  - {fileID: -8374995035194348613}
+  - {fileID: 8366043217244705642}
+  - {fileID: -5100620207885714492}
+  parent: {fileID: 0}
+--- !u!114 &8366043217244705642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4342cf7e7aa28924ab39d3e45018358f, type: 3}
+  m_Name: unarmednd
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 0

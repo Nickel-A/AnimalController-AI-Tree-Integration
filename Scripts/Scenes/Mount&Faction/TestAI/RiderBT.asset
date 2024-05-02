@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8062043209464049774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaaac18fdb5301041ab281cd313fb0b0, type: 3}
+  m_Name: MSetBehaviourTree
+  m_EditorClassIdentifier: 
+  nodeName: Set Behaviour Tree
+  nodePosition: {x: 61.261353, y: 282.70264}
+  breakpoint: 0
+  arrangeable: 1
+  decorators:
+  - {fileID: -7221829727199749352}
+  services: []
+  ignoreAbortSelf: 0
+  key: {fileID: 8671669697639030442, guid: b59e780b68d20064aa588802be43538e, type: 2}
+  behaviourTree: {fileID: 11400000, guid: 89ff9443a97f8b943a43ff8f214ee444, type: 2}
+--- !u!114 &-7221829727199749352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a932cc550374ac84c97996dbf02242f4, type: 3}
+  m_Name: MLook
+  m_EditorClassIdentifier: 
+  nodeName: Look
+  nodePosition: {x: 0, y: 0}
+  breakpoint: 0
+  arrangeable: 1
+  child: {fileID: 0}
+  notifyObserver: 1
+  observerAbort: 0
+  LookMultiplier: 0.9
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 15
+    Variable: {fileID: 0}
+  LookAngle: 120
+  lookFor: 1
+  ObstacleLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  AssignTarget: 1
+  MoveToTarget: 0
+  RemoveTarget: 0
+  ChooseRandomly: 0
+  UnityTag: 
+  GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
+  gameObjectSet: {fileID: 0}
+  tags:
+  - {fileID: 11400000, guid: 9d80b30d48e415e4daefefb2e359ad3d, type: 2}
+  zoneType: 0
+  AllZones: 1
+  ZoneID: -1
+  ZoneModeAbility: -1
+  debugColor: {r: 0, g: 0, b: 0.7, a: 0.3}
+  assignToBB: 1
+  BBKeyName: EnemyInSight
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7a65a64ca895842abc0e2c774d054e, type: 3}
+  m_Name: RiderBT
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: 11400000, guid: b59e780b68d20064aa588802be43538e, type: 2}
+  updateMode: 2
+  tickRate: 30
+  rootNode: {fileID: 2420543103935136367}
+  nodes:
+  - {fileID: 2420543103935136367}
+  - {fileID: -7221829727199749352}
+  - {fileID: 5827333937857050176}
+  - {fileID: -8062043209464049774}
+  groups: []
+  notes: []
+  selectedNode: {fileID: 0}
+--- !u!114 &2420543103935136367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9bdc4129dd9f64c97141f9b4995906, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  nodeName: 
+  nodePosition: {x: 123.83335, y: 0}
+  breakpoint: 0
+  arrangeable: 1
+  child: {fileID: 5827333937857050176}
+--- !u!114 &5827333937857050176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20ecbd642284b504ca1789fb521bbe87, type: 3}
+  m_Name: SequencerNode
+  m_EditorClassIdentifier: 
+  nodeName: Sequencer
+  nodePosition: {x: 99.83333, y: 110.333336}
+  breakpoint: 0
+  arrangeable: 1
+  decorators: []
+  services: []
+  children:
+  - {fileID: -8062043209464049774}

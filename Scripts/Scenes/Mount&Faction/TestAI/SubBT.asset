@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7a65a64ca895842abc0e2c774d054e, type: 3}
+  m_Name: SubBT
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: 11400000, guid: 0da15558e752f59439334e56ed6c9680, type: 2}
+  updateMode: 0
+  tickRate: 30
+  rootNode: {fileID: 5541725392354675774}
+  nodes:
+  - {fileID: 5541725392354675774}
+  - {fileID: 4855609921789469381}
+  groups: []
+  notes: []
+  selectedNode: {fileID: 0}
+--- !u!114 &4855609921789469381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968f5dae537da714e8c4a0f04af03e01, type: 3}
+  m_Name: DebugLogTask
+  m_EditorClassIdentifier: 
+  nodeName: Debug Log
+  nodePosition: {x: 0, y: 109.666664}
+  breakpoint: 0
+  arrangeable: 1
+  decorators: []
+  services: []
+  ignoreAbortSelf: 0
+  logLevel: 0
+  message: {fileID: -7324071160914508978, guid: 0a94a4d95241fda4fa6771f15a936fde, type: 2}
+--- !u!114 &5541725392354675774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9bdc4129dd9f64c97141f9b4995906, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  nodeName: 
+  nodePosition: {x: 24, y: 0}
+  breakpoint: 0
+  arrangeable: 1
+  child: {fileID: 4855609921789469381}

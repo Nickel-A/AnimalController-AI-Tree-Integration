@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6381241104739395144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c717f2aa08147478edeef178e4461d, type: 3}
+  m_Name: TransformKey 1
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &-4134986747819372801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfcad34f5547eb4292ce0c46aef412c, type: 3}
+  m_Name: StringKey
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 
+--- !u!114 &-4094867768536222996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c717f2aa08147478edeef178e4461d, type: 3}
+  m_Name: LeaderAttackedBy
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &-536408697187790302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c717f2aa08147478edeef178e4461d, type: 3}
+  m_Name: Mount
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &-43672261569382680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfcad34f5547eb4292ce0c46aef412c, type: 3}
+  m_Name: AttackOrder
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 
+--- !u!114 &-4096065587837326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c717f2aa08147478edeef178e4461d, type: 3}
+  m_Name: Leader
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a71c596e8b0944b909bbf44cf66c50, type: 3}
+  m_Name: FollowLeaderBB
+  m_EditorClassIdentifier: 
+  keys:
+  - {fileID: -536408697187790302}
+  - {fileID: -4134986747819372801}
+  - {fileID: -4096065587837326}
+  - {fileID: 5363674428679034073}
+  - {fileID: -6381241104739395144}
+  - {fileID: -43672261569382680}
+  - {fileID: -4094867768536222996}
+  parent: {fileID: 0}
+--- !u!114 &5363674428679034073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25e407b7ce80ad48afc03654956a1b0, type: 3}
+  m_Name: Self
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}

@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9078645812346931003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfcad34f5547eb4292ce0c46aef412c, type: 3}
+  m_Name: StringKey2
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 
+--- !u!114 &-8741649948001356510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c717f2aa08147478edeef178e4461d, type: 3}
+  m_Name: WanderArea
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}
+--- !u!114 &-4753316354011237157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfcad34f5547eb4292ce0c46aef412c, type: 3}
+  m_Name: StringKey1
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a71c596e8b0944b909bbf44cf66c50, type: 3}
+  m_Name: EnemyBB
+  m_EditorClassIdentifier: 
+  keys:
+  - {fileID: 82921578343594457}
+  - {fileID: -4753316354011237157}
+  - {fileID: -9078645812346931003}
+  - {fileID: -8741649948001356510}
+  parent: {fileID: 0}
+--- !u!114 &82921578343594457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25e407b7ce80ad48afc03654956a1b0, type: 3}
+  m_Name: Self
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 0
+  value: {fileID: 0}

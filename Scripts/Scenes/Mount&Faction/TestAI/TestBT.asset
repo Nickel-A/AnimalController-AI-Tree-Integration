@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6205125310640673212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4342cf7e7aa28924ab39d3e45018358f, type: 3}
+  m_Name: min
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 1
+  value: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7a65a64ca895842abc0e2c774d054e, type: 3}
+  m_Name: TestBT
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: 11400000, guid: 0a94a4d95241fda4fa6771f15a936fde, type: 2}
+  updateMode: 0
+  tickRate: 30
+  rootNode: {fileID: 7375265356762705323}
+  nodes:
+  - {fileID: 7375265356762705323}
+  - {fileID: 7903081749782320215}
+  - {fileID: 4204960270948869805}
+  - {fileID: 750993958298683705}
+  groups: []
+  notes: []
+  selectedNode: {fileID: 0}
+--- !u!114 &750993958298683705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfa5172728b8b145b57e07583a812f2, type: 3}
+  m_Name: SubTree
+  m_EditorClassIdentifier: 
+  nodeName: Sub Tree
+  nodePosition: {x: 185, y: 231.33334}
+  breakpoint: 0
+  arrangeable: 1
+  decorators: []
+  services: []
+  ignoreAbortSelf: 0
+  sharedBehaviourTree: {fileID: 11400000, guid: 5a3bf2bc724f86f438de01019a3c0430, type: 2}
+--- !u!114 &4204960270948869805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b477a7c9bdbe5cf42a8180906594f194, type: 3}
+  m_Name: RandomIntTask
+  m_EditorClassIdentifier: 
+  nodeName: Random Int
+  nodePosition: {x: 0, y: 231.33334}
+  breakpoint: 0
+  arrangeable: 1
+  decorators: []
+  services: []
+  ignoreAbortSelf: 0
+  min: {fileID: -6205125310640673212}
+  max: {fileID: 6591160517250768099}
+  storeResult: {fileID: -7324071160914508978, guid: 0a94a4d95241fda4fa6771f15a936fde, type: 2}
+--- !u!114 &6591160517250768099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4342cf7e7aa28924ab39d3e45018358f, type: 3}
+  m_Name: max
+  m_EditorClassIdentifier: 
+  category: 
+  description: 
+  sync: 0
+  isLocal: 1
+  value: 5
+--- !u!114 &7375265356762705323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9bdc4129dd9f64c97141f9b4995906, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  nodeName: 
+  nodePosition: {x: 109.833336, y: 0}
+  breakpoint: 0
+  arrangeable: 1
+  child: {fileID: 7903081749782320215}
+--- !u!114 &7903081749782320215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20ecbd642284b504ca1789fb521bbe87, type: 3}
+  m_Name: SequencerNode
+  m_EditorClassIdentifier: 
+  nodeName: Sequencer
+  nodePosition: {x: 85.833336, y: 110.333336}
+  breakpoint: 0
+  arrangeable: 1
+  decorators: []
+  services: []
+  children:
+  - {fileID: 4204960270948869805}
+  - {fileID: 750993958298683705}
