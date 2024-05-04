@@ -8,7 +8,7 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Move Stop", "Animal Controller/Move Stop", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Move Stop", "Animal Controller/ACMovement/Move Stop", IconPath = "Icons/AnimalAI_Icon.png")]
 
     public class MMoveStopNode : TaskNode
     {
@@ -50,8 +50,8 @@ namespace Malbers.Integration.AITree
 
         [Tooltip("The AI will stop if it arrives to the current target")]
         public bool StopOnArrive = true;
-
-       Transform currentTarget;
+        float defaultStopdistance;
+        Transform currentTarget;
         AIBrain aiBrain;
         bool arrived;
         bool failed;
@@ -59,13 +59,12 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
+            aiBrain = GetOwner().GetComponent<AIBrain>();            
         }
 
         protected override void OnEntry()
         {
-            
+            defaultStopdistance = aiBrain.AIControl.StoppingDistance;
             aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;      //IMPORTANT or the animal will try to Move if the Target moves
 
             switch (task)
@@ -183,6 +182,7 @@ namespace Malbers.Integration.AITree
             }
             failed = false;
             arrived = false;
+            aiBrain.AIControl.StoppingDistance = defaultStopdistance;
         }
 
         private void StopOnArrived()

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Target", "Animal Controller/Set Target", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Target", "Animal Controller/ACMovement/Set Target", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetTargetNode : TaskNode
     {
         public enum TargetToFollow { Transform, GameObject, RuntimeGameObjects, ClearTarget, Name, BBKey }

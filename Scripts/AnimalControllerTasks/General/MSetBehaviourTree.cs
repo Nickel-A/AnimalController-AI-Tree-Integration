@@ -4,7 +4,7 @@ using UnityEngine;
 using RenownedGames.Apex;
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Behaviour Tree", "Animal Controller/Set Behaviour Tree", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Behaviour Tree", "Animal Controller/General/Set Behaviour Tree", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetBehaviourTree : TaskNode
     {
         [Header("Node")]

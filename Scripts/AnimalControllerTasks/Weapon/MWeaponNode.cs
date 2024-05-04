@@ -7,7 +7,7 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Weapon", "Animal Controller/Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Weapon", "Animal Controller/Weapon/Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MWeaponNode : TaskNode
     {
         public enum BrainWeaponActions { Draw_Holster, Store_Weapon, Equip_Weapon, Unequip_Weapon, Aim, Attack, Reload }
@@ -39,7 +39,6 @@ namespace Malbers.Integration.AITree
         bool taskDone;
         AIBrain aiBrain;
         MWeaponManager WeaponManager;
-        ComboManager comboManager;
 
         [Hide("Actions", (int)BrainWeaponActions.Attack)]
         [Tooltip("Set to true to use the combo manager for attacks.")]
@@ -56,11 +55,6 @@ namespace Malbers.Integration.AITree
             aiBrain = GetOwner().GetComponent<AIBrain>();
 
             WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
-            comboManager = aiBrain.GetComponentInParent<ComboManager>();
-            
-
-            
-
         }
 
         protected override void OnEntry()
@@ -180,8 +174,8 @@ namespace Malbers.Integration.AITree
                             {
                                 if (useComboManager)
                                 {
-                                    comboManager.Play(branchNumber);
-                                    if (attackOnce && !comboManager.PlayingCombo)
+                                    aiBrain.comboManager.Play(branchNumber);
+                                    if (attackOnce && !aiBrain.comboManager.PlayingCombo)
                                     {
                                         taskDone = true;
                                     }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Reaction", "Animal Controller/Reaction", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Reaction", "Animal Controller/General/Reaction", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MReactionNode : TaskNode
     {
         [Header("Node")]

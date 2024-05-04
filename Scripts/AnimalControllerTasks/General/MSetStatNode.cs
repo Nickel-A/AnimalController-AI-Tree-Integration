@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Stat", "Animal Controller/Set Stat", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Stat", "Animal Controller/General/Set Stat", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetStatNode : TaskNode
     {
         [Header("Node")]

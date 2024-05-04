@@ -8,7 +8,7 @@ using State = RenownedGames.AITree.State;
 namespace Malbers.Integration.AITree
 {
 
-    [NodeContent("Play State", "Animal Controller/Play State", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Play State", "Animal Controller/Animal/Play State", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MPlayStateNode : TaskNode
     {
         [Header("Node")]

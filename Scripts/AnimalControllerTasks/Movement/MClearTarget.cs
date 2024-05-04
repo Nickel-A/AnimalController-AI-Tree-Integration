@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
 
-    [NodeContent("Clear Target", "Animal Controller/Clear Target", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Clear Target", "Animal Controller/ACMovement/Clear Target", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MClearTarget : TaskNode
     {
         // public GameObject target;

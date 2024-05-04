@@ -6,7 +6,7 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Look At", "Animal Controller/Look At", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Look At", "Animal Controller/General/Look At", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MLookAtNode : TaskNode
     {
 

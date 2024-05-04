@@ -1,13 +1,11 @@
 using MalbersAnimations;
 using MalbersAnimations.Controller;
-using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
@@ -39,7 +37,6 @@ namespace Malbers.Integration.AITree
         public LookFor lookFor = LookFor.MainAnimalPlayer;
         [Tooltip("Layers that can block the Animal Eyes")]
         public LayerReference ObstacleLayer = new LayerReference(1);
-
 
         [Space(20), Tooltip("If the what we are looking for is found then Assign it as a new Target")]
         public bool AssignTarget = true;
@@ -83,15 +80,16 @@ namespace Malbers.Integration.AITree
         [Tooltip("Mode Zone Index")]
         [Min(-1)] public int ZoneModeAbility = -1;
 
-        public Color debugColor = new Color(0, 0, 0.7f, 0.3f); AIBrain brain;
+        public Color debugColor = new Color(0, 0, 0.7f, 0.3f); 
+        AIBrain brain;
         private float interval;
-        Decision[] DecisionsVars;
+        GameObjectCollection[] gameObjectCollection;
         int index = 0;
         private bool result;
         public override event Action OnValueChange;
 
         private Faction faction;
- 
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
@@ -114,7 +112,10 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
-            if (result) Look_For(brain, AssignTarget, index); //This will assign the Target in case its true
+            if (result)
+            {
+                Look_For(brain, AssignTarget, index); //This will assign the Target in case its true
+            }
         }
 
 
@@ -122,7 +123,7 @@ namespace Malbers.Integration.AITree
         protected override void OnEntry()
         {
             // Ensure the index is within the bounds of the DecisionsVars array
-            if (DecisionsVars != null && index >= 0 && index < DecisionsVars.Length)
+            if (gameObjectCollection != null && index >= 0 && index < gameObjectCollection.Length)
             {
                 // Use the index for accessing the DecisionsVars array
                 switch (lookFor)
@@ -146,7 +147,7 @@ namespace Malbers.Integration.AITree
 
                         if (gtags.Count > 0)
                         {
-                            DecisionsVars[index].gameobjects = gtags.ToArray();
+                            gameObjectCollection[index].gameobjects = gtags.ToArray();
                         }
 
                         break;
@@ -156,7 +157,7 @@ namespace Malbers.Integration.AITree
                             return;
                         }
 
-                        DecisionsVars[index].gameobjects = GameObject.FindGameObjectsWithTag(UnityTag);
+                        gameObjectCollection[index].gameobjects = GameObject.FindGameObjectsWithTag(UnityTag);
                         break;
                     case LookFor.RuntimeGameobjectSet:
                         if (gameObjectSet == null || gameObjectSet.Count == 0)
@@ -164,27 +165,27 @@ namespace Malbers.Integration.AITree
                             return;
                         }
 
-                        DecisionsVars[index].gameobjects = gameObjectSet.Items.ToArray();
+                        gameObjectCollection[index].gameobjects = gameObjectSet.Items.ToArray();
                         break;
                     default:
                         break;
                 }
 
-                StoreColliders(brain, index); // Pass the index to the method
+                StoreColliders(index); // Pass the index to the method
             }
         }
 
 
         /// <summary> Store all renderers found on the GameObjects  </summary>
-        private void StoreColliders(AIBrain brain, int index)
+        private void StoreColliders(int index)
         {
-            if (DecisionsVars[index].gameobjects != null && DecisionsVars[index].gameobjects.Length > 0)
+            if (gameObjectCollection[index].gameobjects != null && gameObjectCollection[index].gameobjects.Length > 0)
             {
                 var colliders = new List<Collider>();
 
-                for (int i = 0; i < DecisionsVars[index].gameobjects.Length; i++)
+                for (int i = 0; i < gameObjectCollection[index].gameobjects.Length; i++)
                 {
-                    var AllColliders = DecisionsVars[index].gameobjects[i].GetComponentsInChildren<Collider>();
+                    var AllColliders = gameObjectCollection[index].gameobjects[i].GetComponentsInChildren<Collider>();
 
                     foreach (var c in AllColliders)
                     {
@@ -194,7 +195,7 @@ namespace Malbers.Integration.AITree
                         }
                     }
                 }
-                DecisionsVars[index].AddComponents(colliders.ToArray());
+                gameObjectCollection[index].AddComponents(colliders.ToArray());
             }
         }
 
@@ -204,7 +205,10 @@ namespace Malbers.Integration.AITree
         private bool Look_For(AIBrain brain, bool assign, int index)
         {
             if (brain == null)
+            {
                 return false;
+            }
+
             return lookFor switch
             {
                 LookFor.MainAnimalPlayer => LookForAnimalPlayer(brain, assign),
@@ -220,54 +224,6 @@ namespace Malbers.Integration.AITree
                 _ => false,
             };
         }
-
-        public bool LookForTarget(AIBrain brain, bool assign)
-        {
-
-            if (brain.Target == null)
-            {
-                return false;
-            }
-
-            AssignMoveTarget(brain, brain.Target, assign);
-            var Center = brain.TargetAnimal ? brain.TargetAnimal.Center : brain.Target.position;
-            return IsInFieldOfView(brain, Center, out _);
-        }
-
-        public bool LookForTransformVar(AIBrain brain, bool assign)
-        { 
-            if (transform == null || transform.Value == null)
-            {
-                return false;
-            }
-
-            AssignMoveTarget(brain, transform.Value, assign);
-
-            var Center =
-                transform.Value == brain.Target && brain.AIControl.IsAITarget != null ?
-                brain.AIControl.IsAITarget.GetCenterY() :
-                transform.Value.position;
-
-            return IsInFieldOfView(brain, Center, out _);
-        }
-
-        public bool LookForGoVar(AIBrain brain, bool assign)
-        {
-            if (gameObject == null && gameObject.Value && !gameObject.Value.IsPrefab())
-            {
-                return false;
-            }
-
-            AssignMoveTarget(brain, gameObject.Value.transform, assign);
-
-            var Center =
-                gameObject.Value.transform == brain.Target && brain.AIControl.IsAITarget != null ?
-                brain.AIControl.IsAITarget.GetCenterY() :
-                gameObject.Value.transform.position;
-
-            return IsInFieldOfView(brain, Center, out _);
-        }
-
         private bool IsInFieldOfView(AIBrain brain, Vector3 Center, out float Distance)
         {
             var Direction_to_Target = Center - brain.Eyes.position; //Put the Sight a bit higher
@@ -317,12 +273,11 @@ namespace Malbers.Integration.AITree
             //  Debug.Log($"False (NOT IN Distanc{Distance} > RANGE) {LookRange.Value}" );
             return false;
         }
-
         private void AssignMoveTarget(AIBrain brain, Transform target, bool assign)
         {
             if (assign && AssignTarget)
             {
-                    brain.AIControl.SetTarget(target, MoveToTarget);
+                brain.AIControl.SetTarget(target, MoveToTarget);
 
             }
             /*
@@ -335,6 +290,53 @@ namespace Malbers.Integration.AITree
                 }
             }
             */
+        }
+
+        public bool LookForTarget(AIBrain brain, bool assign)
+        {
+
+            if (brain.Target == null)
+            {
+                return false;
+            }
+
+            AssignMoveTarget(brain, brain.Target, assign);
+            var Center = brain.TargetAnimal ? brain.TargetAnimal.Center : brain.Target.position;
+            return IsInFieldOfView(brain, Center, out _);
+        }
+
+        public bool LookForTransformVar(AIBrain brain, bool assign)
+        {
+            if (transform == null || transform.Value == null)
+            {
+                return false;
+            }
+
+            AssignMoveTarget(brain, transform.Value, assign);
+
+            var Center =
+                transform.Value == brain.Target && brain.AIControl.IsAITarget != null ?
+                brain.AIControl.IsAITarget.GetCenterY() :
+                transform.Value.position;
+
+            return IsInFieldOfView(brain, Center, out _);
+        }
+
+        public bool LookForGoVar(AIBrain brain, bool assign)
+        {
+            if (gameObject == null && gameObject.Value && !gameObject.Value.IsPrefab())
+            {
+                return false;
+            }
+
+            AssignMoveTarget(brain, gameObject.Value.transform, assign);
+
+            var Center =
+                gameObject.Value.transform == brain.Target && brain.AIControl.IsAITarget != null ?
+                brain.AIControl.IsAITarget.GetCenterY() :
+                gameObject.Value.transform.position;
+
+            return IsInFieldOfView(brain, Center, out _);
         }
 
         public bool LookForZones(AIBrain brain, bool assign)
@@ -467,14 +469,11 @@ namespace Malbers.Integration.AITree
             return ClosestGameObject(brain, assign, index);
         }
 
-
-
         private bool ClosestGameObject(AIBrain brain, bool assign, int index)
         {
-            // Überprüfen, ob DecisionsVars nicht null ist und ob das Array an der index-Position initialisiert wurde
-            if (DecisionsVars != null && index >= 0 && index < DecisionsVars.Length && DecisionsVars[index] != null)
+            if (gameObjectCollection != null && index >= 0 && index < gameObjectCollection.Length && gameObjectCollection[index] != null)
             {
-                var All = DecisionsVars[index].gameobjects; //catch all the saved gameobjects
+                var All = gameObjectCollection[index].gameobjects; //catch all the saved gameobjects
 
                 if (All == null || All.Length == 0)
                 {
@@ -522,13 +521,12 @@ namespace Malbers.Integration.AITree
             return false;
         }
 
-
         public bool ChooseRandomObject(AIBrain brain, bool assign, int index)
         {
             var All = new List<GameObject>();
-            if (DecisionsVars[index] != null && DecisionsVars[index].gameobjects != null)
+            if (gameObjectCollection[index] != null && gameObjectCollection[index].gameobjects != null)
             {
-                All.AddRange(DecisionsVars[index].gameobjects); //catch all the saved gameobjects with a tag
+                All.AddRange(gameObjectCollection[index].gameobjects); //catch all the saved gameobjects with a tag
             }
 
             if (All.Count == 0)
@@ -543,9 +541,9 @@ namespace Malbers.Integration.AITree
                 {
                     var Center = All[newIndex].transform.position + new Vector3(0, brain.Animal.Height, 0);
 
-                    if (DecisionsVars[index] != null && DecisionsVars[index].Components != null && newIndex < DecisionsVars[index].Components.Length)
+                    if (gameObjectCollection[index] != null && gameObjectCollection[index].Components != null && newIndex < gameObjectCollection[index].Components.Length)
                     {
-                        var renderer = DecisionsVars[index].Components[newIndex];
+                        var renderer = gameObjectCollection[index].Components[newIndex];
 
                         if (renderer != null && renderer is Renderer)
                         {
@@ -564,8 +562,6 @@ namespace Malbers.Integration.AITree
 
             return false;
         }
-
-
 
         public bool LookForGameObjectByName(AIBrain brain, bool assign)
         {
@@ -630,7 +626,6 @@ namespace Malbers.Integration.AITree
             return IsInFieldOfView(brain, MAnimal.MainAnimal.Center, out _);
         }
 
-
         public override string GetDescription()
         {
             string description = base.GetDescription() + "\n";
@@ -650,11 +645,17 @@ namespace Malbers.Integration.AITree
                             {
                                 description += $"{tags[i].DisplayName}";
                             }
-                            if (i != tags.Length - 1) description += ", ";
+                            if (i != tags.Length - 1)
+                            {
+                                description += ", ";
+                            }
                         }
                     }
                     if (ChooseRandomly)
+                    {
                         description += $"\nChoose Randomly: {ChooseRandomly} \n";
+                    }
+
                     break;
                 case LookFor.UnityTag:
                     description += "Look For Unity Tag:\n";
@@ -663,7 +664,10 @@ namespace Malbers.Integration.AITree
                         description += UnityTag;
                     }
                     if (ChooseRandomly)
+                    {
                         description += $"\nChoose Randomly: {ChooseRandomly} \n";
+                    }
+
                     break;
                 case LookFor.Zones:
                     description += "Look for";
@@ -692,7 +696,7 @@ namespace Malbers.Integration.AITree
                     { description += " all Zones"; }
                     break;
                 case LookFor.GameObject:
-                    description += "Look For GameObject: \n"; 
+                    description += "Look For GameObject: \n";
                     if (!string.IsNullOrEmpty(GameObjectName))
                     {
                         description += GameObjectName;
@@ -705,43 +709,63 @@ namespace Malbers.Integration.AITree
                     description += "Look For Current Target";
                     break;
                 case LookFor.TransformVar:
-                    description += "Look For Transform Var"; 
+                    description += "Look For Transform Var";
                     if (transform != null)
                     {
                         description += $"\n{transform.name}";
 
                     }
-                    else description += "\nnull";
+                    else
+                    {
+                        description += "\nnull";
+                    }
+
                     break;
                 case LookFor.GameObjectVar:
-                    description += "Look For GameObject Var"; 
+                    description += "Look For GameObject Var";
                     if (gameObject != null)
                     {
                         description += $"\n{gameObject.name}";
 
                     }
-                    else description += "\nnull";
+                    else
+                    {
+                        description += "\nnull";
+                    }
 
                     break;
                 case LookFor.RuntimeGameobjectSet:
-                    description += "Look For Runtime Gameobject Set"; 
+                    description += "Look For Runtime Gameobject Set";
                     if (gameObjectSet != null)
                     {
                         description += $"\n{gameObjectSet.name}";
 
                     }
-                    else description += "\nnull";
+                    else
+                    {
+                        description += "\nnull";
+                    }
+
                     if (ChooseRandomly)
+                    {
                         description += $"\nChoose Randomly: {ChooseRandomly} \n";
+                    }
+
                     break;
             }
             description += "\n";
-            
+
             if (AssignTarget)
+            {
                 description += $"Assign Target: {AssignTarget} \n";
+            }
+
             if (MoveToTarget)
+            {
                 description += $"Move To Target: {MoveToTarget} \n";
-            return description;            
+            }
+
+            return description;
         }
 
 
@@ -768,17 +792,7 @@ namespace Malbers.Integration.AITree
         }
 #endif
     }
-    [System.Serializable]
-    public class Decision
-    {
-        public GameObject[] gameobjects;
-        public Component[] Components;
 
-        public void AddComponents(Component[] components)
-        {
-            Components = components;
-        }
-    }
 
 
 
@@ -793,9 +807,9 @@ namespace Malbers.Integration.AITree
         public static GUIStyle StyleBlue => MTools.Style(new Color(0, 0.5f, 1f, 0.3f));
 
         SerializedProperty
-            observerAbort,notifyObserver, nodeName, UnityTag, debugColor, zoneType, 
-            ZoneID, tags, LookRange, LookAngle, lookFor, transform, gameobject, 
-            gameObjectSet, AllZones, LookMultiplier, ObstacleLayer, MoveToTarget, 
+            observerAbort, notifyObserver, nodeName, UnityTag, debugColor, zoneType,
+            ZoneID, tags, LookRange, LookAngle, lookFor, transform, gameobject,
+            gameObjectSet, AllZones, LookMultiplier, ObstacleLayer, MoveToTarget,
             AssignTarget, GameObjectName, ZoneModeIndex, ChooseRandomly;
 
         //MonoScript script;
@@ -919,7 +933,7 @@ namespace Malbers.Integration.AITree
 
                 EditorGUILayout.PropertyField(AssignTarget);
                 EditorGUILayout.PropertyField(MoveToTarget);
-                
+
 
 
             }

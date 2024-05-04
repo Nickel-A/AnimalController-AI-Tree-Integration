@@ -8,7 +8,7 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Strafe", "Animal Controller/Set Strafe", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Strafe", "Animal Controller/Animal/Set Strafe", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetStrafeNode : TaskNode
     {
         [Header("Node")]

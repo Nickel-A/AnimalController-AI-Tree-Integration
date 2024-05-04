@@ -1127,13 +1127,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointType: 0
-  stoppingDistance: 0.76
+  stoppingDistance: 1
   slowingDistance: 0
   m_arriveLookAt: 0
   m_height: 1
   m_WaitTime:
-    minValue: 3.39
-    maxValue: 14.19
+    minValue: 1
+    maxValue: 5
   DebugColor: {r: 1, g: 0, b: 0, a: 1}
   nextWayPoints:
   - {fileID: 1908228398}
@@ -1916,7 +1916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5170218139084480737, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.78
+      value: 12.19
       objectReference: {fileID: 0}
     - target: {fileID: 5170218139084480737, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1924,7 +1924,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5170218139084480737, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.99
+      value: 10.69
       objectReference: {fileID: 0}
     - target: {fileID: 5170218139084480737, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1972,11 +1972,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5175850389906281883, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_Layer
-      value: 19
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5175850389906281883, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175850389906281883, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7816013577386788060, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       propertyPath: SelectedState
@@ -1989,6 +1993,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5175850389906281883, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 857873727}
+    - targetCorrespondingSourceObject: {fileID: 5175850389906281883, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 857873741}
   m_SourcePrefab: {fileID: 100100000, guid: 9133169553a02d0418a8c61561fcc4bb, type: 3}
 --- !u!1 &857873726 stripped
 GameObject:
@@ -2008,6 +2015,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   observable: 1
+--- !u!114 &857873741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857873726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20201266b5fdc6c4ca0fa6ce10d048c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tags:
+  - {fileID: 11400000, guid: f45a3d7e9fbf2074496de5b9b0ab09b0, type: 2}
 --- !u!1 &976152218
 GameObject:
   m_ObjectHideFlags: 0
@@ -4130,6 +4151,17 @@ MonoBehaviour:
   OnTargetArrived:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1995784292 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3570505368379396005, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+  m_PrefabInstance: {fileID: 2131248233}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408f0460a69d76f4b89139b3979c69f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2078945598
 GameObject:
   m_ObjectHideFlags: 0
@@ -4248,7 +4280,27 @@ PrefabInstance:
     - target: {fileID: 679100341070556532, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: sharedBehaviourTree
       value: 
-      objectReference: {fileID: 11400000, guid: 2cea98f42c4a4cc488e76f08ca2b26ee, type: 2}
+      objectReference: {fileID: 11400000, guid: d08798a57fac7a64a8bc5f6da9e9a534, type: 2}
+    - target: {fileID: 2737651058654510115, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: comboManager
+      value: 
+      objectReference: {fileID: 1995784292}
+    - target: {fileID: 3570505368379396005, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: selectedComboEditor
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3631936701721187028, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: EditorTab1
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3631936701721187028, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: m_UseCamera.ConstantValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3956036368878283904, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3956036368878283904, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: nextTarget
       value: 
@@ -4257,16 +4309,44 @@ PrefabInstance:
       propertyPath: Editor_Tabs1
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: UseExternal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: UseHolsters
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: Editor_Tabs1
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: Editor_Tabs2
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: startWeapon.ConstantValue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370477796896694541, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: holsters.Array.data[0].Weapon
+      value: 
+      objectReference: {fileID: 302472354151661360, guid: bcff32db73dac7344b4cac585b0ef97f, type: 3}
     - target: {fileID: 4496508905528780266, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: Editor_Tabs1
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4496508905528780266, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: SelectedMode
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4496508905528780266, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: showModeList
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535244236188891518, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6633698625775441596, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
@@ -4275,7 +4355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8282268134616954967, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.88
+      value: -8.02
       objectReference: {fileID: 0}
     - target: {fileID: 8282268134616954967, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4283,7 +4363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8282268134616954967, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.04
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: 8282268134616954967, guid: 205865fcc9ce27e4392977bbe3acd322, type: 3}
       propertyPath: m_LocalRotation.w

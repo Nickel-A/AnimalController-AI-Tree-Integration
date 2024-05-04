@@ -7,7 +7,7 @@ using MalbersAnimations.HAP;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Change Speed", "Animal Controller/Change Speed", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Change Speed", "Animal Controller/ACMovement/Change Speed", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MChangeSpeedNode : TaskNode
     {
         [Header("Node")]

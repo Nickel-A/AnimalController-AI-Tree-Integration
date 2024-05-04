@@ -10,7 +10,7 @@ namespace Malbers.Integration.AITree
     public enum DestinationType { Transform, GameObject, RuntimeGameObjects, Vector3, Name }
 
 
-    [NodeContent("Set Destination", "Animal Controller/Set Destination", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Destination", "Animal Controller/ACMovement/Set Destination", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetDestinationNode : TaskNode
     {
 

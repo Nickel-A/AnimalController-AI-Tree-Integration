@@ -26,6 +26,8 @@ namespace Malbers.Integration.AITree
         //public BehaviorBrain TemporalBrain;
         //public BehaviorBrain Brain => TemporalBrain != null ? TemporalBrain : this;
 
+
+        public ComboManager comboManager;
         /// <summary>Transform used to raycast Rays to interact with the world</summary>
         [RequiredField, Tooltip("Transform used to raycast Rays to interact with the world")]
         public Transform Eyes;
@@ -57,6 +59,7 @@ namespace Malbers.Integration.AITree
         //internal bool[] TasksStarted;
 
         /// <summary>Decision Local Vars to store values on Prepare Decision</summary>
+
         
 
         /// <summary>Reference for the Animal</summary>
@@ -110,6 +113,8 @@ namespace Malbers.Integration.AITree
                 Animal = gameObject.FindComponent<MAnimal>();
             }
 
+            
+
             AIControl ??= gameObject.FindInterface<IAIControl>();
             //mAnimalAIControl ??= gameObject.FindInterface<MAnimalAIControl>();
 
@@ -121,6 +126,11 @@ namespace Malbers.Integration.AITree
 
             Animal.isPlayer.Value = false; //If is using a brain... disable that he is the main player
                                            // ResetVarsOnNewState();
+        }
+
+        private void Start()
+        {
+            AIControl.UpdateDestinationPosition = false; //Otherwise the AI will go to the current target
         }
 
         public void OnEnable()

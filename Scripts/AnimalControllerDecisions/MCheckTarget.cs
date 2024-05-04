@@ -1,6 +1,7 @@
 using MalbersAnimations;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
+using RenownedGames.Apex;
 using System;
 using UnityEngine;
 
@@ -15,15 +16,15 @@ namespace Malbers.Integration.AITree
         [Header("Node")]
         public CompareTarget compare = CompareTarget.IsNull;
 
-        [Hide("compare", 2)]
+        [ShowIf("compare", CompareTarget.IsInRuntimeSet)]
         public RuntimeGameObjects set;
-        [Hide("compare", 1)]
+        [ShowIf("compare", CompareTarget.isTransformVar)]
         public TransformVar transform;
-        [Hide("compare", 3)]
+        [ShowIf("compare", CompareTarget.HasName)]
         public string m_name;
-        [Hide("compare", 5)]
+        [ShowIf("compare", CompareTarget.BlackBoard)]
         public TransformKey blackBoard;
-        [Hide("compare", 6)]
+        [ShowIf("compare", CompareTarget.MalbersTags)]
         public Tag[] tags;
 
         bool targetMatched;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Invoke Event", "Animal Controller/Invoke Event", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Invoke Event", "Animal Controller/General/Invoke Event", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MInvokeEventNode : TaskNode
     {
         [Header("Node")]

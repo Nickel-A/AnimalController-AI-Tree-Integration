@@ -7,7 +7,7 @@ using MalbersAnimations.HAP;
 namespace Malbers.Integration.AITree
 {
 
-    [NodeContent("Check Faction Data", "Animal Controller/Check Faction Data", IconPath = "Icons/AIDecision_Icon.png")]
+    [NodeContent("Check Faction Data", "Animal Controller/Faction/Check Faction Data", IconPath = "Icons/AIDecision_Icon.png")]
     public class MCheckFactionData : ConditionDecorator
     {
         private Faction faction;

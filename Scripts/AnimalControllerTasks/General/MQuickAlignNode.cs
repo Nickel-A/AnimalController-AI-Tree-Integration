@@ -10,7 +10,7 @@ namespace Malbers.Integration.AITree
     public enum AlignTo { TransformHook, GameObjectHook, CurrentTarget }
 
 
-    [NodeContent("Quick Align", "Animal Controller/Quick Align", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Quick Align", "Animal Controller/General/Quick Align", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MQuickAlignNode : TaskNode
     {
         [Header("Node")]

@@ -10,7 +10,7 @@ namespace Malbers.Integration.AITree
 {
     public enum PlayWhen { PlayOnce, PlayForever, Interrupt }
 
-    [NodeContent("Play Mode", "Animal Controller/Play Mode", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Play Mode", "Animal Controller/Animal/Play Mode", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MPlayModeNode : TaskNode
     {
 

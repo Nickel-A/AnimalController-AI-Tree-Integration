@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Target From BB", "Animal Controller/Set Target From BB", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Target From BB", "Animal Controller/ACMovement/Set Target From BB", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetTargetFromBB : TaskNode
     {
 

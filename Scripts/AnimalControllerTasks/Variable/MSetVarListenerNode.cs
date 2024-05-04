@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set Var Listener", "Animal Controller/Set Var Listener", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set Var Listener", "Animal Controller/Variable/Set Var Listener", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetVarListenerNode : TaskNode
     {
 
@@ -14,12 +14,6 @@ namespace Malbers.Integration.AITree
             Bool,
             Int,
             Float
-        }
-
-        public enum BoolType
-        {
-            True,
-            False
         }
 
         [Header("Node")]
@@ -148,14 +142,5 @@ namespace Malbers.Integration.AITree
             }
             return description;
         }
-
-        //public enum VarType
-        //{
-        //    Bool,
-        //    Int,
-        //    Float
-        //}
-
-
     }
 }

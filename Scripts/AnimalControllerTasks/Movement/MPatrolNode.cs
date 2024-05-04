@@ -9,7 +9,7 @@ namespace Malbers.Integration.AITree
 {
 
 
-    [NodeContent("Patrol", "Animal Controller/Patrol", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Patrol", "Animal Controller/ACMovement/Patrol", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MPatrolNode : TaskNode
     {
         [Tooltip("The Animal will Rotate/Look at the Target when he arrives to it")]

@@ -7,7 +7,7 @@ using MalbersAnimations.HAP;
 namespace Malbers.Integration.AITree
 {
 
-    [NodeContent("Find Leader", "Animal Controller/FindLeader", IconPath = "Icons/AIDecision_Icon.png")]
+    [NodeContent("Find Leader", "Animal Controller/Faction/FindLeader", IconPath = "Icons/AIDecision_Icon.png")]
     public class MFindLeader : TaskNode
     {
         private Faction faction;

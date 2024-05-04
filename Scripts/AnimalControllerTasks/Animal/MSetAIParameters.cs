@@ -9,7 +9,7 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Set AI Parameters", "Animal Controller/Set AI Parameters", IconPath = "Icons/AnimalAI_Icon.png")]
+    [NodeContent("Set AI Parameters", "Animal Controller/Animal/Set AI Parameters", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetAIParameters : TaskNode
     {
         [Header("Node")]

@@ -8,7 +8,7 @@ using MalbersAnimations.HAP;
 namespace Malbers.Integration.AITree
 {
 
-    [NodeContent("FollowLeader", "Animal Controller/Follow Leader", IconPath = "Icons/AIDecision_Icon.png")]
+    [NodeContent("FollowLeader", "Animal Controller/Faction/Follow Leader", IconPath = "Icons/AIDecision_Icon.png")]
     public class MFollowLeader : TaskNode
     {
 
