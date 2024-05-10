@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Draw Holster", "Animal Controller/Weapon/Draw Holster", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MDrawHolster : TaskNode
+    public class MDrawHolster : MTaskNode
     {
         [Header("Node")]
         [Tooltip("The holster ID to use for drawing or holstering the weapon.")]
@@ -15,9 +15,6 @@ namespace Malbers.Integration.AITree
         public bool IgnoreDrawStore = false;
         [Tooltip("Play the mode only when the animal has arrived at the target.")]
         public bool near = false;
-        bool taskDone;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -25,8 +22,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -35,26 +30,25 @@ namespace Malbers.Integration.AITree
         protected override void OnEntry()
         {
             base.OnEntry();
-            taskDone = false;
 
-            if (WeaponManager)
+            if (AIBrain.weaponManager)
             {
-                if (near && !aiBrain.AIControl.HasArrived)
+                if (near && !AIBrain.AIControl.HasArrived)
                 {
                     return; // Don't play if 'Play on target' is true but we are not near the target.
                 }
 
-                WeaponManager.DrawWeapon = true;
-                //if (WeaponManager.Weapon && WeaponManager.Weapon.HolsterID == HolsterID)
+                //AIBrain.weaponManager.DrawWeapon = true;
+                //if (AIBrain.weaponManager.Weapon && AIBrain.weaponManager.Weapon.HolsterID == HolsterID)
                 //{
                 //    // If already equiped
                 //    taskDone = true;
                 //}
                 //else
                 //{
-                //    WeaponManager.UnEquip_Fast();
-                //    WeaponManager.IgnoreDraw = IgnoreDrawStore;
-                //    WeaponManager.Holster_Equip(HolsterID);
+                //    AIBrain.weaponManager.UnEquip_Fast();
+                //    AIBrain.weaponManager.IgnoreDraw = IgnoreDrawStore;
+                //    AIBrain.weaponManager.Holster_Equip(HolsterID);
                 //    taskDone = true;
                 //}
             }
@@ -66,20 +60,19 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            if (WeaponManager.DrawWeapon && WeaponManager.WeaponAction == Weapon_Action.None)
+            if (AIBrain.weaponManager.Weapon && AIBrain.weaponManager.ActiveHolster == HolsterID)
             {
-                WeaponManager.UnEquip_Fast();
-                WeaponManager.IgnoreDraw = IgnoreDrawStore;
-                WeaponManager.Holster_Equip(HolsterID);
+                return State.Success;
+            }
+            else if (AIBrain.weaponManager.WeaponAction == Weapon_Action.None || AIBrain.weaponManager.WeaponAction == Weapon_Action.Idle || AIBrain.weaponManager.WeaponAction == Weapon_Action.Aim)
+            {
+                AIBrain.weaponManager.UnEquip_Fast();
+                AIBrain.weaponManager.IgnoreDraw = IgnoreDrawStore;
+                AIBrain.weaponManager.Holster_Equip(HolsterID);
+                return State.Success;
             }
 
-            if (WeaponManager.ActiveHolster == HolsterID && WeaponManager.WeaponAction == Weapon_Action.Idle)
-            {
-                // If already equiped
-                taskDone = true;
-            }
-
-            return taskDone ? State.Success : State.Running;
+            return State.Running;
 
 
         }
@@ -90,8 +83,7 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
-            WeaponManager.DrawWeapon = false;
-            taskDone = false;
+            AIBrain.weaponManager.DrawWeapon = false;
         }
     }
 }

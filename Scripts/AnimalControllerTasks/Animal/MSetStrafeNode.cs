@@ -1,15 +1,14 @@
-﻿using MalbersAnimations;
-using MalbersAnimations.Controller;
+﻿using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
-using Unity.VisualScripting;
+using RenownedGames.Apex;
 using UnityEngine;
 using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Strafe", "Animal Controller/Animal/Set Strafe", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetStrafeNode : TaskNode
+    public class MSetStrafeNode : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
@@ -20,63 +19,68 @@ namespace Malbers.Integration.AITree
         //  public enum StrafeActions { }
 
 
-        [Hide(nameof(showSelf))]
+        [ShowIf("affect", Affected.Self)]
         [Tooltip("The Strafe Target of this AI Character, will be this Current AI Target")]
         public bool TargetIsStrafeTarget;
-        [Hide(nameof(showTarget))]
+
+        [ShowIf("affect", Affected.Target)]
         [Tooltip("The Strafe Target of the current AI Target, will be this AI Character")]
         public bool SelfIsStrafeTarget = true;
 
+
         [Tooltip("Add a completely new Strafe Target to the Animal")]
-      [Hide(nameof(showTransform))]
         public TransformVar NewStrafeTarget;
 
-        AIBrain aiBrain;
+        bool taskDone;
+
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
 
         protected override void OnEntry()
         {
-            aiBrain =  GetOwner().GetComponent<AIBrain>();
             var StrafeTarget = this.NewStrafeTarget != null ? this.NewStrafeTarget.Value : null;
 
 
             if (affect == Affected.Self)
             {
-                aiBrain.Animal.Strafe = strafe.Value;
+                AIBrain.Animal.Strafe = strafe.Value;
 
                 if (StrafeTarget == null)
                 {
-                    StrafeTarget = aiBrain.AIControl.Target;
+                    StrafeTarget = AIBrain.AIControl.Target;
                 }
 
                 if (TargetIsStrafeTarget)
                 {
-                    aiBrain.Animal.Aimer.SetTarget(StrafeTarget);
+                    AIBrain.Animal.Aimer.SetTarget(StrafeTarget);
                 }
             }
             else
             {
-                if (aiBrain.TargetAnimal)
+                if (AIBrain.TargetAnimal)
                 {
-                    aiBrain.TargetAnimal.Strafe = strafe.Value;
+                    AIBrain.TargetAnimal.Strafe = strafe.Value;
                     if (StrafeTarget == null)
                     {
-                        StrafeTarget = aiBrain.Animal.transform;
+                        StrafeTarget = AIBrain.Animal.transform;
                     }
 
                     if (SelfIsStrafeTarget)
                     {
-                        aiBrain.TargetAnimal.Aimer.SetTarget(StrafeTarget);
+                        AIBrain.TargetAnimal.Aimer.SetTarget(StrafeTarget);
                     }
                 }
             }
 
-            aiBrain.TasksDone = true; //Set Done to this task
+            taskDone = true; //Set Done to this task
 
         }
 
         protected override State OnUpdate()
         {
-            if (aiBrain.TasksDone)
+            if (taskDone)
             {
                 return State.Success;
             }

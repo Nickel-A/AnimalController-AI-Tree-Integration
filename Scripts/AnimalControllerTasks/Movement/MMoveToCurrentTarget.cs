@@ -5,15 +5,17 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Move To Current Target", "Animal Controller/ACMovement/Move To Current Target", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MMoveToCurrentTarget : TaskNode
+    public class MMoveToCurrentTarget : MTaskNode
     {
         [Header("Node")]
         /// <summary> Animal Controller slowing Distance to Override the AI Movement Stopping Distance</summary>
         public FloatReference slowingDistance = new(0);
+        public float stoppingDistance =1.5f;
+        public float additiveStopDistance = 0.5f;
+
         public bool LookAtTarget = false;
         [Tooltip("The AI will stop if it arrives to the current target")]
         public bool StopOnArrive = true;
-        AIBrain aiBrain;
         bool arrived;
         bool failed;
 
@@ -22,8 +24,7 @@ namespace Malbers.Integration.AITree
         /// </summary>
         protected override void OnInitialize()
         {
-            base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
+            base.OnInitialize(); 
         }
 
         /// <summary>
@@ -31,11 +32,13 @@ namespace Malbers.Integration.AITree
         /// </summary>
         protected override void OnEntry()
         {
-            aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;
-            if (aiBrain.AIControl.Target)
+            AIBrain.AIControl.StoppingDistance = stoppingDistance;
+            AIBrain.AIControl.AdditiveStopDistance = additiveStopDistance;
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;
+            if (AIBrain.AIControl.Target)
             {
-                aiBrain.AIControl.SetTarget(aiBrain.AIControl.Target, true); //Reset the Target
-                aiBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
+                AIBrain.AIControl.SetTarget(AIBrain.AIControl.Target, true); //Reset the Target
+                AIBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
             }
             else
             {
@@ -60,13 +63,13 @@ namespace Malbers.Integration.AITree
 
         private void StopOnArrived()
         {
-            if (aiBrain.AIControl.HasArrived)
+            if (AIBrain.AIControl.HasArrived)
             {
                 if (StopOnArrive)
                 {
-                    aiBrain.AIControl.Stop();
+                    AIBrain.AIControl.Stop();
                 }
-                aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
                 arrived = true;
             }
         }
@@ -78,7 +81,8 @@ namespace Malbers.Integration.AITree
         {
             base.OnExit();
             arrived = false;
-            aiBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.ResetStoppingDistance();
         }
     }
 }

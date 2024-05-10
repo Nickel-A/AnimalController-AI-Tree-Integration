@@ -1,5 +1,6 @@
 ﻿using MalbersAnimations;
 using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
 using RenownedGames.AITree;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -9,7 +10,7 @@ using State = RenownedGames.AITree.State;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Stance", "Animal Controller/Animal/Set Stance", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetStanceNode : TaskNode
+    public class MSetStanceNode : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
@@ -24,29 +25,32 @@ namespace Malbers.Integration.AITree
         [Tooltip("If enabled, resets the stance.")]
         public bool resetStance = false;
 
+        bool taskDone;
 
-        AIBrain aiBrain;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
 
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
 
             switch (affect)
             {
                 case Affected.Self:
-                    Stance_Set(aiBrain.Animal, stanceOnEnter, true);
+                    Stance_Set(AIBrain.Animal, stanceOnEnter, true);
                     break;
                 case Affected.Target:
-                    Stance_Set(aiBrain.TargetAnimal, stanceOnEnter, true);
+                    Stance_Set(AIBrain.TargetAnimal, stanceOnEnter, true);
                     break;
             }
 
-            aiBrain.TasksDone = true;
+            taskDone = true;
         }
 
         protected override State OnUpdate()
         {
-            if (aiBrain.TasksDone)
+            if (taskDone)
             {
                 return State.Success;
             }

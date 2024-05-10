@@ -1,44 +1,33 @@
-﻿using MalbersAnimations;
-using MalbersAnimations.Controller.AI;
-using MalbersAnimations.Scriptables;
-using RenownedGames.AITree;
-using UnityEditor;
-using UnityEngine;
+﻿using RenownedGames.AITree;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Target From BB", "Animal Controller/ACMovement/Set Target From BB", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetTargetFromBB : TaskNode
+    public class MSetTargetFromBB : MTaskNode
     {
 
         public TransformKey target;
         public bool MoveToTarget = true;
-        private AIBrain aiBrain;
 
         protected override void OnEntry()
         {
-            aiBrain =  GetOwner().GetComponent<AIBrain>();
-
             if (MoveToTarget)
             {
-                aiBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
+                AIBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
             }
             else
             {
-                if (aiBrain.AIControl.IsMoving) { aiBrain.AIControl.Stop(); } //Stop if the animal is already moving
+                if (AIBrain.AIControl.IsMoving) { AIBrain.AIControl.Stop(); } //Stop if the animal is already moving
             }
-            aiBrain.AIControl.SetTarget(target.GetValue(), MoveToTarget);
+            AIBrain.AIControl.SetTarget(target.GetValue(), MoveToTarget);
 
         }
 
         protected override State OnUpdate()
         {
-
-                return RenownedGames.AITree.State.Success;
-
-            
+            return State.Success;
         }
- 
+
 
     }
 }

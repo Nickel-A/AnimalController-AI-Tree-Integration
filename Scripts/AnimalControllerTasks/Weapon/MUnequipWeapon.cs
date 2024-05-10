@@ -5,13 +5,11 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Unequip Weapon", "Animal Controller/Weapon/Unequip Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MUnequipWeapon : TaskNode
+    public class MUnequipWeapon : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Play the mode only when the animal has arrived at the target.")]
         public bool near = false;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -19,8 +17,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -30,11 +26,11 @@ namespace Malbers.Integration.AITree
         {
             base.OnEntry();
 
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near && !AIBrain.AIControl.HasArrived)
             {
                 return; // Don't play if 'Play on target' is true but we are not near the target.
             }
-            WeaponManager.UnEquip();
+            AIBrain.weaponManager.UnEquip();
         }
 
         /// <summary>

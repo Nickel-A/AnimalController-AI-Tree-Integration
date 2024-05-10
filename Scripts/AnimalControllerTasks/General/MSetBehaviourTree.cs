@@ -5,7 +5,7 @@ using RenownedGames.Apex;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Behaviour Tree", "Animal Controller/General/Set Behaviour Tree", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetBehaviourTree : TaskNode
+    public class MSetBehaviourTree : MTaskNode
     {
         [Header("Node")]
         [Title("Blackboard")]
@@ -42,9 +42,7 @@ namespace Malbers.Integration.AITree
 
         protected override State OnUpdate()
         {
-
                 return State.Success;
-
         }
     }
 }

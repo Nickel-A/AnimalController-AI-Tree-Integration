@@ -1,29 +1,28 @@
-﻿using MalbersAnimations.Events;
+﻿using MalbersAnimations.Controller.AI;
+using MalbersAnimations.Events;
 using RenownedGames.AITree;
 using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Invoke Event", "Animal Controller/General/Invoke Event", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MInvokeEventNode : TaskNode
+    public class MInvokeEventNode : MTaskNode
     {
         [Header("Node")]
 
         [Tooltip("Send the Animal as the Event Parameter or the Target")]
         public Affected send = Affected.Self;
         public GameObjectEvent Raise = new GameObjectEvent();
-        AIBrain aiBrain;
 
         protected override void OnEntry()
         {
-             GetOwner().GetComponent<AIBrain>();
             switch (send)
             {
                 case Affected.Self:
-                    Raise.Invoke(aiBrain.Animal.gameObject);
+                    Raise.Invoke(AIBrain.Animal.gameObject);
                     break;
                 case Affected.Target:
-                    Raise.Invoke(aiBrain.Target.gameObject);
+                    Raise.Invoke(AIBrain.Target.gameObject);
                     break;
                 default:
                     break;

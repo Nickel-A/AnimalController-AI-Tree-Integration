@@ -7,10 +7,8 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
-
-
     [NodeContent("Patrol", "Animal Controller/ACMovement/Patrol", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MPatrolNode : TaskNode
+    public class MPatrolNode : MTaskNode
     {
         [Tooltip("The Animal will Rotate/Look at the Target when he arrives to it")]
         public bool LookAtOnArrival = false;
@@ -25,30 +23,31 @@ namespace Malbers.Integration.AITree
         public RuntimeSetTypeGameObject rtype = RuntimeSetTypeGameObject.Random;
         public IntReference RTIndex = new();
         public StringReference RTName = new();
-        private AIBrain aiBrain;
+
+        bool arrived;
+
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
-            aiBrain.AIControl.AutoNextTarget = true; //When Patrolling make sure AutoTarget is set to true... 
+            AIBrain.AIControl.AutoNextTarget = true; //When Patrolling make sure AutoTarget is set to true... 
+            arrived = false;
 
             switch (patrolType)
             {
                 case PatrolType.LastWaypoint:
-                    if (aiBrain.LastWayPoint != null)                                         //If we had a last Waypoint then move to it
+                    if (AIBrain.LastWayPoint != null)                                         //If we had a last Waypoint then move to it
                     {
-                        aiBrain.TargetAnimal = null;                                          //Clean the Animal Target in case it was one
-                        aiBrain.AIControl.SetTarget(aiBrain.LastWayPoint.WPTransform, true);    //Move to the last waypoint the animal  used
+                        AIBrain.TargetAnimal = null;                                          //Clean the Animal Target in case it was one
+                        AIBrain.AIControl.SetTarget(AIBrain.LastWayPoint.WPTransform, true);    //Move to the last waypoint the animal  used
                     }
                     break;
                 case PatrolType.UseRuntimeSet:
                     if (RuntimeSet != null)                                             //If we had a last Waypoint then move to it
                     {
-                        aiBrain.TargetAnimal = null;                                      //Clean the Animal Target in case it was one
-                        GameObject go = RuntimeSet.GetItem(rtype, RTIndex, RTName, aiBrain.Animal.gameObject);
+                        AIBrain.TargetAnimal = null;                                      //Clean the Animal Target in case it was one
+                        GameObject go = RuntimeSet.GetItem(rtype, RTIndex, RTName, AIBrain.Animal.gameObject);
                         if (go)
                         {
-                            aiBrain.AIControl.SetTarget(go.transform, true);
+                            AIBrain.AIControl.SetTarget(go.transform, true);
                         }
 
                         break;
@@ -61,9 +60,10 @@ namespace Malbers.Integration.AITree
 
         protected override State OnUpdate()
         {
-            if (aiBrain.AIControl.HasArrived)
+            OnTargetArrived();
+            
+            if (AIBrain.AIControl.HasArrived)
             {
-                OnTargetArrived();
                 return State.Success;
             }
             else
@@ -74,36 +74,41 @@ namespace Malbers.Integration.AITree
 
         protected override void OnExit()
         {
-            aiBrain.AIControl.StopWait(); //Remove in case it was waiting , when the State is interrupted.
+            AIBrain.AIControl.StopWait(); //Remove in case it was waiting , when the State is interrupted.
+
         }
 
         void OnTargetArrived()
         {
-            aiBrain.AIControl.AutoNextTarget = true; //When Patrolling make sure AutoTarget is set to true... 
+            AIBrain.AIControl.AutoNextTarget = true; //When Patrolling make sure AutoTarget is set to true... 
 
             switch (patrolType)
             {
                 case PatrolType.LastWaypoint:
                     if (IgnoreWaitTime)
                     {
-                        aiBrain.AIControl.StopWait(); //Ingore wait time
-                        aiBrain.AIControl.SetTarget(aiBrain.AIControl.NextTarget, true);
+
+                        AIBrain.AIControl.StopWait(); //Ingore wait time
+                        AIBrain.AIControl.SetTarget(AIBrain.AIControl.NextTarget, true);
+                        arrived = true;
                     }
                     break;
                 case PatrolType.UseRuntimeSet:
 
-                    GameObject NextTarget = RuntimeSet.GetItem(rtype, RTIndex, RTName, aiBrain.Animal.gameObject);
-                    if (NextTarget && aiBrain.AIControl.NextTarget == null)
+                    GameObject NextTarget = RuntimeSet.GetItem(rtype, RTIndex, RTName, AIBrain.Animal.gameObject);
+                    if (NextTarget && AIBrain.AIControl.NextTarget == null)
                     {
                         if (IgnoreWaitTime)
                         {
-                            aiBrain.AIControl.StopWait(); //Ingore wait time
-                            aiBrain.AIControl.SetTarget(NextTarget.transform, true);
+
+                            AIBrain.AIControl.StopWait(); //Ingore wait time
+                            AIBrain.AIControl.SetTarget(NextTarget.transform, true);
+                            arrived = true;
                         }
                         else
                         {
-                            aiBrain.AIControl.SetNextTarget(NextTarget);
-                            aiBrain.AIControl.MovetoNextTarget();
+                            AIBrain.AIControl.SetNextTarget(NextTarget);
+                            AIBrain.AIControl.MovetoNextTarget();                            
                         }
                     }
                     break;

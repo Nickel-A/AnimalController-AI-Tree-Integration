@@ -5,16 +5,13 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    [NodeContent("Move To Last Known Destination", "Animal Controller/ACMovement/Last Known Destination", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MMoveToLastKnownDestination : TaskNode
+    [NodeContent("Last Known Destination", "Animal Controller/ACMovement/Move To Last Known Destination", IconPath = "Icons/AnimalAI_Icon.png")]
+    public class MMoveToLastKnownDestination : MTaskNode
     {
         [Header("Node")]
 
         /// <summary> Animal Controller slowing Distance to Override the AI Movement Stopping Distance</summary>
         public FloatReference slowingDistance = new(0);
-
-        AIBrain aiBrain;
-        bool arrived;
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -22,8 +19,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
         }
 
         /// <summary>
@@ -31,12 +26,12 @@ namespace Malbers.Integration.AITree
         /// </summary>
         protected override void OnEntry()
         {
-            var LastDestination = aiBrain.AIControl.DestinationPosition; //Store the Last Destination
-            Debug.DrawRay(aiBrain.Position, Vector3.up, Color.white, 1);
-            aiBrain.AIControl.DestinationPosition = Vector3.zero;
-            aiBrain.AIControl.SetDestination(LastDestination, true); //Go to the last Destination position
-            aiBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
-            aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+            var LastDestination = AIBrain.AIControl.DestinationPosition; //Store the Last Destination
+            Debug.DrawRay(AIBrain.Position, Vector3.up, Color.white, 1);
+            AIBrain.AIControl.DestinationPosition = Vector3.zero;
+            AIBrain.AIControl.SetDestination(LastDestination, true); //Go to the last Destination position
+            AIBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
 
             base.OnEntry();
         }
@@ -47,9 +42,9 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            if (aiBrain.AIControl.HasArrived)
+            if (AIBrain.AIControl.HasArrived)
             {
-                aiBrain.AIControl.Stop();
+                AIBrain.AIControl.Stop();
                 return State.Success;
             }
             else return State.Running;

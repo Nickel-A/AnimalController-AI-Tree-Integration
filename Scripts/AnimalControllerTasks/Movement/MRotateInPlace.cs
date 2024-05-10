@@ -2,18 +2,14 @@ using Malbers.Integration.AITree;
 using RenownedGames.AITree;
 
 [NodeContent("Rotate In Place", "Animal Controller/ACMovement/Rotate In Place", IconPath = "Icons/AnimalAI_Icon.png")]
-public class MRotateInPlace : TaskNode
+public class MRotateInPlace : MTaskNode
 {
-    AIBrain aiBrain;
-
     /// <summary>
     /// Called on behaviour tree is awake.
     /// </summary>
     protected override void OnInitialize()
     {
         base.OnInitialize();
-        aiBrain = GetOwner().GetComponent<AIBrain>();
-
     }
 
     /// <summary>
@@ -22,13 +18,12 @@ public class MRotateInPlace : TaskNode
     protected override void OnEntry()
     {
         base.OnEntry();
-        aiBrain.AIControl.RemainingDistance = 0;
-        aiBrain.AIControl.DestinationPosition = aiBrain.AIControl.Transform.position;//Set yourself as the Destination Pos
-        aiBrain.AIControl.LookAtTargetOnArrival = true;          //Set the Animal to look Forward to the Target
-        aiBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
-        aiBrain.AIControl.HasArrived = true;      //Set the Stopping Distance to almost nothing that way the animal keeps trying to go towards the target
-        aiBrain.AIControl.Stop();
-
+        AIBrain.AIControl.RemainingDistance = 0;
+        AIBrain.AIControl.DestinationPosition = AIBrain.AIControl.Transform.position;//Set yourself as the Destination Pos
+        AIBrain.AIControl.LookAtTargetOnArrival = true;          //Set the Animal to look Forward to the Target
+        AIBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
+        AIBrain.AIControl.HasArrived = true;      //Set the Stopping Distance to almost nothing that way the animal keeps trying to go towards the target
+        AIBrain.AIControl.Stop();
     }
 
     /// <summary>

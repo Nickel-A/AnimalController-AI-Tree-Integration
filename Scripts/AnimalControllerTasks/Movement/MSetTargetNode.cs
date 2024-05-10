@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Target", "Animal Controller/ACMovement/Set Target", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetTargetNode : TaskNode
+    public class MSetTargetNode : MTaskNode
     {
         public enum TargetToFollow { Transform, GameObject, RuntimeGameObjects, ClearTarget, Name, BBKey }
 
@@ -28,55 +28,49 @@ namespace Malbers.Integration.AITree
         [Tooltip("When a new target is assinged it also sets that the Animal should move to that target")]
         public bool MoveToTarget = true;
         bool taskDone;
-        AIBrain aiBrain;
 
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-        }
         protected override void OnEntry()
         {
 
             if (MoveToTarget)
             {
-                aiBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
+                AIBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
             }
             else
             {
-                if (aiBrain.AIControl.IsMoving) { aiBrain.AIControl.Stop(); } //Stop if the animal is already moving
+                if (AIBrain.AIControl.IsMoving) { AIBrain.AIControl.Stop(); } //Stop if the animal is already moving
             }
 
             switch (targetType)
             {
-                case TargetToFollow.Transform:                    
-                        aiBrain.AIControl.SetTarget(TargetT.Value, MoveToTarget);
+                case TargetToFollow.Transform:
+                    AIBrain.AIControl.SetTarget(TargetT.Value, MoveToTarget);
                     break;
                 case TargetToFollow.GameObject:
-                    aiBrain.AIControl.SetTarget(TargetG.Value.transform, MoveToTarget);
+                    AIBrain.AIControl.SetTarget(TargetG.Value.transform, MoveToTarget);
                     break;
                 case TargetToFollow.RuntimeGameObjects:
                     if (TargetRG != null && !TargetRG.IsEmpty)
                     {
-                        var target = TargetRG.GetItem(rtype, RTIndex, RTName, aiBrain.Animal.gameObject);
+                        var target = TargetRG.GetItem(rtype, RTIndex, RTName, AIBrain.Animal.gameObject);
                         if (target)
                         {
-                            aiBrain.AIControl.SetTarget(target.transform, MoveToTarget);
+                            AIBrain.AIControl.SetTarget(target.transform, MoveToTarget);
                         }
                     }
                     break;
                 case TargetToFollow.ClearTarget:
-                    aiBrain.AIControl.ClearTarget();
+                    AIBrain.AIControl.ClearTarget();
                     break;
                 case TargetToFollow.Name:
                     var GO = GameObject.Find(RTName);
                     if (GO != null)
                     {
-                        aiBrain.AIControl.SetTarget(GO.transform, MoveToTarget);
+                        AIBrain.AIControl.SetTarget(GO.transform, MoveToTarget);
                     }
                     break;
                 case TargetToFollow.BBKey:
-                    aiBrain.AIControl.SetTarget(BBKey.GetValue(), MoveToTarget);
+                    AIBrain.AIControl.SetTarget(BBKey.GetValue(), MoveToTarget);
                     break;
                 default:
                     break;
@@ -89,7 +83,7 @@ namespace Malbers.Integration.AITree
         {
             if (taskDone)
             {
-                if (MoveToTarget && !aiBrain.AIControl.HasArrived)
+                if (MoveToTarget && !AIBrain.AIControl.HasArrived)
                 {
                     return State.Running;
                 }
@@ -107,7 +101,9 @@ namespace Malbers.Integration.AITree
         {
             base.OnExit();
             if (!MoveToTarget)
-            aiBrain.AIControl.Stop();
+            {
+                AIBrain.AIControl.Stop();
+            }
         }
 
         public override string GetDescription()

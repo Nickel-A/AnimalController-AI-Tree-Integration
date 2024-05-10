@@ -3,11 +3,10 @@ using RenownedGames.AITree;
 using UnityEngine;
 
 [NodeContent("Lock Animal Movement", "Animal Controller/ACMovement/Lock Animal Movement", IconPath = "Icons/AnimalAI_Icon.png")]
-public class MLockAnimalMovement : TaskNode
+public class MLockAnimalMovement : MTaskNode
 {
     [Header("Node")]
 
-    AIBrain aiBrain;
     public bool lockMovement;
     /// <summary>
     /// Called on behaviour tree is awake.
@@ -15,7 +14,6 @@ public class MLockAnimalMovement : TaskNode
     protected override void OnInitialize()
     {
         base.OnInitialize();
-        aiBrain = GetOwner().GetComponent<AIBrain>();
     }
 
     /// <summary>
@@ -24,7 +22,7 @@ public class MLockAnimalMovement : TaskNode
     protected override void OnEntry()
     {
         base.OnEntry();
-        aiBrain.Animal.LockMovement = lockMovement;
+        AIBrain.Animal.LockMovement = lockMovement;
     }
 
     /// <summary>

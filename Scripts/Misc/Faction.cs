@@ -108,12 +108,13 @@ namespace Malbers.Integration.AITree
                     MAnimalAIControl attackerAI = collider.gameObject.GetComponentInChildren<MAnimalAIControl>();
                     if (attackerAI != null)
                     {
-                        if (attackerAI.Target !=null)
+                        if (attackerAI.Target != null)
                         {
                             if (attackerAI.Target.gameObject == this.gameObject)
                             {
                                 attackedBy = collider.gameObject;
-                            } else if (mount!=null)
+                            }
+                            else if (mount != null)
                             {
                                 if (attackerAI.Target.gameObject == mount.Rider.gameObject)
                                 {
@@ -273,7 +274,7 @@ namespace Malbers.Integration.AITree
         public void SetFormation()
         {
             followersAIController = new List<MAnimalAIControl>();
-            Faction[] factions = FindObjectsOfType<Faction>();
+            Faction[] factions = FindObjectsByType<Faction>(FindObjectsSortMode.None);
             foreach (Faction faction in factions)
             {
                 if (groupName == faction.groupName && faction.followingLeader && faction.inFormation)
@@ -295,7 +296,7 @@ namespace Malbers.Integration.AITree
 
         public GameObject FindLeader(string groupName)
         {
-            Faction[] factions = FindObjectsOfType<Faction>();
+            Faction[] factions = FindObjectsByType<Faction>(FindObjectsSortMode.None);
             foreach (Faction faction in factions)
             {
                 if (groupName == faction.groupName && faction.groupLeader)
@@ -308,7 +309,7 @@ namespace Malbers.Integration.AITree
 
         public MAnimal FindLeaderAnimal(string groupName)
         {
-            Faction[] factions = FindObjectsOfType<Faction>();
+            Faction[] factions = FindObjectsByType<Faction>(FindObjectsSortMode.None);
             foreach (Faction faction in factions)
             {
                 if (groupName == faction.groupName && faction.groupLeader)

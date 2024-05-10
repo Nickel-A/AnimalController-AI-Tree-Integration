@@ -2,21 +2,22 @@ using Malbers.Integration.AITree;
 using MalbersAnimations;
 using MalbersAnimations.Weapons;
 using RenownedGames.AITree;
+using RenownedGames.Apex;
 using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Equip Weapon", "Animal Controller/Weapon/Equip Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MEquipWeapon : TaskNode
+    public class MEquipWeapon : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Play the mode only when the animal has arrived at the target.")]
         public bool near = false;
-        [Tooltip("The weapon to equip.")]
+
+
+        [NotNull,Tooltip("The weapon to equip.")]
         public MWeapon Weapon;
         bool taskDone;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -24,8 +25,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -36,16 +35,16 @@ namespace Malbers.Integration.AITree
             base.OnEntry();
             taskDone = false;
 
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near && !AIBrain.AIControl.HasArrived)
             {
                 return; // Don't play if 'Play on target' is true but we are not near the target.
             }
 
-            if (WeaponManager.WeaponIsActive == Weapon)
+            if (AIBrain.weaponManager.WeaponIsActive == Weapon)
             {
                 taskDone = true;
             }
-            WeaponManager.Equip_External(Weapon);
+            AIBrain.weaponManager.Equip_External(Weapon);
             taskDone = true;
         }
 

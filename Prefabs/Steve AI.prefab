@@ -7156,6 +7156,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1149391862328811070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1507173734312980878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1042117936113965555}
+  m_Layer: 2
+  m_Name: TargetTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1042117936113965555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507173734312980878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3021513155553404506}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1594148590810379676
 GameObject:
   m_ObjectHideFlags: 0
@@ -7722,6 +7753,37 @@ Transform:
   - {fileID: 2693062231396961777}
   m_Father: {fileID: 7130533754116881121}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2183916884658612035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6955683514137328834}
+  m_Layer: 2
+  m_Name: AIEyes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6955683514137328834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2183916884658612035}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1141438500967295652}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &2198013732868701368
 GameObject:
   m_ObjectHideFlags: 0
@@ -8049,97 +8111,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Description: Hides the UI when there's no longer a climbable wall near the player
-  ShowDescription: 1
---- !u!1 &2562771070943561862
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4596881276972730177}
-  - component: {fileID: 2412293351481501076}
-  m_Layer: 0
-  m_Name: Sprint Settings
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4596881276972730177
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2562771070943561862}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.637, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 684458809154485744}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2412293351481501076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2562771070943561862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 314d00f1b4c62c4439fe886f82ae5243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnActive:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 4596881276972730177}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnDeactive:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  Description: 'Enable the Sprint Virtual Camera, and the Stamina UI.
-
-    Connect
-    this to the Animal.Sprint Event (GameObject.SetActive)'
   ShowDescription: 1
 --- !u!1 &2727510601970256910
 GameObject:
@@ -14269,7 +14240,6 @@ GameObject:
   - component: {fileID: 3021513155553404506}
   - component: {fileID: 3956036368878283904}
   - component: {fileID: 5234980704367624334}
-  - component: {fileID: 7705291662703620096}
   - component: {fileID: 2737651058654510115}
   - component: {fileID: 679100341070556532}
   - component: {fileID: 5893309597405093924}
@@ -14295,6 +14265,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1685039411410279399}
+  - {fileID: 3723464310271627057}
+  - {fileID: 1042117936113965555}
   m_Father: {fileID: 7477725440014831199}
   m_LocalEulerAnglesHint: {x: 0, y: -138.38, z: 0}
 --- !u!114 &3956036368878283904
@@ -14373,53 +14345,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7705291662703620096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4173694057954527507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 719277e72cb5d59488defcf2eaf68d45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointClickData: {fileID: 11400000, guid: b4b12009e452a364c8c23d8a0f881a61, type: 2}
-  PointUI: {fileID: 1291115747974048, guid: a7118c63ac516284aa1961df48d8ce0a, type: 3}
-  Button: 0
-  radius: 0.2
-  ClearTarget: 1
-  OnPointClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3956036368878283904}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetDestination
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnAITargetClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3956036368878283904}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetTarget
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &2737651058654510115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14432,30 +14357,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee2100ab7654d34fbb2c0e87f7b439a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Eyes: {fileID: 1141438500967295652}
-  TransitionCoolDown:
-    UseConstant: 1
-    ConstantValue: 0.2
-    Variable: {fileID: 0}
   DisableAIOnDeath: 1
+  Eyes: {fileID: 6955683514137328834}
+  aim: {fileID: 284904504163421488}
+  pickUpDrop: {fileID: 4395085620684846086}
+  stats: {fileID: 7154739018964169212}
+  damageable: {fileID: 9073221329701955544}
+  targetTransform: {fileID: 1042117936113965555}
+  comboManager: {fileID: 3570505368379396005}
+  weaponManager: {fileID: 4370477796896694541}
   debug: 0
-  TasksVars:
-    intValue: 0
-    floatValue: 0
-    boolValue: 0
-    vector3: {x: 0, y: 0, z: 0}
-    Components: []
-    mono: {fileID: 0}
-    gameobjects: []
-  DecisionsTime: []
-  DecisionsVars:
-    intValue: 0
-    floatValue: 0
-    boolValue: 0
-    vector3: {x: 0, y: 0, z: 0}
-    Components: []
-    mono: {fileID: 0}
-    gameobjects: []
+  statList: []
+  behaviourRunner: {fileID: 0}
 --- !u!114 &679100341070556532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14468,7 +14381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581266756febbf447a9cc1da85c40584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedBehaviourTree: {fileID: 11400000, guid: a8ce16b975ef9a344b71470c615be2ba, type: 2}
+  sharedBehaviourTree: {fileID: 11400000, guid: 9d57c3c512457a549b4b90b48adf574f, type: 2}
 --- !u!114 &5893309597405093924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14948,7 +14861,8 @@ Transform:
   m_LocalPosition: {x: -0.1273851, y: 0.09677646, z: 0.0000006103517}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6955683514137328834}
   m_Father: {fileID: 1872908617233375367}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2970173367294263093
@@ -15052,7 +14966,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  m_aimOrigin: {fileID: 684458809154485744}
+  m_aimOrigin: {fileID: 5190442285039154343}
   m_Smoothness: 10
   m_aimLayer:
     UseConstant: 1
@@ -15088,7 +15002,7 @@ MonoBehaviour:
     Variable: {fileID: 0}
   m_UseCamera:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   m_AimSide: 0
   updateMode: 1
@@ -21894,8 +21808,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6633698625775441596}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.99934053, z: 0, w: -0.03631227}
-  m_LocalPosition: {x: -1.23, y: 0, z: 7.86}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21904,7 +21818,7 @@ Transform:
   - {fileID: 4186889075604741786}
   - {fileID: 1079717043599726152}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -184.162, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1423645982608283848
 Animator:
   serializedVersion: 7
@@ -22006,7 +21920,7 @@ MonoBehaviour:
     tooltip: Makes this Character the Main Camera Target
     active: 1
     gameObjects:
-    - {fileID: 8383667634419491692}
+    - {fileID: 0}
     monoBehaviours: []
   - name: Hooks
     tooltip: Tranform References for for the Player
@@ -29152,7 +29066,7 @@ MonoBehaviour:
   OnStrafe:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9197275336875094018}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: SetActive
         m_Mode: 0
@@ -30630,7 +30544,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     position:
       UseConstant: 1
-      ConstantValue: 4.908939
+      ConstantValue: 0
       Variable: {fileID: 0}
     lerpPosition:
       UseConstant: 1
@@ -30654,7 +30568,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpAnimator:
       UseConstant: 1
-      ConstantValue: 5
+      ConstantValue: 4
       Variable: {fileID: 0}
     strafeSpeed:
       UseConstant: 1
@@ -31577,7 +31491,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  m_aimOrigin: {fileID: 684458809154485744}
+  m_aimOrigin: {fileID: 8817078781980638173}
   m_Smoothness: 20
   m_aimLayer:
     UseConstant: 1
@@ -31651,7 +31565,7 @@ MonoBehaviour:
   OnClearTarget:
     m_PersistentCalls:
       m_Calls: []
-  debug: 1
+  debug: 0
   m_Animator: {fileID: 0}
   m_AimHorizontal: AimHorizontal
   m_AimVertical: AimVertical
@@ -31754,7 +31668,7 @@ MonoBehaviour:
     Index: 0
     Slots:
     - {fileID: 5562361289582529113}
-    Weapon: {fileID: 0}
+    Weapon: {fileID: 4776089527113506134, guid: ac80b7c40c2e6ba48b61a9325b0ecc2f, type: 3}
     Input:
       UseConstant: 1
       ConstantValue: Back Holster
@@ -31830,7 +31744,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
-  Editor_Tabs1: 0
+  Editor_Tabs1: 1
   Editor_Tabs2: 5
 --- !u!114 &2661006987848743457
 MonoBehaviour:
@@ -37811,7 +37725,6 @@ Transform:
   - {fileID: 3020442424440988147}
   - {fileID: 7771231550810247954}
   - {fileID: 4928170431135703612}
-  - {fileID: 684458809154485744}
   - {fileID: 8213283582388375944}
   - {fileID: 5787355793222273598}
   - {fileID: 6182235868390729400}
@@ -38318,6 +38231,81 @@ Transform:
   - {fileID: 3997498877553723897}
   m_Father: {fileID: 9176899702454767928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7692444120206538581
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3723464310271627057}
+  - component: {fileID: 1864258511866607628}
+  - component: {fileID: 1263887745394381426}
+  m_Layer: 0
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3723464310271627057
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692444120206538581}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3021513155553404506}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1864258511866607628
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692444120206538581}
+  m_CullTransparentMesh: 1
+--- !u!114 &1263887745394381426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692444120206538581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 5838acde219087b4ead1fe27713daadd, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &7845524175450494810
 GameObject:
   m_ObjectHideFlags: 0
@@ -43555,7 +43543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1580210338198045092
 Transform:
   m_ObjectHideFlags: 0
@@ -43750,105 +43738,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!1 &8383667634419491692
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 684458809154485744}
-  - component: {fileID: 2723218478869339921}
-  - component: {fileID: 5386232062784892060}
-  m_Layer: 2
-  m_Name: CM Main Target
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &684458809154485744
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8383667634419491692}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.46, z: -0.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4324158736333605989}
-  - {fileID: 4596881276972730177}
-  m_Father: {fileID: 7477725440014831199}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2723218478869339921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8383667634419491692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c40057955ac3324f9b900fad19f1651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Delayed:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  RepeatTime:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  Repeat: 0
-  onEnable:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 774c7acaf3bb1304fb314cd4bd618fcb, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 684458809154485744}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 1eadc0ff250263642ad75526ef2b828e, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 684458809154485744}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  Description: Makes this Character the Camera Target
-  ShowDescription: 1
---- !u!114 &5386232062784892060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8383667634419491692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a655ccd3e50784448de0db62dc59ac9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Reference: {fileID: 684458809154485744}
-  Hook: {fileID: 11400000, guid: e759cb94eee3fcd4bb2f749b1dbda0a8, type: 2}
 --- !u!1 &8408223856460624134
 GameObject:
   m_ObjectHideFlags: 0
@@ -44523,85 +44412,6 @@ MonoBehaviour:
   DebugColor: {r: 1, g: 0.47070277, b: 0, a: 0.5882353}
   DrawAxis: 0
   AxisSize: 0.65
---- !u!1 &9197275336875094018
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4324158736333605989}
-  - component: {fileID: 3647411497132815775}
-  m_Layer: 2
-  m_Name: CM Set Strafe State
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4324158736333605989
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9197275336875094018}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 684458809154485744}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3647411497132815775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9197275336875094018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 314d00f1b4c62c4439fe886f82ae5243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnActive:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 774c7acaf3bb1304fb314cd4bd618fcb, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, MalbersAnimations
-        m_MethodName: Invoke
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnDeactive:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 774c7acaf3bb1304fb314cd4bd618fcb, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, MalbersAnimations
-        m_MethodName: Invoke
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  Description: '(Connected to Animal.OnStrafe)
-
-    Changes the Active CM State to
-    Strafe when Strafing is true'
-  ShowDescription: 1
 --- !u!1 &9212624024758287438
 GameObject:
   m_ObjectHideFlags: 0
@@ -44774,11 +44584,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4313093522034928595, guid: 19032c6d7261bdd409ce2c6f7d207a3a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.000000014901161
       objectReference: {fileID: 0}
     - target: {fileID: 4313093522034928595, guid: 19032c6d7261bdd409ce2c6f7d207a3a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.000000014901161
       objectReference: {fileID: 0}
     - target: {fileID: 4313093522034928595, guid: 19032c6d7261bdd409ce2c6f7d207a3a, type: 3}
       propertyPath: m_AnchoredPosition.x

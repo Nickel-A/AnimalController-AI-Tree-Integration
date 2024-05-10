@@ -1,9 +1,6 @@
-using MalbersAnimations;
-using MalbersAnimations.Controller.AI;
-using MalbersAnimations.Controller;
+using MalbersAnimations.HAP;
 using RenownedGames.AITree;
 using UnityEngine;
-using MalbersAnimations.HAP;
 
 namespace Malbers.Integration.AITree
 {
@@ -15,27 +12,27 @@ namespace Malbers.Integration.AITree
 
         private Faction faction;
         private GameObject leader;
-        private AIBrain aiBrain;
+        private AIBrain AIBrain;
 
         public bool inFormation;
         public bool stopFollowing;
-        public float stoppingDistance=1;
+        public float stoppingDistance = 1;
         public float additiveStopDistance = 0;
         protected override void OnEntry()
         {
             faction = GetOwner().gameObject.GetComponent<Faction>();
-            aiBrain = GetOwner().gameObject.GetComponent<AIBrain>();
+            AIBrain = GetOwner().gameObject.GetComponent<AIBrain>();
             leader = faction.FindLeader(faction.groupName);
             if (stopFollowing)
             {
                 faction.followingLeader = false;
                 faction.inFormation = false;
-                aiBrain.AIControl.Target = null;
+                AIBrain.AIControl.Target = null;
             }
             else
             {
-                aiBrain.AIControl.StoppingDistance = stoppingDistance;
-                aiBrain.AIControl.AdditiveStopDistance = additiveStopDistance;
+                AIBrain.AIControl.StoppingDistance = stoppingDistance;
+                // AIBrain.AIControl.AdditiveStopDistance = additiveStopDistance;
                 faction.followingLeader = true;
                 if (inFormation && faction.inFormation == false)
                 {
@@ -46,11 +43,11 @@ namespace Malbers.Integration.AITree
                 {
                     if (leader.GetComponent<MRider>().IsRiding)
                     {
-                        aiBrain.AIControl.SetTarget(leader.GetComponent<MRider>().Montura.Animal.transform, true);
+                        AIBrain.AIControl.SetTarget(leader.GetComponent<MRider>().Montura.Animal.transform, true);
                     }
                     else
                     {
-                        aiBrain.AIControl.SetTarget(leader.transform, true);
+                        AIBrain.AIControl.SetTarget(leader.transform, true);
                     }
                 }
             }

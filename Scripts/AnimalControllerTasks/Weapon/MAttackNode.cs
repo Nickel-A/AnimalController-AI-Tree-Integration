@@ -1,28 +1,51 @@
-using MalbersAnimations;
 using MalbersAnimations.Weapons;
 using RenownedGames.AITree;
+using RenownedGames.Apex;
 using UnityEngine;
 using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Attack", "Animal Controller/Weapon/Attack", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MAttackNode : TaskNode
+    public class MAttackNode : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Play the mode only when the animal has arrived to the target")]
-
         public bool near = false;
-        public bool AimValue = true;
-        bool taskDone;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
+
         [Tooltip("Set to true to perform the attack once.")]
         public bool attackOnce;
-        [Tooltip("Set to true to use the combo manager for attacks.")]
+        [Tooltip("Set to true to use the combo manager for attacks. If using with combomanager the branch will play once.")]
         public bool useComboManager = false;
-        [Tooltip("Specify the branch number for combo attacks.")]
+        [ShowIf("useComboManager")]
+        public bool useRandomBranch;
+
+        private bool inspectorSwitcher;
+
+        [ShowIf("inspectorSwitcher"), Tooltip("Specify the branch number for combo attacks.")]
         public int branchNumber;
+        [ShowIf("useRandomBranch")]
+        public int branchMinNumber;
+        [ShowIf("useRandomBranch")]
+        public int branchMaxNumber;
+
+        private void OnValidate()
+        {
+            if (useComboManager == false)
+            {
+                useRandomBranch = false;
+                inspectorSwitcher = false;
+            }
+            else
+            {
+                inspectorSwitcher = true;
+            }
+
+            if (useRandomBranch)
+            {
+                inspectorSwitcher = false;
+            }
+        }
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -30,20 +53,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
-        }
-
-        /// <summary>
-        /// Called when behaviour tree enter in node.
-        /// </summary>
-        protected override void OnEntry()
-        {
-            if (near && !aiBrain.AIControl.HasArrived)
-            {
-                return; //Dont play if Play on target is true but we are not near the target.
-            }
-            taskDone = false;
         }
 
         /// <summary>
@@ -52,67 +61,107 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near)
             {
-                WeaponManager.MainAttackReleased();
-                WeaponManager.Weapon.Input = false;
-                return State.Running;
+                AIBrain.AIControl.UpdateDestinationPosition = true;
+                if (!AIBrain.AIControl.HasArrived)
+                {
+                    AIBrain.weaponManager.MainAttackReleased();
+                    //AIBrain.weaponManager.Weapon.Input = false;
+                    return State.Failure;
+                }
             }
 
-            if (WeaponManager.Weapon)
+            if (AIBrain.weaponManager.Weapon)
             {
-                if (WeaponManager.Weapon is MMelee)
+                if (AIBrain.weaponManager.Weapon is MMelee)
                 {
                     if (useComboManager)
                     {
-                        if (!aiBrain.comboManager)
+                        if (!AIBrain.comboManager)
                         {
-                            Debug.LogError("Combo Manager is not assigned to " + aiBrain.name);
+                            Debug.LogError("Combo Manager is not assigned to " + AIBrain.name);
                             return State.Failure;
                         }
 
-                        aiBrain.comboManager.Play(branchNumber);
-                        if (attackOnce && !aiBrain.comboManager.PlayingCombo)
+                        if (useRandomBranch)
                         {
-                            taskDone = true;
+                            branchNumber = Random.Range(branchMinNumber, branchMaxNumber);
+                        }
+                        AIBrain.comboManager.Play(branchNumber);
+
+                        if (attackOnce && !AIBrain.comboManager.PlayingCombo)
+                        {
+                            return State.Success;
                         }
                     }
                     else
                     {
-                        WeaponManager.MainAttack();
+                        AIBrain.weaponManager.MainAttack();
                         if (attackOnce)
                         {
-                            WeaponManager.MainAttackReleased();
-                            taskDone = true;
+                            AIBrain.weaponManager.MainAttackReleased();
+                            return State.Success;
                         }
                     }
                 }
                 else
                 {
-                    if (!WeaponManager.Weapon.Input || (WeaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
+                    if (!AIBrain.weaponManager.Weapon.Input || (AIBrain.weaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
                     {
-                        WeaponManager.MainAttack();
+                        AIBrain.weaponManager.MainAttack();
                         if (attackOnce)
                         {
-                            taskDone = true;
+                            return State.Success;
                         }
                     }
                     else
                     {
-                        WeaponManager.MainAttackReleased();
-                        taskDone = true;
+                        AIBrain.weaponManager.MainAttackReleased();
+                        return State.Success;
                     }
                 }
             }
-            return taskDone ? State.Success : State.Running;
+            else
+            {
+                if (useComboManager)
+                {
+                    if (!AIBrain.comboManager)
+                    {
+                        Debug.LogError("Combo Manager is not assigned to " + AIBrain.name);
+                        return State.Failure;
+                    }
+
+                    if (useRandomBranch)
+                    {
+                        branchNumber = Random.Range(branchMinNumber, branchMaxNumber + 1);
+                    }
+                    AIBrain.comboManager.Play(branchNumber);
+
+                    if (attackOnce && !AIBrain.comboManager.PlayingCombo)
+                    {
+                        return State.Success;
+                    }
+                }
+                else
+                {
+                    AIBrain.weaponManager.MainAttack();
+                    if (attackOnce)
+                    {
+                        AIBrain.weaponManager.MainAttackReleased();
+                        return State.Success;
+                    }
+                }
+            }
+            return State.Running;
         }
+
         /// <summary>
         /// Called when behaviour tree exit from node.
         /// </summary>
         protected override void OnExit()
         {
             base.OnExit();
-            taskDone = false;
         }
     }
 }

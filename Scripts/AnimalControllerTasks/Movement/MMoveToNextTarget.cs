@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Move To Next Target", "Animal Controller/ACMovement/Move To Next Target", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MMoveToNextTarget : TaskNode
+    public class MMoveToNextTarget : MTaskNode
     {
         [Header("Node")]
 
@@ -15,7 +15,6 @@ namespace Malbers.Integration.AITree
         [Tooltip("The AI will stop if it arrives to the current target")]
         public bool StopOnArrive = true;
 
-        AIBrain aiBrain;
         bool arrived;
         bool failed;
 
@@ -25,7 +24,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         /// <summary>
@@ -35,16 +33,16 @@ namespace Malbers.Integration.AITree
         {
             base.OnEntry();
 
-            if (aiBrain.AIControl.NextTarget)
+            if (AIBrain.AIControl.NextTarget)
             {
-                aiBrain.AIControl.SetTarget(aiBrain.AIControl.NextTarget, true);
+                AIBrain.AIControl.SetTarget(AIBrain.AIControl.NextTarget, true);
             }
             else
             {
                 Debug.LogWarning("The Animal does not have a next Target", this);
                 failed = true;
             }
-            aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
         }
 
         /// <summary>
@@ -71,13 +69,13 @@ namespace Malbers.Integration.AITree
         }
         private void IsArrivedOnNextTarget()
         {
-            if (aiBrain.AIControl.HasArrived)
+            if (AIBrain.AIControl.HasArrived)
             {
                 if (StopOnArrive)
                 {
-                    aiBrain.AIControl.Stop();
+                    AIBrain.AIControl.Stop();
                 }
-                aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
                 arrived = true;
             }
         }

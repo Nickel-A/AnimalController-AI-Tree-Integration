@@ -1,8 +1,7 @@
-using MalbersAnimations;
-using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
+using MalbersAnimations.HAP;
 using RenownedGames.AITree;
 using UnityEngine;
-using MalbersAnimations.HAP;
 
 namespace Malbers.Integration.AITree
 {

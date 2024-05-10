@@ -1,5 +1,6 @@
 using Malbers.Integration.AITree;
 using MalbersAnimations;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Utilities;
 using RenownedGames.AITree;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("SendACMessage", "Animal Controller/General/Message", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSendMessageNode : TaskNode
+    public class MSendMessageNode : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
@@ -23,14 +24,12 @@ namespace Malbers.Integration.AITree
         [NonReorderable]
         public MesssageItem[] messages;
         bool messageDone;
-        AIBrain aiBrain;
         /// <summary>
         /// Called on behaviour tree is awake.
         /// </summary>
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         /// <summary>
@@ -41,9 +40,9 @@ namespace Malbers.Integration.AITree
             base.OnEntry();
             if (when == ExecuteTask.OnStart)
             {
-                if (!NearTarget || (NearTarget && aiBrain.AIControl.HasArrived))
+                if (!NearTarget || (NearTarget && AIBrain.AIControl.HasArrived))
                 {
-                    Execute_Task(aiBrain);
+                    Execute_Task(AIBrain);
                     messageDone = true;
                 }
             }
@@ -66,9 +65,9 @@ namespace Malbers.Integration.AITree
 
             if (when == ExecuteTask.OnUpdate)
             {
-                if (!NearTarget || (NearTarget && aiBrain.AIControl.HasArrived))
+                if (!NearTarget || (NearTarget && AIBrain.AIControl.HasArrived))
                 {
-                    Execute_Task(aiBrain);
+                    Execute_Task(AIBrain);
                     return State.Success;
                 }
             }
@@ -83,25 +82,25 @@ namespace Malbers.Integration.AITree
             base.OnExit();
             if (when == ExecuteTask.OnExit)
             {
-                if (!NearTarget || (NearTarget && aiBrain.AIControl.HasArrived))
+                if (!NearTarget || (NearTarget && AIBrain.AIControl.HasArrived))
                 {
-                    Execute_Task(aiBrain);
+                    Execute_Task(AIBrain);
                     messageDone = true;
                 }
             }
             messageDone = false;
         }
-        private void Execute_Task(AIBrain aiBrain)
+        private void Execute_Task(AIBrain AIBrain)
         {
             if (affect == Affected.Self)
             {
-                SendMessage(SendToRoot ? aiBrain.Animal.transform : aiBrain.transform);
+                SendMessage(SendToRoot ? AIBrain.Animal.transform : AIBrain.transform);
             }
             else
             {
-                if (aiBrain.Target != null)
+                if (AIBrain.Target != null)
                 {
-                    SendMessage(SendToRoot ? aiBrain.Target.FindObjectCore() : aiBrain.Target);
+                    SendMessage(SendToRoot ? AIBrain.Target.FindObjectCore() : AIBrain.Target);
                 }
             }
         }

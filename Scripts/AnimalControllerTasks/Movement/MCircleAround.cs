@@ -5,60 +5,45 @@ using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
+    public class TaskVariables
+    {
+        public int IntValue { get; set; }
+        public bool BoolValue { get; set; }
+    }
+
     [NodeContent("Circle Around", "Animal Controller/ACMovement/Circle Around", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MCircleAround : TaskNode
+    public class MCircleAround : MTaskNode
     {
         public enum CircleDirection { Left, Right };
 
         [Header("Node")]
-        /// <summary> Distance for the Flee, Circle Around and keep Distance Task</summary>
         public FloatReference distance = new(10f);
-        /// <summary> Distance Threshold for the Keep Distance Task</summary>
         public FloatReference stoppingDistance = new(0.5f);
-        /// <summary> Animal Controller slowing Distance to Override the AI Movement Stopping Distance</summary>
         public FloatReference slowingDistance = new(0);
-
-        /// <summary> Amount of Target Position around the Target</summary>
         public int arcsCount = 12;
-        /// <summary> Animal Controller Stopping Distance to Override the AI Movement Stopping Distance</summary>
         public CircleDirection direction = CircleDirection.Left;
         public bool circleAroundForever;
         bool arrived;
 
+        TaskVariables taskVars = new TaskVariables();
 
-        AIBrain aiBrain;
-
-        /// <summary>
-        /// Called on behaviour tree is awake.
-        /// </summary>
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
         }
 
-        /// <summary>
-        /// Called when behaviour tree enter in node.
-        /// </summary>
         protected override void OnEntry()
         {
             base.OnEntry();
             arrived = false;
-
-            aiBrain.AIControl.UpdateDestinationPosition = false;
-            aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
-            CalculateClosestCirclePoint(aiBrain);
-
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;
+            CalculateClosestCirclePoint(AIBrain);
         }
 
-        /// <summary>
-        /// Called every tick during node execution.
-        /// </summary>
-        /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            CircleAround(aiBrain);
+            CircleAround(AIBrain);
             if (arrived)
             {
                 return State.Success;
@@ -66,18 +51,15 @@ namespace Malbers.Integration.AITree
             return State.Running;
         }
 
-        /// <summary>
-        /// Called when behaviour tree exit from node.
-        /// </summary>
         protected override void OnExit()
         {
             base.OnExit();
             arrived = false;
         }
 
-        private void CalculateClosestCirclePoint(AIBrain aiBrain)
+        private void CalculateClosestCirclePoint(AIBrain AIBrain)
         {
-            if (aiBrain.Target == null)
+            if (AIBrain.Target == null)
             {
                 return;
             }
@@ -94,9 +76,9 @@ namespace Malbers.Integration.AITree
 
             for (int i = 0; i < arcsCount; ++i)
             {
-                var CurrentPoint = aiBrain.Target.position + (currentDirection.normalized * distance);
+                var CurrentPoint = AIBrain.Target.position + (currentDirection.normalized * distance);
 
-                float DistCurrentPoint = Vector3.Distance(CurrentPoint, aiBrain.transform.position);
+                float DistCurrentPoint = Vector3.Distance(CurrentPoint, AIBrain.transform.position);
 
                 if (minDist > DistCurrentPoint)
                 {
@@ -108,59 +90,46 @@ namespace Malbers.Integration.AITree
                 currentDirection = rotation * currentDirection;
             }
 
-            aiBrain.AIControl.UpdateDestinationPosition = false;
-            aiBrain.AIControl.StoppingDistance = stoppingDistance;
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.StoppingDistance = stoppingDistance;
 
-            aiBrain.TasksVars.intValue = MinIndex;   //Store the Point index on the vars of this Task
-            aiBrain.TasksVars.boolValue = true;      //Store true on the Variables, so we can seek for the next point
-                                                     // brain.TaskAddBool(index, circleAround, true);          //Store true on the Variables, so we can seek for the next point
+            taskVars.IntValue = MinIndex;
+            taskVars.BoolValue = true;
 
-            aiBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-            aiBrain.AIControl.SetDestination(MinPoint, true);
-            aiBrain.AIControl.HasArrived = false;
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.SetDestination(MinPoint, true);
+            AIBrain.AIControl.HasArrived = false;
         }
 
-        private void CircleAround(AIBrain aiBrain)
+        private void CircleAround(AIBrain AIBrain)
         {
-
-            //  Debug.Log("circle aound = ");
-            if (aiBrain.AIControl.HasArrived) //Means that we have arrived to the point so set the next point
+            if (AIBrain.AIControl.HasArrived)
             {
-                aiBrain.TasksVars.intValue++;
-                aiBrain.TasksVars.intValue = aiBrain.TasksVars.intValue % arcsCount;
-                aiBrain.TasksVars.boolValue = true;      //Set this so we can seek for the next point
+                taskVars.IntValue++;
+                taskVars.IntValue = taskVars.IntValue % arcsCount;
+                taskVars.BoolValue = true;
                 if (!circleAroundForever)
                 {
-                    arrived = true;                                  //brain.TaskSetBool(index, circleAround, true);   //Set this so we can seek for the next point
+                    arrived = true;
                 }
             }
 
-            if (aiBrain.TasksVars.boolValue || aiBrain.AIControl.TargetIsMoving)
-            // if (brain.TaskGetBool(index, circleAround) || brain.AIControl.TargetIsMoving)
+            if (taskVars.BoolValue || AIBrain.AIControl.TargetIsMoving)
             {
-                int pointIndex = aiBrain.TasksVars.intValue;
-
+                int pointIndex = taskVars.IntValue;
                 float arcDegree = 360.0f / arcsCount;
                 int Dir = direction == CircleDirection.Right ? 1 : -1;
                 Quaternion rotation = Quaternion.Euler(0, Dir * arcDegree * pointIndex, 0);
 
-
-                // var distance = this.distance * brain.Animal.ScaleFactor; //Remember to use the scale
-
                 Vector3 currentDirection = Vector3.forward;
                 currentDirection = rotation * currentDirection;
 
-                // Debug.Log(brain.Target);
+                Vector3 CurrentPoint = AIBrain.Target.position + (currentDirection.normalized * distance);
 
-                Vector3 CurrentPoint = aiBrain.Target.position + (currentDirection.normalized * distance);
+                AIBrain.AIControl.UpdateDestinationPosition = false;
+                AIBrain.AIControl.SetDestination(CurrentPoint, true);
 
-
-
-                aiBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-                aiBrain.AIControl.SetDestination(CurrentPoint, true);
-
-                aiBrain.TasksVars.boolValue = false;           //Set this so we can seek for the next point
-                                                               //brain.TaskSetBool(index, circleAround, false);      //Set this so we can seek for the next point
+                taskVars.BoolValue = false;
             }
         }
     }

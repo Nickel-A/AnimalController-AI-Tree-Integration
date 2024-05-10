@@ -11,10 +11,10 @@ namespace Malbers.Integration.AITree
         private Faction faction;
         private MRider mRider;
         private Mount mount;
-        private AIBrain aiBrain;
+        private AIBrain AIBrain;
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
             faction = GetOwner().gameObject.GetComponent<Faction>();
             mRider =  faction.mRider;
             if (mRider.Montura != null)
@@ -41,7 +41,7 @@ namespace Malbers.Integration.AITree
                 {
                     faction.followingLeader = false;
                 }
-                aiBrain.AIControl.SetTarget((Transform)null, false);
+                AIBrain.AIControl.SetTarget((Transform)null, false);
                 mRider.Montura.transform.root.gameObject.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 return State.Success;
             }

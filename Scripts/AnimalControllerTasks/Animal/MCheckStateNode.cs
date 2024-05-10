@@ -1,5 +1,6 @@
 ﻿using MalbersAnimations;
 using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
 using RenownedGames.AITree;
 using UnityEngine;
 using State = RenownedGames.AITree.State;
@@ -7,7 +8,7 @@ using State = RenownedGames.AITree.State;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Check State", "Animal Controller/Animal/Check State", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MCheckStateNode : TaskNode
+    public class MCheckStateNode : MTaskNode
     {
         [Header("Node")]
 
@@ -16,12 +17,7 @@ namespace Malbers.Integration.AITree
         public StateID StateID;
         [Tooltip("Check if the State is Entering or Exiting")]
         public EEnterExit when = EEnterExit.Enter;
-        AIBrain aiBrain;
 
-        protected override void OnEntry()
-        {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-        }
 
         protected override State OnUpdate()
         {
@@ -29,7 +25,7 @@ namespace Malbers.Integration.AITree
             {
 
                 case Affected.Self:
-                    if (CheckState(aiBrain.Animal))
+                    if (CheckState(AIBrain.Animal))
                     {
                         return State.Success;
                     }
@@ -39,7 +35,7 @@ namespace Malbers.Integration.AITree
                     }
 
                 case Affected.Target:
-                    if (aiBrain.TargetAnimal != null && CheckState(aiBrain.TargetAnimal))
+                    if (AIBrain.TargetAnimal != null && CheckState(AIBrain.TargetAnimal))
                     {
                         return State.Success;
                     }

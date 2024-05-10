@@ -4,17 +4,16 @@ using RenownedGames.AITree;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Reload", "Animal Controller/Weapon/Reload", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MReload : TaskNode
+    public class MReload : MTaskNode
     {
         bool taskDone;
-        MWeaponManager WeaponManager;
+
         /// <summary>
         /// Called on behaviour tree is awake.
         /// </summary>
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            WeaponManager = GetOwner().GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -32,8 +31,8 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            WeaponManager.ReloadWeapon(); // Reloads if no ammo is in chamber
-            if (!WeaponManager.IsReloading)
+            AIBrain.weaponManager.ReloadWeapon(); // Reloads if no ammo is in chamber
+            if (!AIBrain.weaponManager.IsReloading)
             {
                 taskDone = true;
             }

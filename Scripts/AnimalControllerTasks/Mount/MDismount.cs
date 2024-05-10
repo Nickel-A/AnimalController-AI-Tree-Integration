@@ -11,7 +11,7 @@ namespace Malbers.Integration.AITree
     [NodeContent("Dismount", "Animal Controller/Mount/Dismount")]
     public class MDismount : TaskNode
     {
-        private AIBrain aiBrain;
+        private AIBrain AIBrain;
         private Faction faction;
         private MRider mRider;
         private Mount mount;
@@ -19,7 +19,7 @@ namespace Malbers.Integration.AITree
         {
             faction = GetOwner().gameObject.GetComponent<Faction>();
             faction.inFormation = false;
-            aiBrain = GetOwner().gameObject.GetComponent<AIBrain>();
+            AIBrain = GetOwner().gameObject.GetComponent<AIBrain>();
             mRider = faction.mRider;
             faction.taken = false;
             if (mRider != null)
@@ -37,8 +37,8 @@ namespace Malbers.Integration.AITree
                 mRider = mount.Rider;
                 mount.Rider.DismountAnimal();
                 mount.Set_InputMount.Value = true;
-                aiBrain.AIControl.SetActive(false);
-                aiBrain.AIControl.SetTarget((Transform)null,false);
+                AIBrain.AIControl.SetActive(false);
+                AIBrain.AIControl.SetTarget((Transform)null,false);
                 GameObject cam = mount.transform.Find("On Mount/CM Mount Camera State").gameObject;
                 cam.SetActive(true);
                 Faction factionRider = mount.Rider.transform.gameObject.GetComponentInChildren<Faction>();

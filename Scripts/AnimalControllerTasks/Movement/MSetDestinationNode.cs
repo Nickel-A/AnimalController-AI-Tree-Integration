@@ -7,12 +7,10 @@ using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
-    public enum DestinationType { Transform, GameObject, RuntimeGameObjects, Vector3, Name }
-
-
     [NodeContent("Set Destination", "Animal Controller/ACMovement/Set Destination", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetDestinationNode : TaskNode
+    public class MSetDestinationNode : MTaskNode
     {
+        public enum DestinationType { Transform, GameObject, RuntimeGameObjects, Vector3, Name }
 
         [Tooltip("Slow multiplier to set on the Destination")]
         public float SlowMultiplier = 0;
@@ -32,16 +30,18 @@ namespace Malbers.Integration.AITree
         [Tooltip("When a new target is assinged it also sets that the Animal should move to that target")]
         public bool MoveToTarget = true;
 
-        AIBrain aiBrain;
+        bool taskDone;
 
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
 
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
+            AIBrain.AIControl.ClearTarget();
 
-            aiBrain.AIControl.ClearTarget();
-
-            aiBrain.AIControl.CurrentSlowingDistance = aiBrain.AIControl.StoppingDistance * SlowMultiplier;
+            AIBrain.AIControl.CurrentSlowingDistance = AIBrain.AIControl.StoppingDistance * SlowMultiplier;
 
             switch (targetType)
             {
@@ -50,24 +50,24 @@ namespace Malbers.Integration.AITree
                     if (TargetT == null)
                     { Debug.LogError("Set Destination Task is missing the Transform Hook", this); return; }
 
-                    aiBrain.AIControl.SetDestination(TargetT.Value.position, MoveToTarget);
+                    AIBrain.AIControl.SetDestination(TargetT.Value.position, MoveToTarget);
                     break;
                 case DestinationType.GameObject:
 
                     if (TargetG == null)
                     { Debug.LogError("Set Destination Task is missing the GameObject Hook", this); return; }
 
-                    aiBrain.AIControl.SetDestination(TargetG.Value.transform.position, MoveToTarget);
+                    AIBrain.AIControl.SetDestination(TargetG.Value.transform.position, MoveToTarget);
                     break;
                 case DestinationType.RuntimeGameObjects:
 
                     if (TargetRG == null)
                     { Debug.LogError("Set Destination Task is missing the RuntimeSet", this); return; }
 
-                    var go = TargetRG.GetItem(rtype, RTIndex, RTName, aiBrain.Animal.gameObject);
+                    var go = TargetRG.GetItem(rtype, RTIndex, RTName, AIBrain.Animal.gameObject);
                     if (go != null)
                     {
-                        aiBrain.AIControl.SetDestination(go.transform.position, MoveToTarget);
+                        AIBrain.AIControl.SetDestination(go.transform.position, MoveToTarget);
                     }
 
                     break;
@@ -76,13 +76,13 @@ namespace Malbers.Integration.AITree
                     { Debug.LogError("Set Destination Task is missing the Vector Scriptable Variable", this); return; }
 
 
-                    aiBrain.AIControl.SetDestination(Destination.Value, MoveToTarget);
+                    AIBrain.AIControl.SetDestination(Destination.Value, MoveToTarget);
                     break;
                 case DestinationType.Name:
                     var GO = GameObject.Find(RTName);
                     if (GO != null)
                     {
-                        aiBrain.AIControl.SetDestination(GO.transform.position, MoveToTarget);
+                        AIBrain.AIControl.SetDestination(GO.transform.position, MoveToTarget);
                     }
                     else
                     {
@@ -94,18 +94,18 @@ namespace Malbers.Integration.AITree
             }
 
 
-            aiBrain.TasksDone = true;
+            taskDone = true;
 
         }
 
         protected override State OnUpdate()
         {
-            if (aiBrain.TasksDone && aiBrain.AIControl.HasArrived && MoveToTarget)
+            if (taskDone && AIBrain.AIControl.HasArrived && MoveToTarget)
             {
                 return State.Success;
 
             }
-            else if (aiBrain.TasksDone && !MoveToTarget)
+            else if (taskDone && !MoveToTarget)
             {
                 return State.Success;
             }

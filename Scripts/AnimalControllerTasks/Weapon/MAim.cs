@@ -6,22 +6,18 @@ using UnityEngine.UIElements;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Aim", "Animal Controller/Weapon/Aim", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MAim : TaskNode
+    public class MAim : MTaskNode
     {
         [Header("Node")]
         [Tooltip("Specifies whether to aim with the weapon.")]
         public bool AimValue = true;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
+
         /// <summary>
         /// Called on behaviour tree is awake.
         /// </summary>
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -30,7 +26,7 @@ namespace Malbers.Integration.AITree
         protected override void OnEntry()
         {
             base.OnEntry();
-            WeaponManager.Aim_Set(AimValue);
+            AIBrain.weaponManager.Aim_Set(AimValue);
         }
 
         /// <summary>

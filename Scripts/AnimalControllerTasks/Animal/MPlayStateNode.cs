@@ -1,5 +1,6 @@
 ﻿using MalbersAnimations;
 using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Malbers.Integration.AITree
 {
 
     [NodeContent("Play State", "Animal Controller/Animal/Play State", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MPlayStateNode : TaskNode
+    public class MPlayStateNode : MTaskNode
     {
         [Header("Node")]
         [Tooltip("State to play")]
@@ -28,16 +29,20 @@ namespace Malbers.Integration.AITree
         [Tooltip("Specify the exit status to be set.")]
         public IntReference exitStatus = new IntReference(0);
 
+        bool taskDone;
 
-        AIBrain aiBrain;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
+
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
 
             if (Play == ExecuteTask.OnStart)
             {
-                StateActivate(aiBrain);
-                aiBrain.TasksDone = true;
+                StateActivate(AIBrain);
+                taskDone = true;
             }
         }
 
@@ -45,10 +50,10 @@ namespace Malbers.Integration.AITree
         {
             if (Play == ExecuteTask.OnUpdate)
             {
-                StateActivate(aiBrain); //If the animal is in range of the Target
+                StateActivate(AIBrain); //If the animal is in range of the Target
             }
 
-            if (aiBrain.TasksDone || Play == ExecuteTask.OnExit)
+            if (taskDone || Play == ExecuteTask.OnExit)
             {
                 return State.Success;
             }
@@ -62,14 +67,14 @@ namespace Malbers.Integration.AITree
         {
             if (Play == ExecuteTask.OnExit) //If the animal is in range of the Target
             {
-                StateActivate(aiBrain);
-                aiBrain.TasksDone = true;
+                StateActivate(AIBrain);               
             }
+            taskDone = false;
         }
 
-        private void StateActivate(AIBrain aiBrain)
+        private void StateActivate(AIBrain AIBrain)
         {
-            if (PlayNearTarget && !aiBrain.AIControl.HasArrived)
+            if (PlayNearTarget && !AIBrain.AIControl.HasArrived)
             {
                 return; //Dont play if Play on target is true but we are not near the target.
             }
@@ -77,16 +82,16 @@ namespace Malbers.Integration.AITree
             switch (affect)
             {
                 case Affected.Self:
-                    PlayState(aiBrain.Animal);
-                    aiBrain.TasksDone = true;
+                    PlayState(AIBrain.Animal);
+                    taskDone = true;
                     break;
                 case Affected.Target:
-                    if (aiBrain.TargetAnimal)
+                    if (AIBrain.TargetAnimal)
                     {
-                        PlayState(aiBrain.TargetAnimal);
+                        PlayState(AIBrain.TargetAnimal);
                     }
 
-                    aiBrain.TasksDone = true;
+                    taskDone = true;
                     break;
                 default:
                     break;

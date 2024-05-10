@@ -11,10 +11,10 @@ namespace Malbers.Integration.AITree
     public enum PlayWhen { PlayOnce, PlayForever, Interrupt }
 
     [NodeContent("Play Mode", "Animal Controller/Animal/Play Mode", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MPlayModeNode : TaskNode
+    public class MPlayModeNode : MTaskNode
     {
 
-        [Tooltip("Mode you want to activate when the brain is using this task")]
+        [Tooltip("Mode you want to activate when the AIBrain is using this task")]
         public ModeID modeID;
         [Tooltip("Ability ID for the Mode... if is set to -99 it will play a random Ability")]
         public IntReference AbilityID = new(-99);
@@ -45,28 +45,26 @@ namespace Malbers.Integration.AITree
         [Tooltip("Align time to rotate towards the Target")]
         public float alignTime = 0.3f;
         bool defaultIgnoreFirstCoolDown;
-        AIBrain aiBrain;
         bool modePlayed;
         float startTime;
 
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
             modePlayed = false;
             startTime = Time.time;
             defaultIgnoreFirstCoolDown = IgnoreFirstCoolDown;
-            aiBrain.AIControl.AutoNextTarget = false;
+            AIBrain.AIControl.AutoNextTarget = false;
             if (CoolDown <= 0)
             {
                 if (Play == PlayWhen.PlayOnce)
                 {
-                    if (near && !aiBrain.AIControl.HasArrived)
+                    if (near && !AIBrain.AIControl.HasArrived)
                     {
                         return; //Dont play if Play on target is true but we are not near the target.
                     }
 
 
-                    PlayMode(aiBrain);
+                    PlayMode(AIBrain);
 
                 }
                 else if (Play == PlayWhen.Interrupt)
@@ -74,12 +72,12 @@ namespace Malbers.Integration.AITree
                     switch (affect)
                     {
                         case Affected.Self:
-                            aiBrain.Animal.Mode_Interrupt();
+                            AIBrain.Animal.Mode_Interrupt();
                             break;
                         case Affected.Target:
-                            if (aiBrain.TargetAnimal != null)
+                            if (AIBrain.TargetAnimal != null)
                             {
-                                aiBrain.TargetAnimal.Mode_Interrupt();
+                                AIBrain.TargetAnimal.Mode_Interrupt();
                             }
                             break;
                         default:
@@ -93,7 +91,7 @@ namespace Malbers.Integration.AITree
 
         protected override State OnUpdate()
         {
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near && !AIBrain.AIControl.HasArrived)
             {
                 Debug.Log("Not Arrived");
                 return State.Running; //Dont play if Play on target is true but we are not near the target.
@@ -107,7 +105,7 @@ namespace Malbers.Integration.AITree
                         {
                             if (MTools.ElapsedTime(startTime, CoolDown))
                             {
-                                PlayMode(aiBrain);
+                                PlayMode(AIBrain);
                             }
                         }
                         break;
@@ -117,18 +115,18 @@ namespace Malbers.Integration.AITree
                     if (IgnoreFirstCoolDown) //Means the Mode has not played
                     {
                         IgnoreFirstCoolDown = false;
-                        PlayMode(aiBrain);
+                        PlayMode(AIBrain);
                         startTime = Time.time;  // Reset the cooldown timer
                     }
 
                     if (!modePlayed && CoolDown <= 0)
                     {
-                        PlayModeForever(aiBrain);
+                        PlayModeForever(AIBrain);
                     }
 
                     if (MTools.ElapsedTime(startTime, CoolDown) && CoolDown > 0) //If the animal is in range of the Target
                     {
-                        PlayMode(aiBrain);
+                        PlayMode(AIBrain);
                         startTime = Time.time; // Reset the cooldown timer
                     }
                     break;
@@ -140,12 +138,12 @@ namespace Malbers.Integration.AITree
                             switch (affect)
                             {
                                 case Affected.Self:
-                                    aiBrain.Animal.Mode_Interrupt();
+                                    AIBrain.Animal.Mode_Interrupt();
                                     break;
                                 case Affected.Target:
-                                    if (aiBrain.TargetAnimal != null)
+                                    if (AIBrain.TargetAnimal != null)
                                     {
-                                        aiBrain.TargetAnimal.Mode_Interrupt();
+                                        AIBrain.TargetAnimal.Mode_Interrupt();
                                     }
                                     break;
                                 default:
@@ -174,7 +172,7 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
-            var animal = affect == Affected.Self ? aiBrain.Animal : aiBrain.TargetAnimal;
+            var animal = affect == Affected.Self ? AIBrain.Animal : AIBrain.TargetAnimal;
 
             if (animal != null && animal.IsPlayingMode && StopModeOnExit)
             {
@@ -184,23 +182,23 @@ namespace Malbers.Integration.AITree
             IgnoreFirstCoolDown = defaultIgnoreFirstCoolDown;
         }
 
-        private bool PlayMode(AIBrain aiBrain)
+        private bool PlayMode(AIBrain AIBrain)
         {
             switch (affect)
             {
                 case Affected.Self:
-                    var Direction_to_Target = aiBrain.Target != null ? (aiBrain.Target.position - aiBrain.Eyes.position) : aiBrain.Animal.Forward;
+                    var Direction_to_Target = AIBrain.Target != null ? (AIBrain.Target.position - AIBrain.Eyes.position) : AIBrain.Animal.Forward;
 
-                    var EyesForward = Vector3.ProjectOnPlane(aiBrain.Eyes.forward, aiBrain.Animal.UpVector);
+                    var EyesForward = Vector3.ProjectOnPlane(AIBrain.Eyes.forward, AIBrain.Animal.UpVector);
                     if (ModeAngle == 360f || Vector3.Dot(Direction_to_Target.normalized, EyesForward) > Mathf.Cos(ModeAngle * 0.5f * Mathf.Deg2Rad)) //Mean is in Range:
                     {
-                        if (aiBrain.Animal.Mode_ForceActivate(modeID, AbilityID))
+                        if (AIBrain.Animal.Mode_TryActivate(modeID, AbilityID))
                         {
-                            if (lookAtAlign && aiBrain.Target)
+                            if (lookAtAlign && AIBrain.Target)
                             {
-                                aiBrain.StartCoroutine(MTools.AlignLookAtTransform(aiBrain.Animal.transform, aiBrain.AIControl.GetTargetPosition(), alignTime));
+                                AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.Animal.transform, AIBrain.AIControl.GetTargetPosition(), alignTime));
                             }
-                            aiBrain.Animal.Mode_SetPower(ModePower);
+                            AIBrain.Animal.Mode_SetPower(ModePower);
                             if (Play == PlayWhen.PlayForever)
                             {
                                 return true;
@@ -211,18 +209,18 @@ namespace Malbers.Integration.AITree
                     }
                     break;
                 case Affected.Target:
-                    Direction_to_Target = aiBrain.Eyes.position - aiBrain.Target.position; //Reverse the Direction
-                    EyesForward = Vector3.ProjectOnPlane(aiBrain.Target.forward, aiBrain.Animal.UpVector);
+                    Direction_to_Target = AIBrain.Eyes.position - AIBrain.Target.position; //Reverse the Direction
+                    EyesForward = Vector3.ProjectOnPlane(AIBrain.Target.forward, AIBrain.Animal.UpVector);
 
                     if (ModeAngle == 360f || Vector3.Dot(Direction_to_Target.normalized, EyesForward) > Mathf.Cos(ModeAngle * 0.5f * Mathf.Deg2Rad)) //Mean is in Range:
                     {
-                        if (aiBrain.TargetAnimal && aiBrain.TargetAnimal.Mode_ForceActivate(modeID, AbilityID))
+                        if (AIBrain.TargetAnimal && AIBrain.TargetAnimal.Mode_ForceActivate(modeID, AbilityID))
                         {
-                            if (lookAtAlign && aiBrain.Target)
+                            if (lookAtAlign && AIBrain.Target)
                             {
-                                aiBrain.StartCoroutine(MTools.AlignLookAtTransform(aiBrain.TargetAnimal.transform, aiBrain.transform, alignTime));
+                                AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.TargetAnimal.transform, AIBrain.transform, alignTime));
                             }
-                            aiBrain.TargetAnimal.Mode_SetPower(ModePower);
+                            AIBrain.TargetAnimal.Mode_SetPower(ModePower);
                             if (Play == PlayWhen.PlayForever)
                             {
                                 return true;
@@ -239,42 +237,42 @@ namespace Malbers.Integration.AITree
             return false;
         }
 
-        private bool PlayModeForever(AIBrain brain)
+        private bool PlayModeForever(AIBrain AIBrain)
         {
             switch (affect)
             {
                 case Affected.Self:
-                    var Direction_to_Target = brain.Target != null ? (brain.Target.position - brain.Eyes.position) : brain.Animal.Forward;
+                    var Direction_to_Target = AIBrain.Target != null ? (AIBrain.Target.position - AIBrain.Eyes.position) : AIBrain.Animal.Forward;
 
-                    var EyesForward = Vector3.ProjectOnPlane(brain.Eyes.forward, brain.Animal.UpVector);
+                    var EyesForward = Vector3.ProjectOnPlane(AIBrain.Eyes.forward, AIBrain.Animal.UpVector);
                     if (ModeAngle == 360f || Vector3.Dot(Direction_to_Target.normalized, EyesForward) > Mathf.Cos(ModeAngle * 0.5f * Mathf.Deg2Rad)) //Mean is in Range:
                     {
-                        if (brain.Animal.Mode_TryActivate(modeID, AbilityID))
+                        if (AIBrain.Animal.Mode_TryActivate(modeID, AbilityID))
                         {
-                            if (lookAtAlign && brain.Target)
+                            if (lookAtAlign && AIBrain.Target)
                             {
-                                brain.StartCoroutine(MTools.AlignLookAtTransform(brain.Animal.transform, brain.AIControl.GetTargetPosition(), alignTime));
+                                AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.Animal.transform, AIBrain.AIControl.GetTargetPosition(), alignTime));
                             }
 
-                            brain.Animal.Mode_SetPower(ModePower);
+                            AIBrain.Animal.Mode_SetPower(ModePower);
                             return true;
                         }
                     }
                     break;
                 case Affected.Target:
-                    Direction_to_Target = brain.Eyes.position - brain.Target.position; //Reverse the Direction
-                    EyesForward = Vector3.ProjectOnPlane(brain.Target.forward, brain.Animal.UpVector);
+                    Direction_to_Target = AIBrain.Eyes.position - AIBrain.Target.position; //Reverse the Direction
+                    EyesForward = Vector3.ProjectOnPlane(AIBrain.Target.forward, AIBrain.Animal.UpVector);
 
                     if (ModeAngle == 360f || Vector3.Dot(Direction_to_Target.normalized, EyesForward) > Mathf.Cos(ModeAngle * 0.5f * Mathf.Deg2Rad)) //Mean is in Range:
                     {
-                        if (brain.TargetAnimal && brain.TargetAnimal.Mode_TryActivate(modeID, AbilityID))
+                        if (AIBrain.TargetAnimal && AIBrain.TargetAnimal.Mode_TryActivate(modeID, AbilityID))
                         {
-                            if (lookAtAlign && brain.Target)
+                            if (lookAtAlign && AIBrain.Target)
                             {
-                                brain.StartCoroutine(MTools.AlignLookAtTransform(brain.TargetAnimal.transform, brain.transform, alignTime));
+                                AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.TargetAnimal.transform, AIBrain.transform, alignTime));
                             }
 
-                            brain.TargetAnimal.Mode_SetPower(ModePower);
+                            AIBrain.TargetAnimal.Mode_SetPower(ModePower);
                             return true;
                         }
                     }

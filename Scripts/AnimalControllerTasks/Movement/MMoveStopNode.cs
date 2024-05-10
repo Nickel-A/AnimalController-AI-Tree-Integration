@@ -10,7 +10,7 @@ namespace Malbers.Integration.AITree
 {
     [NodeContent("Move Stop", "Animal Controller/ACMovement/Move Stop", IconPath = "Icons/AnimalAI_Icon.png")]
 
-    public class MMoveStopNode : TaskNode
+    public class MMoveStopNode : MTaskNode
     {
         public enum MoveType
         {
@@ -52,28 +52,27 @@ namespace Malbers.Integration.AITree
         public bool StopOnArrive = true;
         float defaultStopdistance;
         Transform currentTarget;
-        AIBrain aiBrain;
         bool arrived;
         bool failed;
+        TaskVariables taskVars = new TaskVariables();
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();            
         }
 
         protected override void OnEntry()
         {
-            defaultStopdistance = aiBrain.AIControl.StoppingDistance;
-            aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;      //IMPORTANT or the animal will try to Move if the Target moves
+            defaultStopdistance = AIBrain.AIControl.StoppingDistance;
+            AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;      //IMPORTANT or the animal will try to Move if the Target moves
 
             switch (task)
             {
                 case MoveType.MoveToCurrentTarget:
-                    if (aiBrain.AIControl.Target)
+                    if (AIBrain.AIControl.Target)
                     {
-                        aiBrain.AIControl.SetTarget(aiBrain.AIControl.Target, true); //Reset the Target
-                        aiBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
+                        AIBrain.AIControl.SetTarget(AIBrain.AIControl.Target, true); //Reset the Target
+                        AIBrain.AIControl.UpdateDestinationPosition = true;          //Check if the target has moved
                     }
                     else
                     {
@@ -82,8 +81,8 @@ namespace Malbers.Integration.AITree
                     }
                     break;
                 case MoveType.MoveToNextTarget:
-                    if (aiBrain.AIControl.NextTarget)
-                        aiBrain.AIControl.MovetoNextTarget();
+                    if (AIBrain.AIControl.NextTarget)
+                        AIBrain.AIControl.MovetoNextTarget();
                     else
                     {
                         Debug.LogWarning("The Animal does not have a next Target", this);
@@ -91,42 +90,42 @@ namespace Malbers.Integration.AITree
                     }
                     break;
                 case MoveType.Stop:
-                    aiBrain.AIControl.Stop();
-                    aiBrain.AIControl.UpdateDestinationPosition = false;         //IMPORTANT or the animal will try to Move if the Target moves
+                    AIBrain.AIControl.Stop();
+                    AIBrain.AIControl.UpdateDestinationPosition = false;         //IMPORTANT or the animal will try to Move if the Target moves
                     arrived = true;
                     break;
                 case MoveType.LockAnimalMovement:
-                    aiBrain.Animal.LockMovement = true;
+                    AIBrain.Animal.LockMovement = true;
                     arrived = true;
                     break;
                 case MoveType.RotateInPlace:
-                    aiBrain.AIControl.RemainingDistance = 0;
-                    aiBrain.AIControl.DestinationPosition = aiBrain.AIControl.Transform.position;//Set yourself as the Destination Pos
-                    aiBrain.AIControl.LookAtTargetOnArrival = true;          //Set the Animal to look Forward to the Target
-                    aiBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
-                    aiBrain.AIControl.HasArrived = true;      //Set the Stopping Distance to almost nothing that way the animal keeps trying to go towards the target
-                    aiBrain.AIControl.Stop();
+                    AIBrain.AIControl.RemainingDistance = 0;
+                    AIBrain.AIControl.DestinationPosition = AIBrain.AIControl.Transform.position;//Set yourself as the Destination Pos
+                    AIBrain.AIControl.LookAtTargetOnArrival = true;          //Set the Animal to look Forward to the Target
+                    AIBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
+                    AIBrain.AIControl.HasArrived = true;      //Set the Stopping Distance to almost nothing that way the animal keeps trying to go towards the target
+                    AIBrain.AIControl.Stop();
                     arrived = true;
                     break;
                 case MoveType.Flee:
-                    aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
-                    Flee(aiBrain);
+                    AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+                    Flee(AIBrain);
                     break;
                 case MoveType.KeepDistance:
-                    aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
-                    KeepDistance(aiBrain);
+                    AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+                    KeepDistance(AIBrain);
                     break;
                 case MoveType.CircleAround:
-                    aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
-                    CalculateClosestCirclePoint(aiBrain);
+                    AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+                    CalculateClosestCirclePoint(AIBrain);
                     break;
                 case MoveType.MoveToLastKnownDestination:
-                    var LastDestination = aiBrain.AIControl.DestinationPosition; //Store the Last Destination
-                    Debug.DrawRay(aiBrain.Position, Vector3.up, Color.white, 1);
-                    aiBrain.AIControl.DestinationPosition = Vector3.zero;
-                    aiBrain.AIControl.SetDestination(LastDestination, true); //Go to the last Destination position
-                    aiBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
-                    aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+                    var LastDestination = AIBrain.AIControl.DestinationPosition; //Store the Last Destination
+                    Debug.DrawRay(AIBrain.Position, Vector3.up, Color.white, 1);
+                    AIBrain.AIControl.DestinationPosition = Vector3.zero;
+                    AIBrain.AIControl.SetDestination(LastDestination, true); //Go to the last Destination position
+                    AIBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
+                    AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
                     break;
                 default:
                     break;
@@ -142,20 +141,20 @@ namespace Malbers.Integration.AITree
                 case MoveType.MoveToCurrentTarget: StopOnArrived(); break;
                 case MoveType.MoveToNextTarget:
                     {
-                        if (currentTarget != aiBrain.Target)
+                        if (currentTarget != AIBrain.Target)
                         {
                             StopOnArrived();
                         }
                         break;
                     }
-                case MoveType.Flee: Flee(aiBrain); break;
-                case MoveType.KeepDistance: KeepDistance(aiBrain); break;
-                case MoveType.CircleAround: CircleAround(aiBrain); break;
+                case MoveType.Flee: Flee(AIBrain); break;
+                case MoveType.KeepDistance: KeepDistance(AIBrain); break;
+                case MoveType.CircleAround: CircleAround(AIBrain); break;
                 case MoveType.MoveToLastKnownDestination:
-                    if (aiBrain.AIControl.HasArrived)
+                    if (AIBrain.AIControl.HasArrived)
                     {
-                        OnTargetArrived(aiBrain);
-                        aiBrain.AIControl.Stop();
+                        OnTargetArrived(AIBrain);
+                        AIBrain.AIControl.Stop();
                         arrived = true;
                     }
                     break;
@@ -177,33 +176,33 @@ namespace Malbers.Integration.AITree
         {
             switch (task)
             {
-                case MoveType.LockAnimalMovement: aiBrain.Animal.LockMovement = false; break;
+                case MoveType.LockAnimalMovement: AIBrain.Animal.LockMovement = false; break;
                 default: break;
             }
             failed = false;
             arrived = false;
-            aiBrain.AIControl.StoppingDistance = defaultStopdistance;
+            AIBrain.AIControl.StoppingDistance = defaultStopdistance;
         }
 
         private void StopOnArrived()
         {
-            if (aiBrain.AIControl.HasArrived)
+            if (AIBrain.AIControl.HasArrived)
             {
-                aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+                AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
 
                 if (StopOnArrive)
                 {
-                    aiBrain.AIControl.AutoNextTarget = false;
-                    aiBrain.AIControl.Stop();
+                    AIBrain.AIControl.AutoNextTarget = false;
+                    AIBrain.AIControl.Stop();
                 }
 
-                aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
                 arrived = true;
             }
         }
 
 
-        void OnTargetArrived(AIBrain aiBrain)
+        void OnTargetArrived(AIBrain AIBrain)
         {
             switch (task)
             {
@@ -218,15 +217,18 @@ namespace Malbers.Integration.AITree
                 case MoveType.CircleAround: break;
                 case MoveType.KeepDistance: break;
 
-                case MoveType.MoveToLastKnownDestination: aiBrain.AIControl.Stop(); arrived = true; break;
+                case MoveType.MoveToLastKnownDestination: AIBrain.AIControl.Stop(); arrived = true; break;
                 default:
                     break;
             }
         }
 
-        private void CalculateClosestCirclePoint(AIBrain aiBrain)
+        private void CalculateClosestCirclePoint(AIBrain AIBrain)
         {
-            if (aiBrain.Target == null) return;
+            if (AIBrain.Target == null)
+            {
+                return;
+            }
 
             float arcDegree = 360.0f / arcsCount;
             int Dir = direction == CircleDirection.Right ? 1 : -1;
@@ -240,9 +242,9 @@ namespace Malbers.Integration.AITree
 
             for (int i = 0; i < arcsCount; ++i)
             {
-                var CurrentPoint = aiBrain.Target.position + (currentDirection.normalized * distance);
+                var CurrentPoint = AIBrain.Target.position + (currentDirection.normalized * distance);
 
-                float DistCurrentPoint = Vector3.Distance(CurrentPoint, aiBrain.transform.position);
+                float DistCurrentPoint = Vector3.Distance(CurrentPoint, AIBrain.transform.position);
 
                 if (minDist > DistCurrentPoint)
                 {
@@ -254,170 +256,156 @@ namespace Malbers.Integration.AITree
                 currentDirection = rotation * currentDirection;
             }
 
-            aiBrain.AIControl.UpdateDestinationPosition = false;
-            aiBrain.AIControl.StoppingDistance = stoppingDistance;
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.StoppingDistance = stoppingDistance;
 
-            aiBrain.TasksVars.intValue = MinIndex;   //Store the Point index on the vars of this Task
-            aiBrain.TasksVars.boolValue = true;      //Store true on the Variables, so we can seek for the next point
-                                                     // brain.TaskAddBool(index, circleAround, true);          //Store true on the Variables, so we can seek for the next point
+            taskVars.IntValue = MinIndex;
+            taskVars.BoolValue = true;
 
-            aiBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-            aiBrain.AIControl.SetDestination(MinPoint, true);
-            aiBrain.AIControl.HasArrived = false;
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.SetDestination(MinPoint, true);
+            AIBrain.AIControl.HasArrived = false;
         }
 
-        private void CircleAround(AIBrain aiBrain)
+        private void CircleAround(AIBrain AIBrain)
         {
-
-            //  Debug.Log("circle aound = ");
-            if (aiBrain.AIControl.HasArrived) //Means that we have arrived to the point so set the next point
+            if (AIBrain.AIControl.HasArrived)
             {
-                aiBrain.TasksVars.intValue++;
-                aiBrain.TasksVars.intValue = aiBrain.TasksVars.intValue % arcsCount;
-                aiBrain.TasksVars.boolValue = true;      //Set this so we can seek for the next point
-                                                         //brain.TaskSetBool(index, circleAround, true);   //Set this so we can seek for the next point
+                taskVars.IntValue++;
+                taskVars.IntValue = taskVars.IntValue % arcsCount;
+                taskVars.BoolValue = true;
             }
 
-            if (aiBrain.TasksVars.boolValue || aiBrain.AIControl.TargetIsMoving)
-            // if (brain.TaskGetBool(index, circleAround) || brain.AIControl.TargetIsMoving)
+            if (taskVars.BoolValue || AIBrain.AIControl.TargetIsMoving)
             {
-                int pointIndex = aiBrain.TasksVars.intValue;
-
+                int pointIndex = taskVars.IntValue;
                 float arcDegree = 360.0f / arcsCount;
                 int Dir = direction == CircleDirection.Right ? 1 : -1;
                 Quaternion rotation = Quaternion.Euler(0, Dir * arcDegree * pointIndex, 0);
 
-
-                // var distance = this.distance * brain.Animal.ScaleFactor; //Remember to use the scale
-
                 Vector3 currentDirection = Vector3.forward;
                 currentDirection = rotation * currentDirection;
 
-                // Debug.Log(brain.Target);
+                Vector3 CurrentPoint = AIBrain.Target.position + (currentDirection.normalized * distance);
 
-                Vector3 CurrentPoint = aiBrain.Target.position + (currentDirection.normalized * distance);
+                AIBrain.AIControl.UpdateDestinationPosition = false;
+                AIBrain.AIControl.SetDestination(CurrentPoint, true);
 
-
-
-                aiBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-                aiBrain.AIControl.SetDestination(CurrentPoint, true);
-
-                aiBrain.TasksVars.boolValue = false;           //Set this so we can seek for the next point
-                                                               //brain.TaskSetBool(index, circleAround, false);      //Set this so we can seek for the next point
+                taskVars.BoolValue = false;
             }
         }
 
-        private void KeepDistance(AIBrain aiBrain)
+        private void KeepDistance(AIBrain AIBrain)
         {
             
-            if (aiBrain.Target)
+            if (AIBrain.Target)
             {
-                aiBrain.AIControl.UpdateDestinationPosition = true;
+                AIBrain.AIControl.UpdateDestinationPosition = true;
 
-                aiBrain.AIControl.StoppingDistance = stoppingDistance;
-                //aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                AIBrain.AIControl.StoppingDistance = stoppingDistance;
+                //AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
 
-                Vector3 KeepDistPoint = aiBrain.Animal.transform.position;
+                Vector3 KeepDistPoint = AIBrain.Animal.transform.position;
 
-                var DirFromTarget = KeepDistPoint - aiBrain.Target.position;
+                var DirFromTarget = KeepDistPoint - AIBrain.Target.position;
 
                 float halThreshold = distanceThreshold * 0.5f;
                 float TargetDist = DirFromTarget.magnitude;
 
-                var distance = this.distance * aiBrain.Animal.ScaleFactor; //Remember to use the scale
+                var distance = this.distance * AIBrain.Animal.ScaleFactor; //Remember to use the scale
 
                 if (TargetDist < distance - distanceThreshold) //Flee 
                 {
                     float DistanceDiff = distance - TargetDist;
-                    KeepDistPoint = CalculateDistance(aiBrain, DirFromTarget, DistanceDiff, halThreshold);
-                    // brain.TaskDone(index,false);
+                    KeepDistPoint = CalculateDistance(AIBrain, DirFromTarget, DistanceDiff, halThreshold);
+                    // AIBrain.TaskDone(index,false);
 
 
                 }
                 else if (TargetDist > distance + distanceThreshold) //Go to Target
                 {
                     float DistanceDiff = TargetDist - distance;
-                    KeepDistPoint = CalculateDistance(aiBrain, -DirFromTarget, DistanceDiff, -halThreshold);
-                    //brain.TaskDone(index, false);
+                    KeepDistPoint = CalculateDistance(AIBrain, -DirFromTarget, DistanceDiff, -halThreshold);
+                    //AIBrain.TaskDone(index, false);
                 }
                 else
                 {
-                    if (!aiBrain.AIControl.HasArrived)
+                    if (!AIBrain.AIControl.HasArrived)
                     {
-                        aiBrain.AIControl.Stop(); //It need to stop
+                        AIBrain.AIControl.Stop(); //It need to stop
                     }
                     else
                     {
-                        aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                        AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
 
                     }
 
 
-                    aiBrain.AIControl.HasArrived = true;
-                    aiBrain.AIControl.StoppingDistance = distance + distanceThreshold; //Force to have a greater Stopping Distance so the animal can rotate around the target
-                    aiBrain.AIControl.RemainingDistance = 0; //Force the remaining distance to be 0
-                    //  brain.TaskDone(index,false);
+                    AIBrain.AIControl.HasArrived = true;
+                    AIBrain.AIControl.StoppingDistance = distance + distanceThreshold; //Force to have a greater Stopping Distance so the animal can rotate around the target
+                    AIBrain.AIControl.RemainingDistance = 0; //Force the remaining distance to be 0
+                    //  AIBrain.TaskDone(index,false);
                     arrived = true;
                 }
             }
         }
 
-        private Vector3 CalculateDistance(AIBrain brain, Vector3 DirFromTarget, float DistanceDiff, float halThreshold)
+        private Vector3 CalculateDistance(AIBrain AIBrain, Vector3 DirFromTarget, float DistanceDiff, float halThreshold)
         {
-            Vector3 KeepDistPoint = brain.transform.position + (DirFromTarget.normalized * (DistanceDiff + halThreshold));
-            brain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-            brain.AIControl.StoppingDistance = stoppingDistance;
-            brain.AIControl.SetDestination(KeepDistPoint, true);
+            Vector3 KeepDistPoint = AIBrain.transform.position + (DirFromTarget.normalized * (DistanceDiff + halThreshold));
+            AIBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
+            AIBrain.AIControl.StoppingDistance = stoppingDistance;
+            AIBrain.AIControl.SetDestination(KeepDistPoint, true);
             return KeepDistPoint;
         }
 
 
-        private void Flee(AIBrain aiBrain)
+        private void Flee(AIBrain AIBrain)
         {
-            if (aiBrain.Target)
+            if (AIBrain.Target)
             {
                 //Animal wont Update the Destination Position with the Target position. We need to go to the opposite side
-                aiBrain.AIControl.UpdateDestinationPosition = false;
+                AIBrain.AIControl.UpdateDestinationPosition = false;
 
                 //We can look at the target on arrival, we are fleeing from the target!
-                // brain.AIControl.LookAtTargetOnArrival = false;
+                // AIBrain.AIControl.LookAtTargetOnArrival = false;
 
-                var CurrentPos = aiBrain.Animal.transform.position;
+                var CurrentPos = AIBrain.Animal.transform.position;
 
-                var AgentDistance = Vector3.Distance(aiBrain.Animal.transform.position, aiBrain.Position);
-                var TargetDirection = CurrentPos - aiBrain.Target.position;
+                var AgentDistance = Vector3.Distance(AIBrain.Animal.transform.position, AIBrain.Position);
+                var TargetDirection = CurrentPos - AIBrain.Target.position;
 
                 float TargetDistance = TargetDirection.magnitude;
 
-                var distance = this.distance * aiBrain.Animal.ScaleFactor; //Remember to use the scale
+                var distance = this.distance * AIBrain.Animal.ScaleFactor; //Remember to use the scale
 
                 if (TargetDistance < distance)
                 {
                     //player is too close from us, pick a point diametrically oppossite at twice that distance and try to move there.
-                    Vector3 fleePoint = aiBrain.Target.position + (TargetDirection.normalized * (distance + (AgentDistance * 2f)));
+                    Vector3 fleePoint = AIBrain.Target.position + (TargetDirection.normalized * (distance + (AgentDistance * 2f)));
 
-                    aiBrain.AIControl.StoppingDistance = stoppingDistance;
+                    AIBrain.AIControl.StoppingDistance = stoppingDistance;
 
                     Debug.DrawRay(fleePoint, Vector3.up * 3, Color.blue, 2f);
 
                     //If the New flee Point is not in the Stopping distance radius then set a new Flee Point
                     if (Vector3.Distance(CurrentPos, fleePoint) > stoppingDistance)
                     {
-                        aiBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal wont Update the Destination Position with the Target position.
-                        aiBrain.AIControl.SetDestination(fleePoint, true);
+                        AIBrain.AIControl.UpdateDestinationPosition = false; //Means the Animal wont Update the Destination Position with the Target position.
+                        AIBrain.AIControl.SetDestination(fleePoint, true);
 
-                        if (aiBrain.debug)
+                        if (AIBrain.debug)
                         {
-                            Debug.DrawRay(fleePoint, aiBrain.transform.up, Color.blue, 2f);
+                            Debug.DrawRay(fleePoint, AIBrain.transform.up, Color.blue, 2f);
                         }
                     }
                 }
                 else
                 {
-                    aiBrain.AIControl.Stop();
-                    aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
+                    AIBrain.AIControl.Stop();
+                    AIBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
 
-                    //if (!FleeForever) aiBrain.TasksDone=true; //If flee forever is false then flee is finished
+                    //if (!FleeForever) taskDone=true; //If flee forever is false then flee is finished
                 }
             }
         }

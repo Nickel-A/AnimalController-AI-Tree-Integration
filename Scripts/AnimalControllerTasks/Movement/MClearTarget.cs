@@ -1,19 +1,16 @@
-using MalbersAnimations.Controller.AI;
 using RenownedGames.AITree;
-using UnityEngine;
 
 namespace Malbers.Integration.AITree
 {
 
     [NodeContent("Clear Target", "Animal Controller/ACMovement/Clear Target", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MClearTarget : TaskNode
+    public class MClearTarget : MTaskNode
     {
         // public GameObject target;
-        private AIBrain aiBrain;
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().gameObject.GetComponent<AIBrain>();
-            aiBrain.AIControl.SetTarget(null, false);
+            AIBrain = GetOwner().gameObject.GetComponent<AIBrain>();
+            AIBrain.AIControl.SetTarget(null, false);
         }
 
         protected override State OnUpdate()

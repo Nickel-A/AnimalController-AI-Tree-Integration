@@ -1,5 +1,6 @@
 ﻿using MalbersAnimations;
 using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
 using RenownedGames.AITree;
 using System.ComponentModel;
 using UnityEngine;
@@ -9,30 +10,27 @@ using State = RenownedGames.AITree.State;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("In Zone", "Animal Controller/Animal/In Zone", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MInZoneNode : TaskNode
+    public class MInZoneNode : MTaskNode
     {
         [Header("Node")]
         [HelpBox]
         public string description = "Specifies whether to activate a Zone when the Animal(Self) or the Target(Target) is within that zone.";
 
-
         [Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
         public Affected affect = Affected.Self;
 
-        AIBrain aiBrain;
-        bool Done;
+        bool done;
 
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            DoTask(aiBrain);
+            DoTask(AIBrain);
         }
 
         protected override State OnUpdate()
         {
-            DoTask(aiBrain);
+            DoTask(AIBrain);
 
-            if (Done)
+            if (done)
             {
                 return State.Success;
 
@@ -44,14 +42,14 @@ namespace Malbers.Integration.AITree
         }
 
 
-        private void DoTask(AIBrain aiBrain)
+        private void DoTask(AIBrain AIBrain)
         {
-            Done = false;
+            done = false;
 
             switch (affect)
             {
-                case Affected.Self: Done = InZone(aiBrain.Animal); break;
-                case Affected.Target: Done = InZone(aiBrain.TargetAnimal); break;
+                case Affected.Self: done = InZone(AIBrain.Animal); break;
+                case Affected.Target: done = InZone(AIBrain.TargetAnimal); break;
             }
         }
 

@@ -35,7 +35,7 @@ namespace Malbers.Integration.AITree
             distance = 100000f;
             faction = GetOwner().gameObject.GetComponent<Faction>();
             faction.inFormation = false;
-            Faction[] factions = FindObjectsOfType<Faction>();
+            Faction[] factions = FindObjectsByType<Faction>(FindObjectsSortMode.None);
             foreach (Faction faction in factions)
             {
                 if (mount == null)

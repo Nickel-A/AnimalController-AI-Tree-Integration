@@ -29,12 +29,11 @@ namespace Malbers.Integration.AITree
         public TransformKey AnimalToCheck;
         public TransformKey AttackedBy;
         private MRider mRider;
-        private AIBrain aiBrain;
+
         protected override void OnInitialize()
         {
             faction = GetOwner().gameObject.GetComponent<Faction>();
             if (faction.mount != null) mRider = faction.mount.Rider;
-            aiBrain = GetOwner().GetComponent<AIBrain>();
         }
         protected override bool CalculateResult()
         {
@@ -50,7 +49,6 @@ namespace Malbers.Integration.AITree
                         {
                             return attackStyle == faction.attackStyle;
                         }
-                        break;
                     }
                 case CheckFor.AttackOrder:
                     {
@@ -62,7 +60,6 @@ namespace Malbers.Integration.AITree
                         {
                             return attackOrder == faction.attackOrder;
                         }
-                        break;
                     }
                 case CheckFor.AttackedBy:
                     {
@@ -79,8 +76,6 @@ namespace Malbers.Integration.AITree
                         {
                             return false;
                         }
-
-                        break;
                     }
             }
             return false;

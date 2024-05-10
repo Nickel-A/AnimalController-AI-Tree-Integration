@@ -8,12 +8,12 @@
 //    [NodeContent("New Task", "Animal Controller/New Task")]
 //    public class MCheckLeaderMounted : TaskNode
 //    {
-//        private AIBrain aiBrain;
+//        private AIBrain AIBrain;
 //        private GameObject leader;
 //        protected override void OnEntry()
 //        {
-//            aiBrain =  GetOwner().GetComponent<AIBrain>();
-//            leader = aiBrain.FindLeader(aiBrain.groupName);
+//            AIBrain =  GetOwner().GetComponent<AIBrain>();
+//            leader = AIBrain.FindLeader(AIBrain.groupName);
 //        }
 
 //        protected override State OnUpdate()

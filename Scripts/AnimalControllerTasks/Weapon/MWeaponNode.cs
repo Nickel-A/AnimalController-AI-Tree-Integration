@@ -1,5 +1,5 @@
 ﻿using MalbersAnimations;
-using MalbersAnimations.Controller;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Weapons;
 using RenownedGames.AITree;
 using UnityEngine;
@@ -8,10 +8,8 @@ using State = RenownedGames.AITree.State;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Weapon", "Animal Controller/Weapon/Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MWeaponNode : TaskNode
+    public class MWeaponNode : MTaskNode
     {
-        public enum BrainWeaponActions { Draw_Holster, Store_Weapon, Equip_Weapon, Unequip_Weapon, Aim, Attack, Reload }
-
         [Header("Node")]
         [Tooltip("Play the mode only when the animal has arrived at the target.")]
         public bool near = false;
@@ -35,10 +33,7 @@ namespace Malbers.Integration.AITree
         [Hide("Actions", (int)BrainWeaponActions.Attack)]
         [Tooltip("Set to true to perform the attack once.")]
         public bool attackOnce;
-
-        bool taskDone;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
+        private bool taskDone;
 
         [Hide("Actions", (int)BrainWeaponActions.Attack)]
         [Tooltip("Set to true to use the combo manager for attacks.")]
@@ -51,63 +46,60 @@ namespace Malbers.Integration.AITree
 
         protected override void OnInitialize()
         {
-            base.OnInitialize(); 
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
+            base.OnInitialize();
         }
 
         protected override void OnEntry()
         {
 
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near && !AIBrain.AIControl.HasArrived)
             {
                 return; // Don't play if 'Play on target' is true but we are not near the target.
             }
 
-            if (WeaponManager)
+            if (AIBrain.weaponManager)
             {
                 switch (Actions)
                 {
                     case BrainWeaponActions.Equip_Weapon:
-                        if (WeaponManager.WeaponIsActive == Weapon)
+                        if (AIBrain.weaponManager.WeaponIsActive == Weapon)
                         {
                             taskDone = true;
                             break;
                         }
-                        WeaponManager.Equip_External(Weapon);
+                        AIBrain.weaponManager.Equip_External(Weapon);
                         taskDone = true;
                         break;
                     case BrainWeaponActions.Draw_Holster:
-                        if (WeaponManager.Weapon && WeaponManager.Weapon.HolsterID == HolsterID)
+                        if (AIBrain.weaponManager.Weapon && AIBrain.weaponManager.Weapon.HolsterID == HolsterID)
                         {
                             taskDone = true;
                             break;
                         }
-                        WeaponManager.UnEquip_Fast();
-                        WeaponManager.IgnoreDraw = IgnoreDrawStore;
-                        WeaponManager.Holster_Equip(HolsterID);
+                        AIBrain.weaponManager.UnEquip_Fast();
+                        AIBrain.weaponManager.IgnoreDraw = IgnoreDrawStore;
+                        AIBrain.weaponManager.Holster_Equip(HolsterID);
                         taskDone = true;
                         break;
                     case BrainWeaponActions.Aim:
-                        WeaponManager.Aim_Set(AimValue);
+                        AIBrain.weaponManager.Aim_Set(AimValue);
                         break;
                     case BrainWeaponActions.Attack:
                         break;
                     case BrainWeaponActions.Store_Weapon:
-                        WeaponManager.IgnoreStore = IgnoreDrawStore;
-                        WeaponManager.Aim_Set(false);
-                        WeaponManager.Store_Weapon();
+                        AIBrain.weaponManager.IgnoreStore = IgnoreDrawStore;
+                        AIBrain.weaponManager.Aim_Set(false);
+                        AIBrain.weaponManager.Store_Weapon();
                         taskDone = true;
                         break;
                     case BrainWeaponActions.Reload:
-                        if (WeaponManager.Weapon as MShootable)
+                        if (AIBrain.weaponManager.Weapon as MShootable)
                         {
-                            WeaponManager.ReloadWeapon();
+                            AIBrain.weaponManager.ReloadWeapon();
                         }
                         break;
                     case BrainWeaponActions.Unequip_Weapon:
-                        WeaponManager.UnEquip();
+                        AIBrain.weaponManager.UnEquip();
                         taskDone = true;
                         break;
                     default:
@@ -117,13 +109,13 @@ namespace Malbers.Integration.AITree
             else
             {
                 taskDone = true;
-                Debug.Log("No Weapon Manager Found on the Animal", aiBrain.Animal);
+                Debug.Log("No Weapon Manager Found on the Animal", AIBrain.Animal);
             }
         }
 
         protected override State OnUpdate()
         {
-            if (near && !aiBrain.AIControl.HasArrived)
+            if (near && !AIBrain.AIControl.HasArrived)
             {
                 if (Actions != BrainWeaponActions.Attack)
                 {
@@ -131,82 +123,82 @@ namespace Malbers.Integration.AITree
                 }
             }
 
-            if (WeaponManager)
+            if (AIBrain.weaponManager)
             {
                 switch (Actions)
                 {
                     case BrainWeaponActions.Draw_Holster:
-                        if (WeaponManager.DrawWeapon && WeaponManager.WeaponAction == Weapon_Action.None)
+                        if (AIBrain.weaponManager.DrawWeapon && AIBrain.weaponManager.WeaponAction == Weapon_Action.None)
                         {
-                            WeaponManager.UnEquip_Fast();
-                            WeaponManager.IgnoreDraw = IgnoreDrawStore;
-                            WeaponManager.Holster_Equip(HolsterID);
+                            AIBrain.weaponManager.UnEquip_Fast();
+                            AIBrain.weaponManager.IgnoreDraw = IgnoreDrawStore;
+                            AIBrain.weaponManager.Holster_Equip(HolsterID);
                         }
 
-                        if (WeaponManager.ActiveHolster == HolsterID && WeaponManager.WeaponAction == Weapon_Action.Idle)
+                        if (AIBrain.weaponManager.ActiveHolster == HolsterID && AIBrain.weaponManager.WeaponAction == Weapon_Action.Idle)
                         {
                             taskDone = true;
                         }
                         break;
                     case BrainWeaponActions.Store_Weapon:
-                        if (WeaponManager.WeaponAction == Weapon_Action.None)
+                        if (AIBrain.weaponManager.WeaponAction == Weapon_Action.None)
                         {
                             taskDone = true;
                         }
                         break;
                     case BrainWeaponActions.Aim:
-                        if (WeaponManager.Weapon)
+                        if (AIBrain.weaponManager.Weapon)
                         {
                             taskDone = true;
                         }
                         break;
                     case BrainWeaponActions.Attack:
-                        if (near && !aiBrain.AIControl.HasArrived)
+                        if (near && !AIBrain.AIControl.HasArrived)
                         {
-                            WeaponManager.MainAttackReleased();
-                            WeaponManager.Weapon.Input = false;
+                            AIBrain.weaponManager.MainAttackReleased();
+                            AIBrain.weaponManager.Weapon.Input = false;
                             return State.Running;
                         }
 
-                        if (WeaponManager.Weapon)
+                        if (AIBrain.weaponManager.Weapon)
                         {
-                            if (WeaponManager.Weapon is MMelee)
+                            if (AIBrain.weaponManager.Weapon is MMelee)
                             {
                                 if (useComboManager)
                                 {
-                                    aiBrain.comboManager.Play(branchNumber);
-                                    if (attackOnce && !aiBrain.comboManager.PlayingCombo)
+                                    AIBrain.comboManager.Play(branchNumber);
+                                    if (attackOnce && !AIBrain.comboManager.PlayingCombo)
                                     {
                                         taskDone = true;
                                     }
                                 }
                                 else
                                 {
-                                    WeaponManager.MainAttack();
+                                    AIBrain.weaponManager.MainAttack();
                                     if (attackOnce)
                                     {
-                                        WeaponManager.MainAttackReleased();
+                                        AIBrain.weaponManager.MainAttackReleased();
                                         taskDone = true;
                                     }
                                 }
                             }
                             else
                             {
-                                if (!WeaponManager.Weapon.Input || (WeaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
+                                if (!AIBrain.weaponManager.Weapon.Input || (AIBrain.weaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
                                 {
-                                    WeaponManager.MainAttack();
+                                    AIBrain.weaponManager.MainAttack();
                                 }
                                 else
                                 {
-                                    WeaponManager.MainAttackReleased();
+                                    AIBrain.weaponManager.MainAttackReleased();
                                 }
                             }
                         }
                         break;
                     case BrainWeaponActions.Reload:
-                        if (WeaponManager.Weapon as MShootable)
+                        if (AIBrain.weaponManager.Weapon as MShootable)
                         {
-                            if (!WeaponManager.IsReloading)
+                            if (!AIBrain.weaponManager.IsReloading)
                             {
                                 taskDone = true;
                             }

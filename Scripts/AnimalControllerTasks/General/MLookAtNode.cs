@@ -1,15 +1,17 @@
 ﻿using MalbersAnimations;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
+using RenownedGames.Apex;
+using Unity.VisualScripting;
 using UnityEngine;
 using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look At", "Animal Controller/General/Look At", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MLookAtNode : TaskNode
+    public class MLookAtNode : MTaskNode
     {
-
         public enum LookAtOption1 { CurrentTarget, TransformVar }
         public enum LookAtOption2 { AIAnimal, TransformVar }
 
@@ -18,40 +20,41 @@ namespace Malbers.Integration.AITree
         [UnityEngine.Serialization.FormerlySerializedAs("SetLookAtOn")]
         public Affected SetAimOn = Affected.Self;
 
-        [Hide("SetAimOn", (int)Affected.Self)]
+        [ShowIf("SetAimOn", Affected.Self)]
         public LookAtOption1 LookAtTargetS = LookAtOption1.CurrentTarget;
-        [Hide("SetAimOn", (int)Affected.Target)]
+        [ShowIf("SetAimOn", Affected.Target)]
         public LookAtOption2 LookAtTargetT = LookAtOption2.AIAnimal;
-        [Hide("showTransformVar")]
+        [ShowIf("showTransformVar")]
         public TransformVar TargetVar;
 
         [Tooltip("If true .. it will Look for a gameObject on the Target with the Tag[tag].... else it will look for the gameObject name")]
         public bool UseTag = false;
 
-        [Hide("UseTag", true), Tooltip("Search for the Target Child gameObject name")]
+        [HideIf("UseTag")]
+        [Tooltip("Search for the Target Child gameObject name")]
         public string BoneName = "Head";
-        [Hide("UseTag"), Tooltip("Look for a child gameObject on the Target with the Tag[tag]")]
+        [ShowIf("UseTag"), Tooltip("Look for a child gameObject on the Target with the Tag[tag]")]
         public Tag tag;
         [Tooltip("When the Task ends it will Remove the Target on the Aim Component")]
-        public bool DisableOnExit = true;
+        public bool DisableOnExit = false;
+        Transform child = null;
 
-        bool TaskDone;
-        AIBrain aiBrain;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
+
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
 
-            Transform child = null;
-            if (aiBrain != null)
+            if (AIBrain != null)
             {
-
-
                 if (SetAimOn == Affected.Self)
                 {
                     switch (LookAtTargetS)
                     {
                         case LookAtOption1.CurrentTarget:
-                            child = UseTag ? GetGameObjectByTag(aiBrain.Target) : GetChildByName(aiBrain.Target);
+                            child = UseTag ? GetGameObjectByTag(AIBrain.Target) : GetChildByName(AIBrain.Target);
                             break;
                         case LookAtOption1.TransformVar:
                             child = UseTag ? GetGameObjectByTag(TargetVar.Value) : GetChildByName(TargetVar.Value);
@@ -59,53 +62,48 @@ namespace Malbers.Integration.AITree
                         default:
                             break;
                     }
-
-                    aiBrain.Animal.FindInterface<IAim>()?.SetTarget(child);
-                    Debug.Log("SET");
+                    AIBrain.aim.SetTarget(child);
+                    //AIBrain.Animal.FindInterface<IAim>()?.SetTarget(child);
                 }
                 else
                 {
                     if (LookAtTargetT == LookAtOption2.AIAnimal)
                     {
-                        child = UseTag ? GetGameObjectByTag(aiBrain.Animal.transform) : GetChildByName(aiBrain.Animal.transform);
+                        child = UseTag ? GetGameObjectByTag(AIBrain.Animal.transform) : GetChildByName(AIBrain.Animal.transform);
                     }
                     else
                     {
                         child = UseTag ? GetGameObjectByTag(TargetVar.Value) : GetChildByName(TargetVar.Value);
+
                     }
 
-                    if (aiBrain.Target)
+                    if (AIBrain.Target)
                     {
-                        aiBrain.Target.FindInterface<IAim>()?.SetTarget(child);
+                        AIBrain.aim.SetTarget(child);//.FindInterface<IAim>()?.SetTarget(child);
                     }
                 }
 
-                TaskDone = true;
             }
         }
+
         protected override State OnUpdate()
         {
-            if (TaskDone)
-            {
-                return State.Success;
-            }
-            else
-            {
-                return State.Running;
-            }
+            return State.Success;
         }
 
         protected override void OnExit()
         {
             if (DisableOnExit)
             {
-                aiBrain.Animal.FindInterface<IAim>()?.SetTarget(null);
-                if (aiBrain.Target)
+                AIBrain.aim.FindInterface<IAim>()?.SetTarget(null);
+                //AIBrain.Animal.FindInterface<IAim>()?.SetTarget(null);
+                if (AIBrain.Target)
                 {
-                    aiBrain.Target.FindInterface<IAim>()?.SetTarget(null);
+                    AIBrain.Target.FindInterface<IAim>()?.SetTarget(null);
                 }
             }
         }
+
         private Transform GetChildByName(Transform Target)
         {
             if (Target && !string.IsNullOrEmpty(BoneName))

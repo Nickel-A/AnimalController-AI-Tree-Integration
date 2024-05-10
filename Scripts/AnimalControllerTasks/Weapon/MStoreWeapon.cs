@@ -6,12 +6,10 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Store Weapon", "Animal Controller/Weapon/Store Weapon", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MStoreWeapon : TaskNode
+    public class MStoreWeapon : MTaskNode
     {
         [Header("Node")]
         bool taskDone;
-        AIBrain aiBrain;
-        MWeaponManager WeaponManager;
         [Tooltip("Ignore draw and store weapon animations.")]
         public bool IgnoreDrawStore = false;
 
@@ -21,8 +19,6 @@ namespace Malbers.Integration.AITree
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            WeaponManager = aiBrain.GetComponentInParent<MWeaponManager>();
         }
 
         /// <summary>
@@ -32,9 +28,9 @@ namespace Malbers.Integration.AITree
         {
             base.OnEntry();
 
-            WeaponManager.IgnoreStore = IgnoreDrawStore;
-            WeaponManager.Aim_Set(false);
-            WeaponManager.Store_Weapon();
+            AIBrain.weaponManager.IgnoreStore = IgnoreDrawStore;
+            AIBrain.weaponManager.Aim_Set(false);
+            AIBrain.weaponManager.Store_Weapon();
             taskDone = true;
         }
 
@@ -44,7 +40,7 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            if (WeaponManager.WeaponAction == Weapon_Action.None)
+            if (AIBrain.weaponManager.WeaponAction == Weapon_Action.None)
             {
                 taskDone = true;
             }

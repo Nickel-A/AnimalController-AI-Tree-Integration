@@ -11,7 +11,7 @@ namespace Malbers.Integration.AITree
 
 
     [NodeContent("Quick Align", "Animal Controller/General/Quick Align", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MQuickAlignNode : TaskNode
+    public class MQuickAlignNode : MTaskNode
     {
         [Header("Node")]
 
@@ -29,19 +29,14 @@ namespace Malbers.Integration.AITree
         public float alignTime = 0.3f;
 
         float updateTime = 1f;
-        AIBrain aiBrain;
-
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-
-
             switch (alignTo)
             {
                 case AlignTo.TransformHook:
                     if (TransformHook != null || TransformHook.Value == null)
                     {
-                        aiBrain.StartCoroutine(MTools.AlignLookAtTransform(aiBrain.Animal.transform, TransformHook.Value, alignTime));
+                        AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.Animal.transform, TransformHook.Value, alignTime));
                     }
                     else
                     {
@@ -52,7 +47,7 @@ namespace Malbers.Integration.AITree
                 case AlignTo.GameObjectHook:
                     if (GameObjectHook != null || GameObjectHook.Value == null)
                     {
-                        aiBrain.StartCoroutine(MTools.AlignLookAtTransform(aiBrain.Animal.transform, GameObjectHook.Value.transform, alignTime));
+                        AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.Animal.transform, GameObjectHook.Value.transform, alignTime));
                     }
                     else
                     {
@@ -61,9 +56,9 @@ namespace Malbers.Integration.AITree
 
                     break;
                 case AlignTo.CurrentTarget:
-                    if (aiBrain.Target)
+                    if (AIBrain.Target)
                     {
-                        aiBrain.StartCoroutine(MTools.AlignLookAtTransform(aiBrain.Animal.transform, aiBrain.Target, alignTime));
+                        AIBrain.StartCoroutine(MTools.AlignLookAtTransform(AIBrain.Animal.transform, AIBrain.Target, alignTime));
                     }
                     else
                     {
@@ -74,13 +69,10 @@ namespace Malbers.Integration.AITree
                 default:
                     break;
             }
-
-
         }
 
         protected override State OnUpdate()
         {
-
             if (MTools.ElapsedTime(alignTime, updateTime))
             {
                 return State.Success;

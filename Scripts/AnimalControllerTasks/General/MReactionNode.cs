@@ -1,4 +1,5 @@
 ﻿using MalbersAnimations;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Reactions;
 using RenownedGames.AITree;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Reaction", "Animal Controller/General/Reaction", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MReactionNode : TaskNode
+    public class MReactionNode : MTaskNode
     {
         [Header("Node")]
 
@@ -21,16 +22,20 @@ namespace Malbers.Integration.AITree
         [Tooltip("Reaction when the AI State ends")]
         public Reaction reactionOnExit;
 
-        AIBrain aiBrain;
+        bool taskDone;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
+
         protected override void OnEntry()
         {
-            aiBrain = GetOwner().GetComponent<AIBrain>();
-            React(aiBrain, reaction);
+            React(AIBrain, reaction);
         }
 
         protected override State OnUpdate()
         {
-            if (aiBrain.TasksDone)
+            if (taskDone)
             {
                 return State.Success;
             }
@@ -42,23 +47,24 @@ namespace Malbers.Integration.AITree
 
         protected override void OnExit()
         {
-            React(aiBrain, reactionOnExit);
+            React(AIBrain, reactionOnExit);
+            taskDone = false;
         }
 
-        private void React(AIBrain aiBrain, Reaction reaction)
+        private void React(AIBrain AIBrain, Reaction reaction)
         {
             if (affect == Affected.Self)
             {
-                reaction?.React(aiBrain.Animal);
+                reaction?.React(AIBrain.Animal);
             }
             else
             {
-                if (aiBrain.Target)
+                if (AIBrain.Target)
                 {
-                    reaction?.React(aiBrain.Target);
+                    reaction?.React(AIBrain.Target);
                 }
             }
-            aiBrain.TasksDone = true;
+            taskDone = true;
         }
     }
 }

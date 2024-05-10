@@ -1,4 +1,5 @@
 ﻿using MalbersAnimations;
+using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using UnityEngine;
@@ -6,16 +7,8 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Set Var Listener", "Animal Controller/Variable/Set Var Listener", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MSetVarListenerNode : TaskNode
+    public class MSetVarListenerNode : MTaskNode
     {
-
-        public enum VarType
-        {
-            Bool,
-            Int,
-            Float
-        }
-
         [Header("Node")]
         [Tooltip("Check the Variable Listener ID Value, when this value is Zero, the ID is ignored")]
         public IntReference ListenerID = 0;
@@ -25,38 +18,39 @@ namespace Malbers.Integration.AITree
         public Affected checkOn = Affected.Self;
 
         [Space,
-            Tooltip("Check on the Target or Self if it has a Listener Variable Component <Int><Bool><Float> and compares it with the local variable)")]
+        Tooltip("Check on the Target or Self if it has a Listener Variable Component <Int><Bool><Float> and compares it with the local variable)")]
         public VarType varType = VarType.Bool;
-
 
         [Hide("varType", (int)VarType.Bool)] public bool boolValue = true;
         [Hide("varType", (int)VarType.Int)] public int intValue = 0;
         [Hide("varType", (int)VarType.Float)] public float floatValue = 0f;
 
-        AIBrain aiBrain;
+        bool taskDone;
 
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
 
         protected override void OnEntry()
         {
-
-            aiBrain = GetOwner().GetComponent<AIBrain>();
             switch (checkOn)
             {
                 case Affected.Self:
-                    Set_VarListener(aiBrain.Animal);
+                    Set_VarListener(AIBrain.Animal);
                     break;
                 case Affected.Target:
-                    Set_VarListener(aiBrain.Target);
+                    Set_VarListener(AIBrain.Target);
                     break;
                 default:
                     break;
             }
-            aiBrain.TasksDone = true;
+            taskDone = true;
         }
 
         protected override State OnUpdate()
         {
-            if (aiBrain.TasksDone)
+            if (taskDone)
             {
                 return State.Success;
             }
@@ -107,7 +101,7 @@ namespace Malbers.Integration.AITree
         public override string GetDescription()
         {
             string description = base.GetDescription();
-             description += "Target: ";
+            description += "Target: ";
             if (checkOn == Affected.Self)
             {
                 description += "Self\n";

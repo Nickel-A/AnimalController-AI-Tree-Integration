@@ -9,13 +9,13 @@
 //    public class MMoveToGameObject : TaskNode
 //    {
 //        // public GameObject target;
-//        private AIBrain aiBrain;
+//        private AIBrain AIBrain;
 //        private MAnimalAIControl mAnimalAIControl;
 //        public BlackboardEntrySelector<GameObject> target;
 //        protected override void OnEntry()
 //        {
-//            aiBrain =  GetOwner().gameObject.GetComponent<AIBrain>();
-//            mAnimalAIControl = aiBrain.mAnimalAIControl;
+//            AIBrain =  GetOwner().gameObject.GetComponent<AIBrain>();
+//            mAnimalAIControl = AIBrain.mAnimalAIControl;
 //            mAnimalAIControl.SetTarget(target.value);
 //        }
 

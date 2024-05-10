@@ -1,129 +1,99 @@
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using UnityEngine;
+using State = RenownedGames.AITree.State;
 
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Keep Distance", "Animal Controller/ACMovement/Keep Distance", IconPath = "Icons/AnimalAI_Icon.png")]
-    public class MKeepDistance : TaskNode
+    public class MKeepDistance : MTaskNode
     {
-        [Header("Node")]
-        /// <summary> Distance for the Flee, Circle Around and keep Distance Task</summary>
-        public FloatReference distance = new(10f);
-        /// <summary> Distance Threshold for the Keep Distance Task</summary>
-        public FloatReference distanceThreshold = new(1f);
-        /// <summary> Animal Controller Stopping Distance to Override the AI Movement Stopping Distance</summary>
-        public FloatReference stoppingDistance = new(0.5f);
-        /// <summary> Animal Controller slowing Distance to Override the AI Movement Stopping Distance</summary>
-        public FloatReference slowingDistance = new(0);
-        public bool LookAtTarget = false;
-
-        AIBrain aiBrain;
-        bool arrived;
+        [Header("Node Settings")]
+        public FloatReference distance = new FloatReference(10f);
+        public FloatReference distanceThreshold = new FloatReference(1f);
+        public FloatReference stoppingDistance = new FloatReference(0.5f);
+        public FloatReference slowingDistance = new FloatReference(0f);
+        public bool lookAtTarget = false;
         public bool keepDistanceForever;
         public bool useStrafe;
 
-        /// <summary>
-        /// Called on behaviour tree is awake.
-        /// </summary>
+        private bool arrived;
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            aiBrain = GetOwner().GetComponent<AIBrain>();
         }
 
-        /// <summary>
-        /// Called when behaviour tree enter in node.
-        /// </summary>
         protected override void OnEntry()
         {
             base.OnEntry();
-            aiBrain.Animal.Strafe = useStrafe;
+            AIBrain.Animal.Strafe = useStrafe;
             arrived = false;
-            aiBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;
         }
 
-        /// <summary>
-        /// Called every tick during node execution.
-        /// </summary>
-        /// <returns>State.</returns>
         protected override State OnUpdate()
         {
-            KeepDistance(aiBrain);
-
-            if (arrived)
+            if (AIBrain.Target)
             {
-                return State.Success;
+                KeepDistance();
+                if (arrived)
+                {
+                    return State.Success;
+                }
+                return State.Running;
             }
-            return State.Running;
+            return State.Failure; // No target found
         }
 
-        /// <summary>
-        /// Called when behaviour tree exit from node.
-        /// </summary>
         protected override void OnExit()
         {
             base.OnExit();
-            arrived = false;
         }
 
-        private void KeepDistance(AIBrain aiBrain)
+        private void KeepDistance()
         {
-            if (aiBrain.Target)
+            Vector3 keepDistPoint = AIBrain.Animal.transform.position;
+            var dirFromTarget = keepDistPoint - AIBrain.Target.position;
+            float halThreshold = distanceThreshold * 0.5f;
+            float targetDist = dirFromTarget.magnitude;
+
+            float targetDistance = distance * AIBrain.Animal.ScaleFactor;
+
+            if (targetDist < targetDistance - distanceThreshold) // Flee 
             {
-                //aiBrain.AIControl.UpdateDestinationPosition = true;
-
-                aiBrain.AIControl.StoppingDistance = stoppingDistance;
-                //aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
-
-                Vector3 KeepDistPoint = aiBrain.Animal.transform.position;
-
-                var DirFromTarget = KeepDistPoint - aiBrain.Target.position;
-
-                float halThreshold = distanceThreshold * 0.5f;
-                float TargetDist = DirFromTarget.magnitude;
-
-                var distance = this.distance * aiBrain.Animal.ScaleFactor; //Remember to use the scale
-
-                if (TargetDist < distance - distanceThreshold) //Flee 
+                float distanceDiff = targetDistance - targetDist;
+                keepDistPoint = CalculateDistance(AIBrain, dirFromTarget, distanceDiff, halThreshold);
+            }
+            else if (targetDist > targetDistance + distanceThreshold) // Go to Target
+            {
+                float distanceDiff = targetDist - targetDistance;
+                keepDistPoint = CalculateDistance(AIBrain, -dirFromTarget, distanceDiff, -halThreshold);
+            }
+            else // Maintain distance
+            {
+                if (!AIBrain.AIControl.HasArrived)
                 {
-                    float DistanceDiff = distance - TargetDist;
-                    KeepDistPoint = CalculateDistance(aiBrain, DirFromTarget, DistanceDiff, halThreshold);
-
-
+                    AIBrain.AIControl.Stop();
                 }
-                else if (TargetDist > distance + distanceThreshold) //Go to Target
+                AIBrain.AIControl.LookAtTargetOnArrival = lookAtTarget;
+                AIBrain.AIControl.HasArrived = true;
+                AIBrain.AIControl.StoppingDistance = targetDistance + distanceThreshold;
+                AIBrain.AIControl.RemainingDistance = 0;
+                if (!keepDistanceForever)
                 {
-                    float DistanceDiff = TargetDist - distance;
-                    KeepDistPoint = CalculateDistance(aiBrain, -DirFromTarget, DistanceDiff, -halThreshold);
-                }
-                else
-                {
-                    if (!aiBrain.AIControl.HasArrived)
-                    {
-                        aiBrain.AIControl.Stop(); //It need to stop
-                    }
-                    else
-                    {
-                        aiBrain.AIControl.LookAtTargetOnArrival = LookAtTarget;
-
-                    }
-
-
-                    aiBrain.AIControl.HasArrived = true;
-                    aiBrain.AIControl.StoppingDistance = distance + distanceThreshold; //Force to have a greater Stopping Distance so the animal can rotate around the target
-                    aiBrain.AIControl.RemainingDistance = 0; //Force the remaining distance to be 0
-                    if (!keepDistanceForever) arrived = true;
+                    arrived = true;
                 }
             }
         }
-        private Vector3 CalculateDistance(AIBrain brain, Vector3 DirFromTarget, float DistanceDiff, float halThreshold)
+
+        private Vector3 CalculateDistance(AIBrain AIBrain, Vector3 dirFromTarget, float distanceDiff, float halThreshold)
         {
-            Vector3 KeepDistPoint = brain.transform.position + (DirFromTarget.normalized * (DistanceDiff + halThreshold));
-            brain.AIControl.UpdateDestinationPosition = false; //Means the Animal Wont Update the Destination Position with the Target position.
-            brain.AIControl.StoppingDistance = stoppingDistance;
-            brain.AIControl.SetDestination(KeepDistPoint, true);
-            return KeepDistPoint;
+            Vector3 keepDistPoint = AIBrain.transform.position + (dirFromTarget.normalized * (distanceDiff + halThreshold));
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.StoppingDistance = stoppingDistance;
+            AIBrain.AIControl.SetDestination(keepDistPoint, true);
+            return keepDistPoint;
         }
     }
 }
