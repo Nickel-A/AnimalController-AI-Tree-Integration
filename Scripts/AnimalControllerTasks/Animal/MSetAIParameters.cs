@@ -28,7 +28,7 @@ namespace Malbers.Integration.AITree
                         AIBrain.AIControl.StoppingDistance = value;
                         break;
                     case Parameters.AdditiveStopDistance:
-                        //AIBrain.AIControl.AdditiveStopDistance = value;
+                        AIBrain.AIControl.AdditiveStopDistance = value;
                         break;
                 }
             }

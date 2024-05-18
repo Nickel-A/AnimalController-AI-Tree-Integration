@@ -28,7 +28,7 @@ namespace Malbers.Integration.AITree
 
 
     [NodeContent("Check Var Listener", "Animal Controller/MObserverDecorator/Check Var Listener", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckVarListener : MObserverDecorator
+    public class MCheckVarListener : ObserverDecorator
     {
         [Header("Node")]
 
@@ -68,11 +68,14 @@ namespace Malbers.Integration.AITree
 
         List<MonoBehaviour> decisionComponents = new List<MonoBehaviour>(); // New list to hold components
 
+        AIBrain AIBrain;
+
         public override event Action OnValueChange;
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
 
             var objectives = GetObjective(AIBrain);
 

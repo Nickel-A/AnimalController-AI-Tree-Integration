@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For GameObject", "Animal Controller/Look/Look For GameObject", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForGameObject : MObserverDecorator
+    public class MLookForGameObject : ObserverDecorator
     {
         [Header("Node")]
         public Color debugColor = new Color(0, 0, 0.7f, 0.3f);
@@ -36,11 +36,13 @@ namespace Malbers.Integration.AITree
         [Tooltip("If the what we are looking for is found then also start moving")]
         public bool moveToTarget = false;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
 
+        public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         protected override void OnFlowUpdate()
@@ -92,7 +94,7 @@ namespace Malbers.Integration.AITree
             {
                 Collider collider = collidersBuffer[i];
 
-                if (IsInFieldOfView(AIBrain, targetPosition, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _))
+                if (AIUtility.IsInFieldOfView(AIBrain, targetPosition, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _))
                 {
                     return true;
                 }
@@ -104,7 +106,7 @@ namespace Malbers.Integration.AITree
         public override void OnDrawGizmos()
         {
             if(AIBrain.debug)
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+            AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
         }
 #endif
     }

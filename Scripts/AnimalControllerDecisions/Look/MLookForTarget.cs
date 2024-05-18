@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For Target", "Animal Controller/Look/Look For Target", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForTarget : MObserverDecorator
+    public class MLookForTarget : ObserverDecorator
     {
         [Header("Node")]
         public Color debugColor = new Color(0, 0, 0.7f, 0.3f);
@@ -26,10 +26,13 @@ namespace Malbers.Integration.AITree
         [Tooltip("If the what we are looking for is found then also start moving")]
         public bool moveToTarget = false;
 
+        AIBrain AIBrain;
+
         public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         protected override void OnFlowUpdate()
@@ -58,13 +61,13 @@ namespace Malbers.Integration.AITree
                 return false;
             }
             var Center = AIBrain.TargetAnimal ? AIBrain.TargetAnimal.Center : AIBrain.Target.position;
-            return IsInFieldOfView(AIBrain, Center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
+            return AIUtility.IsInFieldOfView(AIBrain, Center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
         }
 
 #if UNITY_EDITOR
         public override void OnDrawGizmos()
         {
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+            AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
         }
 #endif
     }

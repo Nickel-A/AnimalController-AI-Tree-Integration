@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Check Stance", "Animal Controller/MObserverDecorator/Check Stance", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckStance : MObserverDecorator
+    public class MCheckStance : ObserverDecorator
     {
         public enum Affected { Self, Target, Leader };
         [Header("Node")]
@@ -24,14 +24,18 @@ namespace Malbers.Integration.AITree
         public bool invertResult = false;
 
         private bool checkResult;
+        private Faction faction;
+        AIBrain AIBrain;
 
         public override event Action OnValueChange;
-        private Faction faction;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
             faction = GetOwner().gameObject.GetComponent<Faction>();
         }
+
+
         /// <summary>
         /// Called every tick regardless of the node execution.
         /// </summary>

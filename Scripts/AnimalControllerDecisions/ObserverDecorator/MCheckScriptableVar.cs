@@ -1,10 +1,9 @@
-using MalbersAnimations.Scriptables;
 using MalbersAnimations;
+using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
-using UnityEngine;
-using MalbersAnimations.Controller.AI;
-using UnityEditor;
 using System;
+using UnityEditor;
+using UnityEngine;
 
 
 namespace Malbers.Integration.AITree
@@ -13,7 +12,7 @@ namespace Malbers.Integration.AITree
     public enum BoolType { True, False }
 
     [NodeContent("Check Scriptable Var", "Animal Controller/MObserverDecorator/Check Scriptable Var", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckScriptableVar : MObserverDecorator
+    public class MCheckScriptableVar : ObserverDecorator
     {
         [Tooltip("Check on the Target or Self if it has a Listener Variable Component <Int><Bool><Float> and compares it with the local variable)")]
         public VarType varType = VarType.Bool;
@@ -31,7 +30,10 @@ namespace Malbers.Integration.AITree
         public float floatValue = 0f;
 
         public override event Action OnValueChange;
-
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
         protected override void OnFlowUpdate()
         {
             base.OnFlowUpdate();
@@ -49,7 +51,7 @@ namespace Malbers.Integration.AITree
                     return Float != null && CompareFloat(Float.Value);
                 default:
                     return false;
-            }            
+            }
         }
 
         public bool CompareInteger(int IntValue)
@@ -57,13 +59,13 @@ namespace Malbers.Integration.AITree
             switch (compare)
             {
                 case ComparerInt.Equal:
-                    return (IntValue == intValue);
+                    return IntValue == intValue;
                 case ComparerInt.Greater:
-                    return (IntValue > intValue);
+                    return IntValue > intValue;
                 case ComparerInt.Less:
-                    return (IntValue < intValue);
+                    return IntValue < intValue;
                 case ComparerInt.NotEqual:
-                    return (IntValue != intValue);
+                    return IntValue != intValue;
                 default:
                     return false;
             }
@@ -73,13 +75,13 @@ namespace Malbers.Integration.AITree
             switch (compare)
             {
                 case ComparerInt.Equal:
-                    return (IntValue == floatValue);
+                    return IntValue == floatValue;
                 case ComparerInt.Greater:
-                    return (IntValue > floatValue);
+                    return IntValue > floatValue;
                 case ComparerInt.Less:
-                    return (IntValue < floatValue);
+                    return IntValue < floatValue;
                 case ComparerInt.NotEqual:
-                    return (IntValue != floatValue);
+                    return IntValue != floatValue;
                 default:
                     return false;
             }

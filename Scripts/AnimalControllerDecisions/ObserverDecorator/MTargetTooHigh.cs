@@ -6,9 +6,11 @@ using System;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Target Too High", "Animal Controller/MObserverDecorator/Target Too High", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MTargetTooHigh : MObserverDecorator
+    public class MTargetTooHigh : ObserverDecorator
     {
         bool previousTargetTooHigh;
+
+        AIBrain AIBrain;
 
         public override event Action OnValueChange;
 

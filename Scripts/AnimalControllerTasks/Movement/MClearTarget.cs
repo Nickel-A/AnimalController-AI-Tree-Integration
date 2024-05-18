@@ -7,15 +7,21 @@ namespace Malbers.Integration.AITree
     public class MClearTarget : MTaskNode
     {
         // public GameObject target;
+
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+
+        }
+
         protected override void OnEntry()
         {
-            AIBrain = GetOwner().gameObject.GetComponent<AIBrain>();
-            AIBrain.AIControl.SetTarget(null, false);
+            //AIBrain.AIControl.ClearTarget();
         }
 
         protected override State OnUpdate()
         {
-
+            AIBrain.AIControl.ClearTarget();
             return State.Success;
 
 

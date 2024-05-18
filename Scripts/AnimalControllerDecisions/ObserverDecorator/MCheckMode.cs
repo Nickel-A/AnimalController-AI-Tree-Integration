@@ -9,7 +9,7 @@ using MalbersAnimations.Controller.AI;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Check Mode", "Animal Controller/MObserverDecorator/Check Mode", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckMode : MObserverDecorator
+    public class MCheckMode : ObserverDecorator
     {
         [Header("Node")]
 
@@ -24,11 +24,13 @@ namespace Malbers.Integration.AITree
         [Tooltip("Toggle to invert the result")]
         public bool invertResult = false;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
 
+        public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         /// <summary>

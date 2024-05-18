@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For Main Player", "Animal Controller/Look/Look For Main Player", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForMainPlayer : MObserverDecorator
+    public class MLookForMainPlayer : ObserverDecorator
     {
         [Header("Node")]
 
@@ -41,6 +41,9 @@ namespace Malbers.Integration.AITree
 
         [Tooltip("If the what we are looking for is found then also start moving")]
         public bool moveToTarget = false;
+
+        AIBrain AIBrain;
+        public bool debug;
 
         public override event Action OnValueChange;
         protected override void OnInitialize()
@@ -92,16 +95,16 @@ namespace Malbers.Integration.AITree
 
             if (MAnimal.MainAnimal == AIBrain.Animal) { Debug.LogError("AI Animal is set as MainAnimal. Fix it!", AIBrain.Animal); return false; }
 
-            return IsInFieldOfView(AIBrain, MAnimal.MainAnimal.Center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
+            return AIUtility.IsInFieldOfView(AIBrain, MAnimal.MainAnimal.Center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
         }
 
 #if UNITY_EDITOR
         public override void OnDrawGizmos()
         {
-            if (AIBrain.debug)
+            if (debug)
             {
 
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+                AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
             }
         }
 #endif

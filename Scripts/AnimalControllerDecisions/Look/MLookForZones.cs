@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For Zones", "Animal Controller/Look/Look For Zones", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForZones : MObserverDecorator
+    public class MLookForZones : ObserverDecorator
     {
         [Header("Node")]
         public Color debugColor = new Color(0, 0, 0.7f, 0.3f);
@@ -46,10 +46,13 @@ namespace Malbers.Integration.AITree
         [Tooltip("If the what we are looking for is found then also start moving")]
         public bool moveToTarget = false;
 
+        AIBrain AIBrain;
+
         public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
         protected override void OnFlowUpdate()
         {
@@ -86,7 +89,7 @@ namespace Malbers.Integration.AITree
                     (zone.zoneType == ZoneType.Mode && ZoneIndex == -1) ||  //Check if it's a Zone Mode but the Ability its any
                     zone.ModeAbilityIndex == ZoneIndex)                   //Check if it's a Zone Mode AND Ability Match
                 {
-                    if (IsInFieldOfView(AIBrain, zone.ZoneCollider.bounds.center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out float Distance) && Distance < minDistance)
+                    if (AIUtility.IsInFieldOfView(AIBrain, zone.ZoneCollider.bounds.center, lookAngle, lookRange, lookMultiplier, obstacleLayer, out float Distance) && Distance < minDistance)
                     {
                         minDistance = Distance;
                         FoundZone = zone;
@@ -108,7 +111,7 @@ namespace Malbers.Integration.AITree
 #if UNITY_EDITOR
         public override void OnDrawGizmos()
         {
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+            AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
         }
 #endif
     }

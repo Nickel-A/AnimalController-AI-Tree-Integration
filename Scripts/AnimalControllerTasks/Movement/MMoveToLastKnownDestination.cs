@@ -12,6 +12,9 @@ namespace Malbers.Integration.AITree
 
         /// <summary> Animal Controller slowing Distance to Override the AI Movement Stopping Distance</summary>
         public FloatReference slowingDistance = new(0);
+        // Gizmo color
+        public Color gizmoColor = Color.yellow;
+        public bool debug;
 
         /// <summary>
         /// Called on behaviour tree is awake.
@@ -26,12 +29,14 @@ namespace Malbers.Integration.AITree
         /// </summary>
         protected override void OnEntry()
         {
-            var LastDestination = AIBrain.AIControl.DestinationPosition; //Store the Last Destination
+            // Get the last known position from AIBrain component
+            var lastDestination = AIBrain.GetLastTargetPosition();
             Debug.DrawRay(AIBrain.Position, Vector3.up, Color.white, 1);
-            AIBrain.AIControl.DestinationPosition = Vector3.zero;
-            AIBrain.AIControl.SetDestination(LastDestination, true); //Go to the last Destination position
-            AIBrain.AIControl.UpdateDestinationPosition = false;          //Set the Animal to look Forward to the Target
-            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;          //Set the Animal to look Forward to the Target
+            // Set the AI's destination to the last known position
+            AIBrain.AIControl.SetDestination(lastDestination, true);
+            // Set other properties
+            AIBrain.AIControl.UpdateDestinationPosition = false;
+            AIBrain.AIControl.CurrentSlowingDistance = slowingDistance;
 
             base.OnEntry();
         }
@@ -42,6 +47,7 @@ namespace Malbers.Integration.AITree
         /// <returns>State.</returns>
         protected override State OnUpdate()
         {
+
             if (AIBrain.AIControl.HasArrived)
             {
                 AIBrain.AIControl.Stop();
@@ -56,6 +62,17 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
+        }
+
+        public override void OnDrawGizmos()
+        {
+            if (debug)
+            {
+
+            base.OnDrawGizmos();
+            Gizmos.color = gizmoColor;
+            Gizmos.DrawSphere(AIBrain.AIControl.DestinationPosition, 1f);
+            }
         }
     }
 }

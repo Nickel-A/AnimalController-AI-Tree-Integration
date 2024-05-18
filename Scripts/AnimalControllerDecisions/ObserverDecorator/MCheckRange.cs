@@ -7,7 +7,7 @@ namespace Malbers.Integration.AITree
 {
     [NodeContent("Check Range", "Animal Controller/MObserverDecorator/Check Range", IconPath = "Icons/AIDecision_Icon.png")]
 
-    public class MCheckRange : MObserverDecorator
+    public class MCheckRange : ObserverDecorator
     {
         [Header("Node")]
 
@@ -22,13 +22,17 @@ namespace Malbers.Integration.AITree
 
         private bool checkResult;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
 
+        public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
             checkResult = false;
+
         }
+
 
         /// <summary>
         /// Called every tick regardless of the node execution.

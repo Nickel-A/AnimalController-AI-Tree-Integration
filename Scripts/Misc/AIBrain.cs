@@ -2,20 +2,32 @@ using MalbersAnimations;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Utilities;
+using NUnit.Framework;
 using RenownedGames.AITree;
 using RenownedGames.Apex;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 
 namespace Malbers.Integration.AITree
 {
+    public enum FactionRelation
+    {
+        Friendly,
+        Aggressive,
+        Neutral
+    }
+
     [RequireComponent(typeof(BehaviourRunner))]
     [AddComponentMenu("Malbers/Animal Controller/AI/AIBrain")]
 
     public class AIBrain : MonoBehaviour, IAnimatorListener
     {
+        public AIStateID CurrentAIState;
+        public AIStateID deadAIState;
+
         [TabGroup("Tab Group 1", "General")]
         [Tooltip("Removes all AI Components when the Animal Dies. (Brain, AiControl, Agent)")]
         [FormerlySerializedAs("RemoveAIOnDeath")]
@@ -25,6 +37,10 @@ namespace Malbers.Integration.AITree
         [RequiredField, NotNull]
         [Tooltip("Transform used to raycast Rays to interact with the world")]
         public Transform Eyes;
+
+        [TabGroup("Tab Group 1", "General")]
+        [Tooltip("Reference of the Key wich represents the Target of the AI.")]
+        public TransformKey targetBlackboardKey;
 
         [TabGroup("Tab Group 1", "General")]
         [Tooltip("Reference of the Aim component some Behavior Tree nodes need it.")]
@@ -38,7 +54,6 @@ namespace Malbers.Integration.AITree
         [Tooltip("Reference for the Stats component some Behavior Tree nodes need it.")]
         public Stats stats;
 
-        [Message("Leave the fields blank if you don't need them.", FontStyle = FontStyle.Italic)]
         [TabGroup("Tab Group 1", "General")]
         [Tooltip("Reference for the MDamageable component some Behavior Tree nodes need it.")]
         public MDamageable damageable;
@@ -55,12 +70,10 @@ namespace Malbers.Integration.AITree
         [Tooltip("Reference for the MWeaponManager component some Behavior Tree nodes need it.")]
         public MWeaponManager weaponManager;
 
-        [TabGroup("Tab Group 1", "Debug")]
+        [Message("Leave the fields blank if you don't need them.", FontStyle = FontStyle.Italic)]
+        [TabGroup("Tab Group 1", "General")]
         public bool debug = false;
 
-        [ReadOnly,TabGroup("Tab Group 1", "Debug")]
-        [Tooltip("List of the stats on the AI. It will be filled on start")]
-        public List<Stat> statList;
 
         /// <summary>Reference for the Ai Control Movement</summary>
         public IAIControl AIControl;
@@ -95,6 +108,25 @@ namespace Malbers.Integration.AITree
         /// <summary>Reference for the Target the Stats Component</summary>
         public Dictionary<int, Stat> TargetStats { get; set; }
 
+        Transform keyValue;
+
+        public List<StatParameterInfo> statParameterInfo = new List<StatParameterInfo>();
+
+        /// <summary>Stores the last position of the target</summary>
+        private Vector3 lastTargetPosition;
+
+
+    public AIStateID GetCurrentState()
+        {
+            return CurrentAIState;
+        }
+
+        public void SetAIState(AIStateID newState)
+        {
+            CurrentAIState = newState;
+        }
+
+
         #region Unity Callbacks
         void Awake()
         {
@@ -104,37 +136,107 @@ namespace Malbers.Integration.AITree
             }
             AIControl ??= gameObject.FindInterface<IAIControl>();
             AIControl.UpdateDestinationPosition = false; //Otherwise the AI will go to the current target
-
+            behaviourRunner = GetComponent<BehaviourRunner>();
             var AnimalStatscomponent = Animal.FindComponent<Stats>();
             if (AnimalStatscomponent)
             {
-
                 AnimalStats = AnimalStatscomponent.Stats_Dictionary();
             }
             Animal.isPlayer.Value = false; //If is using a AIBrain... disable that he is the main player
                                            // ResetVarsOnNewState();
+            lastTargetPosition = transform.position;
         }
 
         private void Start()
         {
-            behaviourRunner = GetComponent<BehaviourRunner>();
             //aim = Animal.GetComponentInChildren<Aim>();
             //weaponManager = Animal.GetComponent<MAIBrain.weaponManager>();
             //comboManager = Animal.GetComponentInChildren<ComboManager>();
             //stats = Animal.GetComponent<Stats>();
             //damageable = Animal.GetComponent<MDamageable>();
-            if (stats != null)
-            {
-                statList = stats.stats;
-            }
+
             AIControl.UpdateDestinationPosition = false; //Otherwise the AI will go to the current target
                                                          // Assuming 'parentObject' is the parent GameObject that contains the child objects
+            SaveAllAnimalStats();
+            SaveTargetPosition();
         }
+
+        public void SaveAllAnimalStats()
+        {
+            if (AnimalStats != null)
+            {
+                statParameterInfo.Clear(); // Clear the list to avoid duplicates
+
+                foreach (var pair in AnimalStats)
+                {
+                    // Create a new ParameterInfo instance for each entry in the dictionary
+                    StatParameterInfo parameterInfo = new StatParameterInfo(pair.Value.Name, pair.Key, pair.Value.Value);
+
+                    // Add the parameterInfo to the list
+                    statParameterInfo.Add(parameterInfo);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("AnimalStats dictionary is null.");
+            }
+        }
+
+        // Method to compare the saved parameters with the current ones
+        //public void CompareParameters()
+        //{
+        //    // Iterate over the saved parameter infos
+        //    foreach (var savedInfo in parameterInfos)
+        //    {
+        //        // Get the current value from the AnimalStats dictionary
+        //        if (AnimalStats.TryGetValue(savedInfo.ID, out Stat stat))
+        //        {
+        //            float currentValue = stat.Value;
+
+        //            // Log both previous and current values
+        //            Debug.Log($"{savedInfo.Name}: Previous Value: {savedInfo.PreviousValue}, Current Value: {currentValue}");
+
+        //            // Compare the values
+        //            if (currentValue > savedInfo.PreviousValue)
+        //            {
+        //                Debug.Log($"{savedInfo.Name} increased.");
+        //            }
+        //            else if (currentValue < savedInfo.PreviousValue)
+        //            {
+        //                Debug.Log($"{savedInfo.Name} decreased.");
+        //            }
+        //            else
+        //            {
+        //                Debug.Log($"{savedInfo.Name} remained the same.");
+        //            }
+
+        //            // Set the current value as the previous value for the next comparison
+        //            savedInfo.PreviousValue = currentValue;
+        //        }
+        //        else
+        //        {
+        //            Debug.LogWarning($"Parameter with ID {savedInfo.ID} not found.");
+        //        }
+        //    }
+        //}
+
+
+        //private void Update()
+        //{
+        //    if(Input.GetKeyDown(KeyCode.J))
+        //    {
+        //        CompareParameters();
+        //    }
+        //}
 
         public void OnEnable()
         {
             AIControl.TargetSet.AddListener(OnTargetSet);
             Animal.OnStateChange.AddListener(OnAnimalStateChange);
+            if (behaviourRunner.GetBlackboard().TryGetKey(targetBlackboardKey.ToString(), out targetBlackboardKey))
+            {
+                targetBlackboardKey.ValueChanged += OnTargetValueChanged;
+            }
         }
 
         public void OnDisable()
@@ -143,6 +245,12 @@ namespace Malbers.Integration.AITree
             Animal.OnStateChange.RemoveListener(OnAnimalStateChange);
             AIControl.Stop();
             StopAllCoroutines();
+
+            // Unsubscribe from the ValueChanged event to avoid memory leaks
+            if (behaviourRunner.GetBlackboard().TryGetKey(targetBlackboardKey.ToString(), out targetBlackboardKey))
+            {
+                targetBlackboardKey.ValueChanged -= OnTargetValueChanged;
+            }
         }
         #endregion
 
@@ -150,6 +258,7 @@ namespace Malbers.Integration.AITree
         {
             if (state == StateEnum.Death) //meaning this animal has died
             {
+                CurrentAIState = deadAIState;
                 StopAllCoroutines();
                 enabled = false;
 
@@ -157,7 +266,7 @@ namespace Malbers.Integration.AITree
                 {
                     behaviourRunner.enabled = false;
                     AIControl.SetActive(false);
-                    Animal.enabled = false;
+                    //Animal.enabled = false;
                     this.SetEnable(false);
                     if (weaponManager != null)
                     {
@@ -167,12 +276,32 @@ namespace Malbers.Integration.AITree
             }
         }
 
+        private void OnTargetValueChanged()
+        {
+            behaviourRunner.GetBlackboard().TryGetKey(targetBlackboardKey.ToString(), out TransformKey value);
+            {
+                AIControl.Target = value.GetValue();
+                keyValue = value.GetValue();
+            }
+            SaveTargetPosition();
+        }
+
         /// <summary>Stores if the Current Target is an Animal and if it has the Stats component </summary>
         private void OnTargetSet(Transform target)
         {
+            
+            if (keyValue != null)
+            {
+                OnTargetValueChanged();
+                target = keyValue;
+            }
+
             Target = target;
+            SaveTargetPosition();
             if (target)
             {
+
+
                 TargetAnimal = target.FindComponent<MAnimal>();// ?? target.GetComponentInChildren<MAnimal>();
                 TargetStats = null;
                 var TargetStatsC = target.FindComponent<Stats>();// ?? target.GetComponentInChildren<Stats>();
@@ -186,16 +315,21 @@ namespace Malbers.Integration.AITree
         }
 
         /// <summary>
-        /// Sets the position of the target.
-        /// Can be called, for example, in the Animator if you need the current position of the target. 
-        /// Useful if the AI has spells that need a position to instantiate an effect.
+        /// Saves the position of the current target.
         /// </summary>
-        public void SetTargetPosition()
+        private void SaveTargetPosition()
         {
-            if (Target != null && targetTransform != null)
+            if (Target != null)
             {
-                targetTransform.position = Target.position;
+                lastTargetPosition = Target.position;
             }
+        }
+
+
+
+        public Vector3 GetLastTargetPosition()
+        {
+            return lastTargetPosition;
         }
 
         public void SetLastWayPoint(Transform target)
@@ -220,6 +354,8 @@ namespace Malbers.Integration.AITree
             }
         }
 
+
+
 #if UNITY_EDITOR
         void Reset()
         {
@@ -241,7 +377,39 @@ namespace Malbers.Integration.AITree
                 Debug.LogWarning("There's No AI Control in this GameObject, Please add one");
             }
         }
+
+        private void OnDrawGizmos()
+        {
+            if (debug)
+            {
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(lastTargetPosition, 0.5f);
+            }
+        }
 #endif
     }
-}
 
+    public class StatParameterInfo
+    {
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public float PreviousValue { get; set; } // New field for previous value
+        public float CurrentValue { get; set; }
+
+        public StatParameterInfo(string name, int id, float value)
+        {
+            Name = name;
+            ID = id;
+            PreviousValue = value; // Initialize previous value with the current value
+            CurrentValue = value;
+        }
+
+        // Method to set the current value as the previous value
+        public void UpdatePreviousValue(float newValue)
+        {
+            PreviousValue = newValue;
+        }
+    }
+
+}

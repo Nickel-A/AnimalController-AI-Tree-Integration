@@ -3,17 +3,12 @@ using MalbersAnimations.Controller;
 using MalbersAnimations.Controller.AI;
 using MalbersAnimations.Events;
 using MalbersAnimations.HAP;
-using MalbersAnimations.Scriptables;
-using System;
+using RenownedGames.AITree;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
-using RenownedGames.AITree;
 
 namespace Malbers.Integration.AITree
 {
-
-
     public class Faction : MonoBehaviour
     {
         public enum AttackStyle
@@ -175,23 +170,23 @@ namespace Malbers.Integration.AITree
                     switch (formation)
                     {
                         case Formation.BehindColumn:
-                            startPosition = transform.position - transform.forward * distanceToLeader;
+                            startPosition = transform.position - (transform.forward * distanceToLeader);
                             followersGO = new GameObject[_nbFollowers];
                             for (int i = 0; i < _nbFollowers; i++)
                             {
-                                followerPosition = startPosition - transform.forward * (i * distanceBetween);
+                                followerPosition = startPosition - (transform.forward * (i * distanceBetween));
                                 GameObject cube = Instantiate(cubePrefab, followerPosition, Quaternion.identity);
                                 followersGO[i] = cube;
                             }
                             break;
                         case Formation.BehindLine:
                             totalWidth = (_nbFollowers - 1) * distanceBetween;
-                            startPosition = transform.position - transform.right * totalWidth / 2;
+                            startPosition = transform.position - (transform.right * totalWidth / 2);
 
                             followersGO = new GameObject[_nbFollowers];
                             for (int i = 0; i < _nbFollowers; i++)
                             {
-                                followerPosition = startPosition + transform.right * (i * distanceBetween);
+                                followerPosition = startPosition + (transform.right * (i * distanceBetween));
                                 followerPosition -= transform.forward * distanceToLeader;
                                 GameObject cube = Instantiate(cubePrefab, followerPosition, Quaternion.identity);
                                 followersGO[i] = cube;
@@ -199,12 +194,12 @@ namespace Malbers.Integration.AITree
                             break;
                         case Formation.FrontLine:
                             totalWidth = (_nbFollowers - 1) * distanceBetween;
-                            startPosition = transform.position - transform.right * totalWidth / 2;
+                            startPosition = transform.position - (transform.right * totalWidth / 2);
 
                             followersGO = new GameObject[_nbFollowers];
                             for (int i = 0; i < _nbFollowers; i++)
                             {
-                                followerPosition = startPosition + transform.right * (i * distanceBetween);
+                                followerPosition = startPosition + (transform.right * (i * distanceBetween));
                                 followerPosition += transform.forward * distanceToLeader;
                                 GameObject cube = Instantiate(cubePrefab, followerPosition, Quaternion.identity);
                                 followersGO[i] = cube;
@@ -215,7 +210,7 @@ namespace Malbers.Integration.AITree
                             followersGO = new GameObject[_nbFollowers];
 
                             startRotation = transform.rotation;
-                            startPosition = transform.position - startRotation * Vector3.forward * distanceBetween;
+                            startPosition = transform.position - (startRotation * Vector3.forward * distanceBetween);
 
                             for (int i = 0; i < _nbFollowers; i++)
                             {
@@ -223,18 +218,18 @@ namespace Malbers.Integration.AITree
                                 float xPos = Mathf.Cos(Mathf.Deg2Rad * angle) * distanceBetween;
                                 float zPos = Mathf.Sin(Mathf.Deg2Rad * angle) * distanceBetween;
 
-                                followerPosition = startPosition + startRotation * (new Vector3(xPos, 0f, zPos));
+                                followerPosition = startPosition + (startRotation * new Vector3(xPos, 0f, zPos));
                                 followerPosition += transform.forward * distanceBetween;
                                 GameObject cube = Instantiate(cubePrefab, followerPosition, Quaternion.identity);
                                 followersGO[i] = cube;
                             }
                             break;
                         case Formation.Circle:
-                            angleIncrement = 360f / (_nbFollowers);
+                            angleIncrement = 360f / _nbFollowers;
                             followersGO = new GameObject[_nbFollowers];
 
                             startRotation = transform.rotation;
-                            startPosition = transform.position - startRotation * Vector3.forward * distanceBetween;
+                            startPosition = transform.position - (startRotation * Vector3.forward * distanceBetween);
 
                             for (int i = 0; i < _nbFollowers; i++)
                             {
@@ -242,7 +237,7 @@ namespace Malbers.Integration.AITree
                                 float xPos = Mathf.Cos(Mathf.Deg2Rad * angle) * distanceBetween;
                                 float zPos = Mathf.Sin(Mathf.Deg2Rad * angle) * distanceBetween;
 
-                                followerPosition = startPosition + startRotation * (new Vector3(xPos, 0f, zPos));
+                                followerPosition = startPosition + (startRotation * new Vector3(xPos, 0f, zPos));
                                 followerPosition += transform.forward * distanceBetween;
                                 GameObject cube = Instantiate(cubePrefab, followerPosition, Quaternion.identity);
                                 followersGO[i] = cube;

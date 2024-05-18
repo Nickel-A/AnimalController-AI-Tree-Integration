@@ -16,6 +16,9 @@ namespace Malbers.Integration.AITree
         public bool lookAtTarget = false;
         public bool keepDistanceForever;
         public bool useStrafe;
+        public bool useBlackboardKey;
+
+        public TransformKey blackboardKey;
 
         private bool arrived;
 
@@ -36,7 +39,15 @@ namespace Malbers.Integration.AITree
         {
             if (AIBrain.Target)
             {
-                KeepDistance();
+                if (useBlackboardKey)
+                {
+                    KeepDistanceBlackboardKey();
+                }
+                else
+                {
+                    KeepDistance();
+                }
+
                 if (arrived)
                 {
                     return State.Success;
@@ -49,6 +60,42 @@ namespace Malbers.Integration.AITree
         protected override void OnExit()
         {
             base.OnExit();
+        }
+
+        private void KeepDistanceBlackboardKey()
+        {
+            Vector3 keepDistPoint = AIBrain.Animal.transform.position;
+            var dirFromTarget = keepDistPoint - blackboardKey.GetValue().position;
+            float halThreshold = distanceThreshold * 0.5f;
+            float targetDist = dirFromTarget.magnitude;
+
+            float targetDistance = distance * AIBrain.Animal.ScaleFactor;
+
+            if (targetDist < targetDistance - distanceThreshold) // Flee 
+            {
+                float distanceDiff = targetDistance - targetDist;
+                keepDistPoint = CalculateDistance(AIBrain, dirFromTarget, distanceDiff, halThreshold);
+            }
+            else if (targetDist > targetDistance + distanceThreshold) // Go to Target
+            {
+                float distanceDiff = targetDist - targetDistance;
+                keepDistPoint = CalculateDistance(AIBrain, -dirFromTarget, distanceDiff, -halThreshold);
+            }
+            else // Maintain distance
+            {
+                if (!AIBrain.AIControl.HasArrived)
+                {
+                    AIBrain.AIControl.Stop();
+                }
+                AIBrain.AIControl.LookAtTargetOnArrival = lookAtTarget;
+                AIBrain.AIControl.HasArrived = true;
+                AIBrain.AIControl.StoppingDistance = targetDistance + distanceThreshold;
+                AIBrain.AIControl.RemainingDistance = 0;
+                if (!keepDistanceForever)
+                {
+                    arrived = true;
+                }
+            }
         }
 
         private void KeepDistance()

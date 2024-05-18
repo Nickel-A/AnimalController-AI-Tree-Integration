@@ -7762,6 +7762,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6955683514137328834}
+  - component: {fileID: 1871934900214246916}
   m_Layer: 2
   m_Name: AIEyes
   m_TagString: Untagged
@@ -7781,9 +7782,164 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1211716807788159764}
   m_Father: {fileID: 1141438500967295652}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1871934900214246916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2183916884658612035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d0f18f006f45eabdf63f3b9421bdb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  signalProcessors: []
+  OnDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLostDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSomeDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNoDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  inputSensor:
+    value: {fileID: 4008473267169135150}
+  pulseRoutine:
+    Mode:
+      value: 2
+    UpdateFunction: 0
+    Interval:
+      value: 1
+  BlocksLineOfSight:
+    serializedVersion: 2
+    m_Bits: 1
+  IgnoreTriggerColliders: 1
+  PointSamplingMethod: 0
+  TestLOSTargetsOnly: 0
+  NumberOfRays: 10
+  MinimumVisibility: 0.5
+  MovingAverageEnabled: 0
+  MovingAverageWindowSize: 10
+  LimitDistance: 1
+  MaxDistance: 25
+  VisibilityByDistance:
+    Mode: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  LimitViewAngle: 1
+  MaxHorizAngle: 90
+  VisibilityByHorizAngle:
+    Mode: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  MaxVertAngle: 90
+  VisibilityByVertAngle:
+    Mode: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  FOVConstraintMethod: 0
 --- !u!1 &2198013732868701368
 GameObject:
   m_ObjectHideFlags: 0
@@ -14259,7 +14415,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4173694057954527507}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9347652, z: -0, w: 0.35526624}
+  m_LocalRotation: {x: 0.00026839934, y: -0.9356538, z: 0.0029715088, w: 0.35290673}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14268,7 +14424,7 @@ Transform:
   - {fileID: 3723464310271627057}
   - {fileID: 1042117936113965555}
   m_Father: {fileID: 7477725440014831199}
-  m_LocalEulerAnglesHint: {x: 0, y: -138.38, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.329, y: -138.669, z: 0.091}
 --- !u!114 &3956036368878283904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14304,8 +14460,8 @@ MonoBehaviour:
   target: {fileID: 0}
   nextTarget: {fileID: 0}
   debug: 0
-  debugGizmos: 1
-  debugStatus: 1
+  debugGizmos: 0
+  debugStatus: 0
   OnTargetPositionArrived:
     m_PersistentCalls:
       m_Calls: []
@@ -14322,7 +14478,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   AgentTransform: {fileID: 3021513155553404506}
-  Editor_Tabs1: 2
+  Editor_Tabs1: 0
 --- !u!195 &5234980704367624334
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -14359,6 +14515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisableAIOnDeath: 1
   Eyes: {fileID: 6955683514137328834}
+  targetBlackboardKey: {fileID: 7116498329002733434, guid: ecb1676d439593d49b3b022a82432baa, type: 2}
   aim: {fileID: 284904504163421488}
   pickUpDrop: {fileID: 4395085620684846086}
   stats: {fileID: 7154739018964169212}
@@ -14367,7 +14524,6 @@ MonoBehaviour:
   comboManager: {fileID: 3570505368379396005}
   weaponManager: {fileID: 4370477796896694541}
   debug: 0
-  statList: []
   behaviourRunner: {fileID: 0}
 --- !u!114 &679100341070556532
 MonoBehaviour:
@@ -14381,7 +14537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581266756febbf447a9cc1da85c40584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedBehaviourTree: {fileID: 11400000, guid: 9d57c3c512457a549b4b90b48adf574f, type: 2}
+  sharedBehaviourTree: {fileID: 11400000, guid: c08130f2cab653047977d610fd2c80f8, type: 2}
 --- !u!114 &5893309597405093924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14395,11 +14551,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replaceable: 0
-  configs: []
-  key: {fileID: 8290113127002622430, guid: ecb1676d439593d49b3b022a82432baa, type: 2}
+  configs:
+  - rid: 3634743804008857671
+  key: {fileID: 7116498329002733434, guid: ecb1676d439593d49b3b022a82432baa, type: 2}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 3634743804008857671
+      type: {class: AIPerceptionSensorConfig, ns: RenownedGames.AITree.Integrations.SensorToolkit2, asm: AITree.Integrations.SensorToolkit2}
+      data:
+        sensor: {fileID: 1871934900214246916}
+        sortMode: 1
 --- !u!114 &4362450873950233564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15626,7 +15788,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5873175687039386581}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 181eb898d7c8aa441b8df05cec988f7d, type: 3}
   m_Name: 
@@ -16224,6 +16386,88 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &5883352448184487711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1211716807788159764}
+  - component: {fileID: 4008473267169135150}
+  m_Layer: 2
+  m_Name: Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1211716807788159764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883352448184487711}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6955683514137328834}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4008473267169135150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883352448184487711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f00a8324cac4f1e84ad1644ec747516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  signalProcessors: []
+  OnDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLostDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSomeDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNoDetection:
+    m_PersistentCalls:
+      m_Calls: []
+  signalFilter:
+    IgnoreList:
+    - {fileID: 6633698625775441596}
+    EnableTagFilter: 1
+    AllowedTags:
+    - Animal
+  DetectionMode: 1
+  Shape: 0
+  Sphere:
+    Radius: 25
+  Box:
+    HalfExtents: {x: 0.5, y: 0.5, z: 0.5}
+  Capsule:
+    Radius: 0.5
+    Height: 1
+  DetectsOnLayers:
+    serializedVersion: 2
+    m_Bits: 1048577
+  IgnoreTriggerColliders: 0
+  pulseRoutine:
+    Mode:
+      value: 2
+    UpdateFunction: 0
+    Interval:
+      value: 1
 --- !u!1 &5903219717209431675
 GameObject:
   m_ObjectHideFlags: 0
@@ -22004,8 +22248,8 @@ MonoBehaviour:
   SelectedState: 1
   SelectedStance: 0
   ShowStateInInspector: 0
-  Editor_Tabs1: 0
-  Editor_Tabs2: 4
+  Editor_Tabs1: 4
+  Editor_Tabs2: 1
   SelectedMode: 9
   Mode_Tabs1: 1
   Ability_Tabs: 0
@@ -30544,7 +30788,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     position:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4.908939
       Variable: {fileID: 0}
     lerpPosition:
       UseConstant: 1
@@ -30568,7 +30812,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpAnimator:
       UseConstant: 1
-      ConstantValue: 4
+      ConstantValue: 5
       Variable: {fileID: 0}
     strafeSpeed:
       UseConstant: 1
@@ -31118,7 +31362,7 @@ MonoBehaviour:
     OnActive:
       m_PersistentCalls:
         m_Calls: []
-    EditorTabs: 1
+    EditorTabs: 0
   - active: 1
     ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
     value:
@@ -31385,7 +31629,7 @@ MonoBehaviour:
     Variable: {fileID: 0}
   AlignToDamage:
     UseConstant: 1
-    ConstantValue: 0
+    ConstantValue: 1
     Variable: {fileID: 0}
   AlignTime:
     UseConstant: 1
@@ -31573,7 +31817,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
-  EditorTab1: 0
+  EditorTab1: 1
 --- !u!114 &4370477796896694541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31636,7 +31880,7 @@ MonoBehaviour:
     Slots:
     - {fileID: 9211853413205934034}
     - {fileID: 8801761087455910600}
-    Weapon: {fileID: 302472354151661360, guid: bcff32db73dac7344b4cac585b0ef97f, type: 3}
+    Weapon: {fileID: 0}
     Input:
       UseConstant: 1
       ConstantValue: Left Holster
@@ -31668,7 +31912,7 @@ MonoBehaviour:
     Index: 0
     Slots:
     - {fileID: 5562361289582529113}
-    Weapon: {fileID: 4776089527113506134, guid: ac80b7c40c2e6ba48b61a9325b0ecc2f, type: 3}
+    Weapon: {fileID: 4279326906189182492, guid: f41bd41d79ffdd7479f84c7035bb697e, type: 3}
     Input:
       UseConstant: 1
       ConstantValue: Back Holster
@@ -37850,7 +38094,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7297913731092990343}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
@@ -43295,7 +43539,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7916866949740571414}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
@@ -44596,7 +44840,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4313093522034928595, guid: 19032c6d7261bdd409ce2c6f7d207a3a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.01
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4313093522034928595, guid: 19032c6d7261bdd409ce2c6f7d207a3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

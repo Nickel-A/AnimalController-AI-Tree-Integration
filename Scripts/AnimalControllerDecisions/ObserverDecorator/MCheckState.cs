@@ -11,7 +11,7 @@ namespace Malbers.Integration.AITree
 {
 
     [NodeContent("Check State", "Animal Controller/MObserverDecorator/Check State", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckState : MObserverDecorator
+    public class MCheckState : ObserverDecorator
     {
         public override event Action OnValueChange;
 
@@ -29,9 +29,13 @@ namespace Malbers.Integration.AITree
         [Tooltip("Toggle to invert the result")]
         public bool invertResult = false;
 
+        AIBrain AIBrain;
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
+
         }
 
         protected override void OnFlowUpdate()
@@ -48,7 +52,7 @@ namespace Malbers.Integration.AITree
             {
                 result = !result;
             }
-
+            //Debug.Log("STATE " +result);
             return result;
         }
 
@@ -131,6 +135,7 @@ namespace Malbers.Integration.AITree
                 {
                     description += $"Active State ID: {activeState}\n";
                 }
+                //description += AIBrain.Target.ToString();
             }   
             return description;
         }

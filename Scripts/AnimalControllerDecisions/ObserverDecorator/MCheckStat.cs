@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Check Stat", "Animal Controller/MObserverDecorator/Check Stat", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCheckStat : MObserverDecorator
+    public class MCheckStat : ObserverDecorator
     {
         public enum checkStatOption { Compare, CompareNormalized, IsInmune, Regenerating, Degenerating, IsEmpty, IsFull, IsActive, ValueChanged, ValueReduced, ValueIncreased }
         [Header("Node")]
@@ -22,7 +22,7 @@ namespace Malbers.Integration.AITree
         public StatID Stat;
         [Tooltip("What do you want to do with the Stat?")]
         public checkStatOption Option = checkStatOption.Compare;
-        [Tooltip("(Option Compare Only) Type of the comparation")]
+        [Tooltip("(Option Compare Only) Type of the comparison")]
         public ComparerInt StatIs = ComparerInt.Less;
         public float Value;
         [Tooltip("(Option Compare Only) Value to Compare the Stat")]
@@ -34,16 +34,28 @@ namespace Malbers.Integration.AITree
         public bool TryGetValue = true;
 
         [HideInInspector] public bool hideVars = false;
-        private bool checkResult;
+        bool result;
+
+        AIBrain AIBrain;
+
         public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
+        }
+
+        protected override void OnFlowUpdate()
+        {
+            base.OnFlowUpdate();
+            OnValueChange?.Invoke();
         }
 
         protected override void OnEntry()
         {
+            // Store the Value the Stat has starting this Decision
             base.OnEntry();
+
             switch (checkOn)
             {
                 case Affected.Self:
@@ -51,29 +63,28 @@ namespace Malbers.Integration.AITree
                     {
                         if (AIBrain.AnimalStats.TryGetValue(Stat.ID, out Stat statS))
                         {
-                            AIBrain.statList[Stat.ID].value = statS.Value;
+                            AIBrain.statParameterInfo.Find(p => p.ID == Stat.ID)?.UpdatePreviousValue(statS.Value);
                         }
                     }
                     else
                     {
-                        AIBrain.statList[Stat.ID].value = AIBrain.AnimalStats[Stat.ID].Value;
+                        AIBrain.statParameterInfo.Find(p => p.ID == Stat.ID)?.UpdatePreviousValue(AIBrain.AnimalStats[Stat.ID].Value);
                     }
                     break;
 
                 case Affected.Target:
-
                     if (AIBrain.TargetHasStats)
                     {
                         if (TryGetValue)
                         {
                             if (AIBrain.TargetStats.TryGetValue(Stat.ID, out Stat statS))
                             {
-                                AIBrain.statList[Stat.ID].value = statS.Value;
+                                AIBrain.statParameterInfo.Find(p => p.ID == Stat.ID)?.UpdatePreviousValue(statS.Value);
                             }
                         }
                         else
                         {
-                            AIBrain.statList[Stat.ID].value = AIBrain.TargetStats[Stat.ID].Value;
+                            AIBrain.statParameterInfo.Find(p => p.ID == Stat.ID)?.UpdatePreviousValue(AIBrain.TargetStats[Stat.ID].Value);
                         }
                     }
                     break;
@@ -82,35 +93,22 @@ namespace Malbers.Integration.AITree
             }
         }
 
-        // Override the Evaluate method or else your environment will throw an error
-        protected override void OnFlowUpdate()
-        {
-            base.OnFlowUpdate();
-            OnValueChange?.Invoke();
-        }
         public override bool CalculateResult()
         {
-            bool result = false;
-
             switch (checkOn)
             {
                 case Affected.Self:
-                    if (TryGetValue)
+                    if (TryGetValue && AIBrain != null)
                     {
-                        if (AIBrain != null && AIBrain.AnimalStats.TryGetValue(Stat.ID, out Stat statS))
+                        if (AIBrain.AnimalStats.TryGetValue(Stat.ID, out Stat statS))
                         {
-                            checkResult = CheckStat(statS, AIBrain);
-                            result = checkResult;
+                            result = CheckStat(statS, AIBrain);
                         }
                     }
-                    else
+                    else if (AIBrain != null)
                     {
-                        if (AIBrain != null)
-                        {
-                            var SelfStatValue = AIBrain.statList[Stat.ID];
-                            checkResult = CheckStat(SelfStatValue, AIBrain);
-                            result = checkResult;
-                        }
+                        var SelfStatValue = AIBrain.AnimalStats[Stat.ID];
+                        result = CheckStat(SelfStatValue, AIBrain);
                     }
                     break;
                 case Affected.Target:
@@ -118,21 +116,26 @@ namespace Malbers.Integration.AITree
                     {
                         if (TryGetValue && AIBrain.TargetStats.TryGetValue(Stat.ID, out Stat statT))
                         {
-                            checkResult = CheckStat(statT, AIBrain);
-                            result = checkResult;
+                            result = CheckStat(statT, AIBrain);
                         }
-                        else if (AIBrain != null && !TryGetValue)
+                        else if (AIBrain != null)
                         {
-                            var TargetStatValue = AIBrain.statList[Stat.ID];
-                            checkResult = CheckStat(TargetStatValue, AIBrain);
-                            result = checkResult;
+                            var TargetStatValue = AIBrain.TargetStats[Stat.ID];
+                            result = CheckStat(TargetStatValue, AIBrain);
                         }
                     }
                     break;
             }
+
             return result;
 
         }
+
+        protected override void OnExit()
+        {
+            base.OnExit();
+        }
+
         private void RecoverValue()
         {
             m_Value.Value = Value;
@@ -159,15 +162,43 @@ namespace Malbers.Integration.AITree
                 case checkStatOption.IsActive:
                     return stat.Active;
                 case checkStatOption.ValueChanged:
-                    return stat.value != AIBrain.statList[Stat.ID].value;
+                    // Get the previous value of the stat from the ParameterInfo stored in AIBrain
+                    float previousValue = AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.PreviousValue ?? 0f;
+                    // Compare the current value of the stat with its previous value
+                    bool valueChanged = stat.Value != previousValue;
+                    // Set the current value as the previous value if changed
+                    if (valueChanged)
+                    {
+                        AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.UpdatePreviousValue(stat.Value);
+                    }
+                    return valueChanged;
                 case checkStatOption.ValueReduced:
-                    return stat.value < AIBrain.statList[Stat.ID].value;
+                    // Get the previous value of the stat from the ParameterInfo stored in AIBrain
+                    previousValue = AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.PreviousValue ?? 0f;
+                    // Compare the current value of the stat with its previous value
+                    bool valueReduced = stat.Value < previousValue;
+                    // Set the current value as the previous value if reduced
+                    if (valueReduced)
+                    {
+                        AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.UpdatePreviousValue(stat.Value);
+                    }
+                    return valueReduced;
                 case checkStatOption.ValueIncreased:
-                    return stat.value > AIBrain.statList[Stat.ID].value;
+                    // Get the previous value of the stat from the ParameterInfo stored in AIBrain
+                    previousValue = AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.PreviousValue ?? 0f;
+                    // Compare the current value of the stat with its previous value
+                    bool valueIncreased = stat.Value > previousValue;
+                    // Set the current value as the previous value if increased
+                    if (valueIncreased)
+                    {
+                        AIBrain.statParameterInfo.Find(p => p.ID == stat.ID)?.UpdatePreviousValue(stat.Value);
+                    }
+                    return valueIncreased;
                 default:
                     return false;
             }
         }
+
         private bool CompareWithValue(float stat)
         {
             switch (StatIs)
@@ -194,8 +225,10 @@ namespace Malbers.Integration.AITree
             }
             description += $"Option: {Option} \n";
             description += $"Stat Is: {StatIs} \n";
-            description += $"Value: {Value} \n";
-            description += $"Result: {checkResult} \n";
+            if (AIBrain)
+            {
+                description += $"Value: {result} \n";
+            }
             return description;
         }
 
@@ -207,14 +240,14 @@ namespace Malbers.Integration.AITree
 
 #if UNITY_EDITOR
 
-[CustomEditor(typeof(MCheckStat))]
+    [CustomEditor(typeof(MCheckStat))]
     [CanEditMultipleObjects]
     public class MCheckStatEditor : Editor
     {
         public static GUIStyle StyleBlue => MTools.Style(new Color(0, 0.5f, 1f, 0.3f));
 
         SerializedProperty
-            nodeName, notifyObserver, observerAbort, checkOn, Stat, Option, StatIs, Value, TryGetValue;
+            nodeName, checkOn, Stat, Option, StatIs, Value, TryGetValue, notifyObserver, observerAbort;
 
         MonoScript script;
         private void OnEnable()

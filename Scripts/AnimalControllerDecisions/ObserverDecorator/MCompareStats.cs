@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Compare Stats", "Animal Controller/MObserverDecorator/Compare Stats", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MCompareStats : MObserverDecorator
+    public class MCompareStats : ObserverDecorator
     {
         [Header("Node")]
 
@@ -18,8 +18,14 @@ namespace Malbers.Integration.AITree
         [Tooltip("Stats you want to find on the Target")]
         public StatID TargetStat;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
 
+        public override event Action OnValueChange;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
+        }
         protected override void OnFlowUpdate()
         {
             base.OnFlowUpdate();

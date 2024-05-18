@@ -67,7 +67,7 @@ namespace Malbers.Integration.AITree
                 if (!AIBrain.AIControl.HasArrived)
                 {
                     AIBrain.weaponManager.MainAttackReleased();
-                    //AIBrain.weaponManager.Weapon.Input = false;
+                    AIBrain.weaponManager.Weapon.Input = false;
                     return State.Failure;
                 }
             }
@@ -76,6 +76,7 @@ namespace Malbers.Integration.AITree
             {
                 if (AIBrain.weaponManager.Weapon is MMelee)
                 {
+
                     if (useComboManager)
                     {
                         if (!AIBrain.comboManager)
@@ -109,50 +110,22 @@ namespace Malbers.Integration.AITree
                 {
                     if (!AIBrain.weaponManager.Weapon.Input || (AIBrain.weaponManager.Weapon as MShootable).releaseProjectile == MShootable.Release_Projectile.OnAttackStart)
                     {
+
                         AIBrain.weaponManager.MainAttack();
                         if (attackOnce)
                         {
-                            return State.Success;
+                            return State.Success;                            
                         }
                     }
                     else
                     {
                         AIBrain.weaponManager.MainAttackReleased();
+                        
                         return State.Success;
                     }
                 }
             }
-            else
-            {
-                if (useComboManager)
-                {
-                    if (!AIBrain.comboManager)
-                    {
-                        Debug.LogError("Combo Manager is not assigned to " + AIBrain.name);
-                        return State.Failure;
-                    }
-
-                    if (useRandomBranch)
-                    {
-                        branchNumber = Random.Range(branchMinNumber, branchMaxNumber + 1);
-                    }
-                    AIBrain.comboManager.Play(branchNumber);
-
-                    if (attackOnce && !AIBrain.comboManager.PlayingCombo)
-                    {
-                        return State.Success;
-                    }
-                }
-                else
-                {
-                    AIBrain.weaponManager.MainAttack();
-                    if (attackOnce)
-                    {
-                        AIBrain.weaponManager.MainAttackReleased();
-                        return State.Success;
-                    }
-                }
-            }
+            
             return State.Running;
         }
 
@@ -161,6 +134,8 @@ namespace Malbers.Integration.AITree
         /// </summary>
         protected override void OnExit()
         {
+            if(AIBrain.weaponManager.Weapon != null)
+            AIBrain.weaponManager.Weapon.Input = false;
             base.OnExit();
         }
     }

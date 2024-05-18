@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For Blackboard Key", "Animal Controller/Look/Look For Blackboard Key", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForBlackboardKey : MObserverDecorator
+    public class MLookForBlackboardKey : ObserverDecorator
     {
         [Header("Node")]
 
@@ -37,8 +37,14 @@ namespace Malbers.Integration.AITree
         public Key key;
         Transform targetTransfrom;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
 
+        public override event Action OnValueChange;
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
+        }
         protected override void OnFlowUpdate()
         {
             base.OnFlowUpdate();
@@ -75,14 +81,14 @@ namespace Malbers.Integration.AITree
                 targetTransfrom.position = vector3Key.GetValue();
             }
             if (targetTransfrom == null) return false;
-            return IsInFieldOfView(AIBrain, targetTransfrom.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
+            return AIUtility.IsInFieldOfView(AIBrain, targetTransfrom.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _);
 
         }
 
 #if UNITY_EDITOR
         public override void OnDrawGizmos()
         {
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+            AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
         }
 #endif
     }

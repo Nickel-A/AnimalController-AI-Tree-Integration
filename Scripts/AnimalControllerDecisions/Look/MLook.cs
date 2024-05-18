@@ -16,7 +16,7 @@ namespace Malbers.Integration.AITree
     public enum LookFor { MainAnimalPlayer, MalbersTag, UnityTag, Zones, GameObject, ClosestWayPoint, CurrentTarget, TransformVar, GameObjectVar, RuntimeGameobjectSet }
 
     [NodeContent("Look", "Animal Controller/Look/Look", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLook : MObserverDecorator
+    public class MLook : ObserverDecorator
     {
 
         [Range(0, 1)]
@@ -80,7 +80,7 @@ namespace Malbers.Integration.AITree
         [Tooltip("Mode Zone Index")]
         [Min(-1)] public int ZoneModeAbility = -1;
 
-        public Color debugColor = new Color(0, 0, 0.7f, 0.3f); 
+        public Color debugColor = new Color(0, 0, 0.7f, 0.3f);
         private float interval;
         GameObjectCollection[] gameObjectCollection;
         int index = 0;
@@ -89,12 +89,15 @@ namespace Malbers.Integration.AITree
 
         private Faction faction;
 
+        AIBrain AIBrain;
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
             faction = GetOwner().GetComponent<Faction>();
-
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
+
         protected override void OnFlowUpdate()
         {
             base.OnFlowUpdate();

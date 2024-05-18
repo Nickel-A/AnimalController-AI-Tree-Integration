@@ -9,7 +9,7 @@ namespace Malbers.Integration.AITree
     [NodeContent("Set Target", "Animal Controller/ACMovement/Set Target", IconPath = "Icons/AnimalAI_Icon.png")]
     public class MSetTargetNode : MTaskNode
     {
-        public enum TargetToFollow { Transform, GameObject, RuntimeGameObjects, ClearTarget, Name, BBKey }
+        public enum TargetToFollow { Transform, GameObject, RuntimeGameObjects, ClearTarget, Name, BBKey, lastKnownPosition }
 
         [Space]
         public TargetToFollow targetType = TargetToFollow.Transform;
@@ -72,6 +72,9 @@ namespace Malbers.Integration.AITree
                 case TargetToFollow.BBKey:
                     AIBrain.AIControl.SetTarget(BBKey.GetValue(), MoveToTarget);
                     break;
+                case TargetToFollow.lastKnownPosition:
+                    //AIBrain.AIControl.SetTarget(AIBrain.GetLastTargetPosition(),MoveToTarget);
+                    break;
                 default:
                     break;
             }
@@ -83,6 +86,10 @@ namespace Malbers.Integration.AITree
         {
             if (taskDone)
             {
+
+                if (targetType == TargetToFollow.ClearTarget)
+                    return State.Success;
+
                 if (MoveToTarget && !AIBrain.AIControl.HasArrived)
                 {
                     return State.Running;
@@ -91,6 +98,8 @@ namespace Malbers.Integration.AITree
                 {
                     return State.Success;
                 }
+
+                
             }
             else
             {

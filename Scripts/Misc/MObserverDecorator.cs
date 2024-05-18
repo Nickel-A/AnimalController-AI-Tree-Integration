@@ -1,9 +1,9 @@
 using MalbersAnimations.Scriptables;
 using RenownedGames.AITree;
 using RenownedGames.Apex;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System;
 using UnityEngine;
 
 namespace Malbers.Integration.AITree

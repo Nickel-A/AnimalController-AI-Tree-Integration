@@ -18,6 +18,12 @@ namespace Malbers.Integration.AITree
         [SerializeField]
         private bool waitUntilTrue;
 
+        /// <summary>
+        /// Exposes the AIBrain to all inheriting classes. This is a wrapper for Malbers components
+        /// including AIControl and any other components we may need in the future.
+        /// </summary>
+        protected AIBrain AIBrain;
+
         // Stored required properties.
         private bool running;
         /// <summary>
@@ -93,11 +99,5 @@ namespace Malbers.Integration.AITree
             inverseCondition = value;
         }
         #endregion
-        /// <summary>
-        /// Exposes the AIBrain to all inheriting classes. This is a wrapper for Malbers components
-        /// including AIControl and any other components we may need in the future.
-        /// </summary>
-        protected AIBrain AIBrain;
-
     }
 }

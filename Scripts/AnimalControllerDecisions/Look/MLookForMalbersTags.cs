@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace Malbers.Integration.AITree
 {
     [NodeContent("Look For Malbers Tags", "Animal Controller/Look/Look For Malbers Tags", IconPath = "Icons/AIDecision_Icon.png")]
-    public class MLookForMalbersTags : MObserverDecorator
+    public class MLookForMalbersTags : ObserverDecorator
     {
         [Header("Node")]
         public Color debugColor = new Color(0, 0, 0.7f, 0.3f);
@@ -35,11 +35,14 @@ namespace Malbers.Integration.AITree
         [Tooltip("If the what we are looking for is found then also start moving")]
         public bool moveToTarget = false;
 
-        public override event Action OnValueChange;
+        AIBrain AIBrain;
+        public bool debug;
 
+        public override event Action OnValueChange;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            AIBrain = GetOwner().GetComponent<AIBrain>();
         }
 
         protected override void OnFlowUpdate()
@@ -78,7 +81,7 @@ namespace Malbers.Integration.AITree
 
                     if (go != null)
                     {
-                        if (IsInFieldOfView(AIBrain, go.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _))
+                        if (AIUtility.IsInFieldOfView(AIBrain, go.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out _))
                         {
                             if (assignTarget)
                             {
@@ -98,7 +101,7 @@ namespace Malbers.Integration.AITree
 
                     if (go != null)
                     {
-                        if (IsInFieldOfView(AIBrain, go.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out float distance))
+                        if (AIUtility.IsInFieldOfView(AIBrain, go.position, lookAngle, lookRange, lookMultiplier, obstacleLayer, out float distance))
                         {
                             if (distance < minDistance)
                             {
@@ -124,7 +127,8 @@ namespace Malbers.Integration.AITree
 #if UNITY_EDITOR
         public override void OnDrawGizmos()
         {
-            DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
+            if (debug)
+            AIUtility.DrawFieldOfViewGizmos(AIBrain, debugColor, lookAngle, lookRange);
         }
 #endif
     }
